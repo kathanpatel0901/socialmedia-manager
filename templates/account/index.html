@@ -1,0 +1,20 @@
+{% extends "base/base.html" %} 
+{% block content %} 
+{% load static %} 
+{% load socialaccount %} 
+{% csrf_token %}
+
+<div class="container">
+  <div class="signup-form">
+    <h2>Sign up with your account</h2>
+    <form action="">
+      <a href="{% provider_login_url 'google' %}?next=/home">
+        <button type="button" class="btn btn-google btn-outline-dark">
+          <img src="{% static 'sigoogle2.png' %}" alt="Button Image" />
+        </button>
+      </a>
+    </form>
+  </div>
+</div>
+
+{% endblock content %}
