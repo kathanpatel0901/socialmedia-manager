@@ -31,3 +31,16 @@ body {
   width: 100%;
   margin-bottom: 10px;
 }
+
+.facebook{
+  max-width: 205px;
+  margin: 0 auto;
+  margin-top: 50px;
+  margin-bottom: 900px;
+  margin-left: 10px;
+  padding: auto;
+  background-color: #ffffff;
+  border-radius: 15px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+

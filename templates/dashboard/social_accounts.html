@@ -1,9 +1,11 @@
 {% extends "base/sidebar.html" %}
 {% load socialaccount %}
 {% block sidebar %}
-
+{% providers_media_js %}
 <body>
 
+    <h1 class="facebook"><a href="{% provider_login_url "facebook" %}">facebook</a></h1>
+    
 </body>
 
 {% endblock sidebar %}

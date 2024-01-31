@@ -51,7 +51,7 @@ INSTALLED_APPS = [
     'allauth.account',
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
-    # 'allauth.socialaccount.providers.facebook',
+    'allauth.socialaccount.providers.facebook',
     # 'allauth.socialaccount.providers.instagram',
     # 'allauth.socialaccount.providers.linkedin',
     # 'allauth.socialaccount.providers.linkedin_oauth2',
@@ -177,10 +177,32 @@ SOCIALACCOUNT_PROVIDERS = {
             'access_type': 'online',
         },
         'OAUTH_PKCE_ENABLED': True,
+    },
+    'facebook': {
+        'METHOD': 'oauth2',  # Set to 'js_sdk' to use the Facebook connect SDK
+        # 'SDK_URL': '//connect.facebook.net/{locale}/sdk.js',
+        'SCOPE': ['email', 'public_profile'],
+        'AUTH_PARAMS': {'auth_type': 'reauthenticate'},
+        'INIT_PARAMS': {'cookie': True},
+        'FIELDS': [
+            'id',
+            'first_name',
+            'last_name',
+            'middle_name',
+            'name',
+            'name_format',
+            'picture',
+            'short_name'
+        ],
+        'EXCHANGE_TOKEN': True,
+        # 'LOCALE_FUNC': 'path.to.callable',
+        'VERIFIED_EMAIL': False,
+        'VERSION': 'v13.0',
+        'GRAPH_API_URL': 'https://graph.facebook.com/v13.0',
     }
 }
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_USERNAME_REQUIRED = False
 ACCOUNT_AUTHENTICATION_METHOD = 'email'
 ACCOUNT_EMAIL_VERIFICATION = 'optional'
-LOGIN_REDIRECT_URL = '/home'
+# LOGIN_REDIRECT_URL = '/home'
