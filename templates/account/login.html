@@ -1,0 +1,35 @@
+{% extends "base/base.html" %}
+{% load crispy_forms_tags %}
+{% load socialaccount %}
+{% block content %}
+
+{%load static%}
+
+<div class="container">
+    <div class="justify-content-center mx-3">
+        <h1 class=" text-center bg-gray-100 h-[52px] "> <span class="font-bold text-3xl ">Welcome
+                Back</span>
+        </h1>
+        <div class="justify-content-center mx-3">
+            <a href="{% provider_login_url 'google' %}">
+                <button type="button" class="btn btn-google  ">
+                    <img src="{% static 'sigoogle2.png' %}" alt="Button Image" />
+                  </button>
+            </a>
+        </div>
+    </div>
+</div> 
+
+{%endblock%}
+
+{% comment %} <div class="signup-form">
+    <h2>Sign up with your account</h2>
+    <form action="">
+      provider_login_url 'google'
+      <a href="{% url 'account_login' %}?next=/home">
+        <button type="button" class="btn btn-google btn-outline-dark">
+          <img src="{% static 'sigoogle2.png' %}" alt="Button Image" />
+        </button>
+      </a>
+    </form>
+  </div> {% endcomment %}

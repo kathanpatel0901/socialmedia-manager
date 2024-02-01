@@ -1,10 +1,9 @@
-
 {% extends "base/sidebar.html" %}
-{% load socialaccount %}
+{% load account %}
 {% block sidebar %}
 
 <body>
-  
+    {% csrf_token %}
 </body>
 
 {% endblock sidebar %}
