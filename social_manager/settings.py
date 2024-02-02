@@ -12,6 +12,8 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 
 from pathlib import Path
 
+
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -55,8 +57,8 @@ INSTALLED_APPS = [
     # 'allauth.socialaccount.providers.instagram',
     # 'allauth.socialaccount.providers.linkedin',
     # 'allauth.socialaccount.providers.linkedin_oauth2',
-    # 'allauth.socialaccount.providers.twitter',
-    # 'allauth.socialaccount.providers.twitter_oauth2',
+    
+    'allauth.socialaccount.providers.twitter_oauth2',
     
 ]
 SITE_ID = 2 
@@ -75,11 +77,11 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'social_manager.urls'
-
+import os
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': ['templates'],
+        'DIRS': [os.path.join(BASE_DIR,'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -178,28 +180,7 @@ SOCIALACCOUNT_PROVIDERS = {
         },
         'OAUTH_PKCE_ENABLED': True,
     },
-    'facebook': {
-        'METHOD': 'oauth2',  # Set to 'js_sdk' to use the Facebook connect SDK
-        # 'SDK_URL': '//connect.facebook.net/{locale}/sdk.js',
-        'SCOPE': ['email', 'public_profile'],
-        'AUTH_PARAMS': {'auth_type': 'reauthenticate'},
-        'INIT_PARAMS': {'cookie': True},
-        'FIELDS': [
-            'id',
-            'first_name',
-            'last_name',
-            'middle_name',
-            'name',
-            'name_format',
-            'picture',
-            'short_name'
-        ],
-        'EXCHANGE_TOKEN': True,
-        # 'LOCALE_FUNC': 'path.to.callable',
-        'VERIFIED_EMAIL': False,
-        'VERSION': 'v13.0',
-        'GRAPH_API_URL': 'https://graph.facebook.com/v13.0',
-    }
+    
 }
 # ACCOUNT_EMAIL_REQUIRED = True
 # ACCOUNT_USERNAME_REQUIRED = False
@@ -207,3 +188,7 @@ SOCIALACCOUNT_PROVIDERS = {
 # ACCOUNT_EMAIL_VERIFICATION = 'optional'
 LOGIN_REDIRECT_URL ='/home'
 LOGOUT_REDIRECT_URL ='/index'
+
+SOCIALACCOUNT_ADAPTER = 'signin.adapters.google_adapter.GoogleSocialAccountAdapter'
+
+SOCIALACCOUNT_ADAPTER = 'signin.adapters.twitter_adapter.TwitterSocialAccountAdapter'

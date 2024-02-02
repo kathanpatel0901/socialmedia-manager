@@ -1,16 +1,14 @@
 {% extends "base/base.html" %}
-{% load crispy_forms_tags %}
 {% load socialaccount %}
 {% block content %}
 
 {%load static%}
 
 <div class="container">
-    <div class="justify-content-center mx-3">
-        <h1 class=" text-center bg-gray-100 h-[52px] "> <span class="font-bold text-3xl ">Welcome
-                Back</span>
+    <div class="signup-form">
+        <h1 class=" text-center bg-gray-100 h-[52px] "> <span class="font-bold text-3xl ">Welcome</span>
         </h1>
-        <div class="justify-content-center mx-3">
+        <div class="container">
             <a href="{% provider_login_url 'google' %}">
                 <button type="button" class="btn btn-google  ">
                     <img src="{% static 'sigoogle2.png' %}" alt="Button Image" />

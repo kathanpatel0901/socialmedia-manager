@@ -11,6 +11,19 @@ body {
     #4b79a1
   ); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
 }
+body {
+  background: #4b79a1; /* fallback for old browsers */
+  background: -webkit-linear-gradient(
+    to right,
+    #283e51,
+    #4b79a1
+  ); /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(
+    to right,
+    #283e51,
+    #4b79a1
+  ); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+}
 .signup-form {
   max-width: 400px;
   margin: 0 auto;
@@ -31,20 +44,3 @@ body {
   width: 100%;
   margin-bottom: 10px;
 }
-
-.facebook{
-  max-width: 205px;
-  margin: 0 auto;
-  margin-top: 50px;
-  margin-bottom: 900px;
-  margin-left: 10px;
-  padding: auto;
-  background-color: #ffffff;
-  border-radius: 15px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-}
-
-.button{
-  align-items: center;
-}
-

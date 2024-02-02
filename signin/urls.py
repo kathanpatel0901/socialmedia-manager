@@ -11,5 +11,7 @@ urlpatterns = [
     path('social_account', views.social_accounts),
 
     path('login', views.login),
+    path('google-redirect/', views.google_redirect, name='google_redirect'),
+    path('twitter-redirect/', views.twitter_redirect, name='twitter_redirect'),
    
-]
+]   

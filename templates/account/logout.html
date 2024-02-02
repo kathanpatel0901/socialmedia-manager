@@ -1,20 +1,51 @@
-{% block content %}
-<div class="m-auto w-[50%] m-auto border  rounded-lg">
+{% extends "base/base.html" %} 
+{% comment %} {% block content %}
+<div class="signup-form">
+  <h1 class="text-center bg-gray-100 h-[52px] font-bold text-3xl">Sign Out</h1>
+  
+  <p class="text-center my-3">Are you sure you want to sign out?</p>
+
+  <div class="flex justify-center mx-3">
+    <form method="post" action="{% url 'account_logout' %}">
+      {% csrf_token %}
+      <div class="">
+        <button type="submit" name="yes_button" class="btn btn-outline-danger btn-google">
+          Yes
+        </button>
+      </div>
+      <div>
+        <button type="button" name="no_button" class="btn btn-outline-dark btn-google">
+         NO
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %} {% endcomment %}
+
+{% comment %} <button type="button" name="no_button" class="btn btn-outline-dark btn-google">
+  NO
+ </button>
+  {% endcomment %}
+ {% block content %}
+<div class="signup-form">
   <h1 class="text-center bg-gray-100 h-[52px] font-bold text-3xl">Sign Out</h1>
 
   <p class="text-center my-3">Are you sure you want to sign out?</p>
   <div class="justify-center mx-3">
-
     <form method="post" action="{% url 'account_logout' %}">
       {% csrf_token %}
       <div class="">
-        <button type="submit" class="bg-red-200 my-3 rounded-lg w-[100%] p-2">Sign Out</button>
+        <button type="submit" class="btn btn-outline-success btn-google">
+          Yes
+        </button>
       </div>
     </form>
-    <div class="justify-center ">
-      <button class="bg-blue-700 text-white rounded-lg w-[100%] my-3 p-2"><a href="/index">Cancel</a></button>
+    <div class="d-flex justify-content-center">
+        <a href="/index" class="link-danger">No</a>
+    
     </div>
   </div>
 </div>
-  
-  {% endblock %}
+
+{% endblock %} 

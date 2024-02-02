@@ -1,13 +1,35 @@
 {% extends "base/sidebar.html" %}
 {% load socialaccount %}
+{%load static%}
 {% block sidebar %}
 {% providers_media_js %}
-<body>
-    <div>
 
-        <h1 class="facebook"><a href="{% provider_login_url "facebook" %}">facebook</a></h1>
+
+    <div class="container ">
+        <div class="col">
+            <h1 class=" text-center bg-gray-100 h-[52px] "> <span class="font-bold text-3xl ">Link your account</span>
+            </h1>
+            <div class="text-center mt-5">
+                <a href="{% provider_login_url 'twitter' %}">
+                    <button type="button" width="50" hight="30" class="btn btn-twitter btn-outline-light">
+                        <img src="{% static 'twitter.png' %}" alt="Button Image" />
+                      </button>
+                </a>
+                {% if request.user.is_authenticated %} 
+                {% if request.user.socialaccount_set.all %}
+                {% with social_account=request.user.socialaccount_set.first %}
+                <div>
+                    <img src=" {{ social_account.get_avatar_url }}" alt="hugenerd" width="30" height="30" class="rounded-circle">
+                    <a   class="btn btn-google">{{request.user.username}} 
+                       
+                    </a>   
+                </div>
+                {% endwith %}
+                {% endif %}
+                {% endif %}
+            </div>
+        </div>
     </div>
-        
-</body>
+
 
 {% endblock sidebar %}
