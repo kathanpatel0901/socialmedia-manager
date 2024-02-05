@@ -19,10 +19,12 @@
                 {% if request.user.socialaccount_set.all %}
                 {% with social_account=request.user.socialaccount_set.first %}
                 <div>
+
                     <img src=" {{ social_account.get_avatar_url }}" alt="hugenerd" width="30" height="30" class="rounded-circle">
                     <a   class="btn btn-google">{{request.user.username}} 
                        
-                    </a>   
+                    </a>
+                      
                 </div>
                 {% endwith %}
                 {% endif %}

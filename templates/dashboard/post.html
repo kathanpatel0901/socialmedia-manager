@@ -1,15 +1,28 @@
 {% extends "base/sidebar.html" %}
 {% load socialaccount %}
 {% block sidebar %}
-{% providers_media_js %}
-<body>
-    <div class="col col-md-9 ms-sm-auto px-4">
-        <!-- Main Content -->
-        <h2>Main Content Title</h2>
-        <p>This is your main content. Add your HTML content, forms, or other elements here.</p>
-        <!-- ... Add your content here ... -->
-    </div>
-        
-</body>
+{% load crispy_forms_tags %}
+{% comment %} {% providers_media_js %} {% endcomment %}
+</h1>
+  <h1 class=" text-center bg-gray-100 h-[52px] "> <span class="font-bold text-3xl ">Set Posts from here
+  </span>
+  <div class="signup-form">
+    {% crispy form %} 
+    
+  </div>
 
 {% endblock sidebar %}
+    
+
+<!-- templates/post_tweet.html -->
+
+{% comment %} {% extends 'base.html' %}
+
+{% block content %}
+  <h2>Post a Tweet</h2>
+  <form method="post" action="{% url 'post_tweet' %}">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Post Tweet</button>
+  </form>
+{% endblock %} {% endcomment %}
