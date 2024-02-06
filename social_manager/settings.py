@@ -26,8 +26,8 @@ SECRET_KEY = 'django-insecure-49@##0%hf)79-s9k@8qybje)(87!_w7c&l8zdj+bll_$$%y^l)
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
-
 ALLOWED_HOSTS = []
+
 
 
 # Application definition
@@ -40,7 +40,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.sites',
-    
+    'sslserver',
+    'django_extensions',
     #forms_app
     'crispy_forms',
     'crispy_bootstrap5',
@@ -56,7 +57,7 @@ INSTALLED_APPS = [
     'allauth.socialaccount.providers.facebook',
     # 'allauth.socialaccount.providers.instagram',
     # 'allauth.socialaccount.providers.linkedin',
-    # 'allauth.socialaccount.providers.linkedin_oauth2',
+    'allauth.socialaccount.providers.linkedin_oauth2',
     
     'allauth.socialaccount.providers.twitter_oauth2',
     
@@ -180,6 +181,43 @@ SOCIALACCOUNT_PROVIDERS = {
         },
         'OAUTH_PKCE_ENABLED': True,
     },
+    'facebook': {
+        'METHOD': 'oauth2',  # Set to 'js_sdk' to use the Facebook connect SDK
+        'SDK_URL': '//connect.facebook.net/{locale}/sdk.js',
+        'SCOPE': ['email', 'public_profile'],
+        'AUTH_PARAMS': {'auth_type': 'reauthenticate'},
+        'INIT_PARAMS': {'cookie': True},
+        'FIELDS': [
+            'id',
+            'first_name',
+            'last_name',
+            'middle_name',
+            'name',
+            'name_format',
+            'picture',
+            'short_name'
+        ],
+        'EXCHANGE_TOKEN': True,
+        'LOCALE_FUNC': 'path.to.callable',
+        'VERIFIED_EMAIL': False,
+        'VERSION': 'v13.0',
+        'GRAPH_API_URL': 'https://graph.facebook.com/v13.0',
+    },
+
+       'linkedin': {
+        'SCOPE': [
+            'r_basicprofile',
+            'r_emailaddress'
+        ],
+        'PROFILE_FIELDS': [
+            'id',
+            'first-name',
+            'last-name',
+            'email-address',
+            'picture-url',
+            'public-profile-url',
+        ]
+    },
     
 }
 # ACCOUNT_EMAIL_REQUIRED = True
@@ -189,11 +227,21 @@ SOCIALACCOUNT_PROVIDERS = {
 LOGIN_REDIRECT_URL ='/home'
 LOGOUT_REDIRECT_URL ='/index'
 
-SOCIALACCOUNT_ADAPTER = 'signin.adapters.google_adapter.GoogleSocialAccountAdapter'
+# SOCIALACCOUNT_ADAPTER = 'signin.adapters.google_adapter.GoogleSocialAccountAdapter'
 
-SOCIALACCOUNT_ADAPTER = 'signin.adapters.twitter_adapter.TwitterSocialAccountAdapter'
+# SOCIALACCOUNT_ADAPTER = 'signin.adapters.twitter_adapter.TwitterSocialAccountAdapter'
 
 TWITTER_API_KEY = 'pdvJF5HKszeWfxGE6VksMRb6N'
 TWITTER_API_SECRET_KEY = 'ZbI9iyOOSJY3heGpQgeAmVBWjtqQZJb989DFAhewHaDdF5rtM2'
 TWITTER_ACCESS_TOKEN = '1698066183910768640-KuUxMrY3mCMPaE522yFgMfuDjMFZxB'
 TWITTER_ACCESS_TOKEN_SECRET = 'anmC9ZM833XZcO1JyBmglDFanc2cLxk4ylc2wJcZd8Oz7'
+
+# SECURE_SSL_REDIRECT = True
+# CSRF_COOKIE_SECURE = True
+# SESSION_COOKIE_SECURE = True
+# SECURE_BROWSER_XSS_FILTER = True
+# SECURE_CONTENT_TYPE_NOSNIFF = True
+# SECURE_HSTS_SECONDS = 31536000  # One year
+# SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+# SECURE_HSTS_PRELOAD = True
+# CSRF_USE_SESSIONS = True

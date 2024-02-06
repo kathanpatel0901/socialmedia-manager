@@ -7,21 +7,28 @@
 
     <div class="container ">
         <div class="col">
-            <h1 class=" text-center bg-gray-100 h-[52px] "> <span class="font-bold text-3xl ">Link your account</span>
+            <h1 class=" text-center bg-light-100 h-[52px] "> Link your accounts 
             </h1>
             <div class="text-center mt-5">
-                <a href="{% provider_login_url 'twitter' %}">
-                    <button type="button" width="50" hight="30" class="btn btn-twitter btn-outline-light">
-                        <img src="{% static 'twitter.png' %}" alt="Button Image" />
-                      </button>
+                <a href="{% provider_login_url 'twitter' %}" class="btn btn-twitter btn-outline-dark">Link your 
+                        <img src="{% static 'x_white.png' %}" style="width:25px" alt="Button Image" />
                 </a>
+                
+                <a href="{% provider_login_url 'facebook' %}"  class="btn btn-outline-dark ms-3"> Link your 
+                        <img src="{% static 'Facebook_Logo.png' %}" style="width:25px" class="ms-2" alt="Button Image" />   
+                </a>
+                
+                <a href="{% provider_login_url 'linkedin' %}"  class="btn btn-outline-dark ms-3"> Link your 
+                    <img src="{% static 'inwhite.png' %}" style="width:25px" class="ms-2" alt="Button Image" />   
+            </a>
+            
                 {% if request.user.is_authenticated %} 
                 {% if request.user.socialaccount_set.all %}
                 {% with social_account=request.user.socialaccount_set.first %}
                 <div>
-
-                    <img src=" {{ social_account.get_avatar_url }}" alt="hugenerd" width="30" height="30" class="rounded-circle">
-                    <a   class="btn btn-google">{{request.user.username}} 
+                <hr>
+                    <a>{{request.user.username}} 
+                        <img src=" {{ social_account.get_avatar_url }}" alt="hugenerd" width="30" height="30" class="rounded-circle">
                        
                     </a>
                       

@@ -1,11 +1,4 @@
 from django import forms
-class TweetForm(forms.Form):
-    tweet = forms.CharField(widget= forms.Textarea, label='tweet_content')
-
-
-# forms.py
-
-from django import forms
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Submit
 
