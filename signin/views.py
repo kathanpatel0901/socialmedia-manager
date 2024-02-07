@@ -70,5 +70,3 @@ def post_tweet(request):
     return render(request, 'dashboard/post.html', {'form': form})
 
 
-
-

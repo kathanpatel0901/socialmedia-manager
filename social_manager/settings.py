@@ -40,8 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.sites',
-    'sslserver',
-    'django_extensions',
+    
     #forms_app
     'crispy_forms',
     'crispy_bootstrap5',
@@ -53,14 +52,14 @@ INSTALLED_APPS = [
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
+
+    #social_media
     'allauth.socialaccount.providers.google',
-    'allauth.socialaccount.providers.facebook',
-    # 'allauth.socialaccount.providers.instagram',
-    # 'allauth.socialaccount.providers.linkedin',
-    'allauth.socialaccount.providers.linkedin_oauth2',
-    
+    'allauth.socialaccount.providers.facebook', 
     'allauth.socialaccount.providers.twitter_oauth2',
-    
+    'allauth.socialaccount.providers.linkedin_oauth2',
+    "allauth.socialaccount.providers.github",
+   
 ]
 SITE_ID = 2 
 
@@ -181,6 +180,7 @@ SOCIALACCOUNT_PROVIDERS = {
         },
         'OAUTH_PKCE_ENABLED': True,
     },
+
     'facebook': {
         'METHOD': 'oauth2',  # Set to 'js_sdk' to use the Facebook connect SDK
         'SDK_URL': '//connect.facebook.net/{locale}/sdk.js',
@@ -218,12 +218,20 @@ SOCIALACCOUNT_PROVIDERS = {
             'public-profile-url',
         ]
     },
+
+     'github': {
+        'SCOPE': [
+            'user',
+            'repo',
+            'read:org',
+        ],
+    },
     
 }
 # ACCOUNT_EMAIL_REQUIRED = True
 # ACCOUNT_USERNAME_REQUIRED = False
 # ACCOUNT_AUTHENTICATION_METHOD = 'email'
-# ACCOUNT_EMAIL_VERIFICATION = 'optional'
+ACCOUNT_EMAIL_VERIFICATION = 'none'
 LOGIN_REDIRECT_URL ='/home'
 LOGOUT_REDIRECT_URL ='/index'
 
@@ -235,6 +243,9 @@ TWITTER_API_KEY = 'pdvJF5HKszeWfxGE6VksMRb6N'
 TWITTER_API_SECRET_KEY = 'ZbI9iyOOSJY3heGpQgeAmVBWjtqQZJb989DFAhewHaDdF5rtM2'
 TWITTER_ACCESS_TOKEN = '1698066183910768640-KuUxMrY3mCMPaE522yFgMfuDjMFZxB'
 TWITTER_ACCESS_TOKEN_SECRET = 'anmC9ZM833XZcO1JyBmglDFanc2cLxk4ylc2wJcZd8Oz7'
+
+
+
 
 # SECURE_SSL_REDIRECT = True
 # CSRF_COOKIE_SECURE = True

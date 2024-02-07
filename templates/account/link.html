@@ -1,6 +1,5 @@
 {% extends "base/base.html" %}
 {% load socialaccount %}
-{% load account %}
 {% block content %}
 
 {%load static%}
@@ -10,7 +9,7 @@
         <h1 class=" text-center bg-gray-100 h-[52px] "> <span class="font-bold text-3xl ">Welcome</span>
         </h1>
         <div class="container">
-            <a href="{% provider_login_url 'google' %}">
+            <a href="{% provider_login_url 'linkedin_oauth2' %}">
                 <button type="button" class="btn btn-google  ">
                     <img src="{% static 'sigoogle2.png' %}" alt="Button Image" />
                   </button>
@@ -20,15 +19,3 @@
 </div> 
 
 {%endblock%}
-
-{% comment %} <div class="signup-form">
-    <h2>Sign up with your account</h2>
-    <form action="">
-      provider_login_url 'google'
-      <a href="{% url 'account_login' %}?next=/home">
-        <button type="button" class="btn btn-google btn-outline-dark">
-          <img src="{% static 'sigoogle2.png' %}" alt="Button Image" />
-        </button>
-      </a>
-    </form>
-  </div> {% endcomment %}
