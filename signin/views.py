@@ -4,11 +4,10 @@ from django.contrib.auth import logout
 from django.views import View
 from allauth.socialaccount.models import SocialAccount
 from django.contrib.auth.decorators import login_required
-import tweepy
 from tweepy import OAuthHandler, API
 from .forms import TweetForm
 from django.conf import settings
-
+import tweepy
 
 
 def index(request):
@@ -48,7 +47,7 @@ def post_tweet(request):
 def post_success(request):
    return render(request, 'dashboard/post_success.html')
 
-# @login_required
+@login_required
 def post_tweet(request):
     if request.method == 'POST':
         form = TweetForm(request.POST)
@@ -70,3 +69,19 @@ def post_tweet(request):
     return render(request, 'dashboard/post.html', {'form': form})
 
 
+
+def tweet(request):
+    if request.method == 'POST':
+      content = request.POST.get('content','')
+
+      if content:
+         print('Content:', content)
+          
+         auth = tweepy.OAuthHandler(settings.TWITTER_API_KEY, settings.TWITTER_API_SECRET_KEY)
+         auth.set_access_token(settings.TWITTER_ACCESS_TOKEN, settings.TWITTER_ACCESS_TOKEN_SECRET)
+         api = tweepy.API(auth)
+         api.update_status(content)
+
+         return render(request,'dashboard/post_success.html')
+
+    return render(request, 'dashboard/tweet.html')
