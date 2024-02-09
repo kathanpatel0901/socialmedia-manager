@@ -256,3 +256,16 @@ TWITTER_ACCESS_TOKEN_SECRET = '9tQzV0z2dc2vEE7PY9Eiz10m7A1Qt3yayrZZrSVvL7J9m'
 # SECURE_HSTS_INCLUDE_SUBDOMAINS = True
 # SECURE_HSTS_PRELOAD = True
 # CSRF_USE_SESSIONS = True
+# .
+
+#  gunicorn --bind 0.0.0.0:8000 social_manager.wsgi:application
+
+# [program:gunicorn]
+# directory=/home/ubuntu/clone
+# command=/home/ubuntu/env/bin/gunicorn --workers 3 --bind unix:/home/ubuntu/Social_Media_Manager/app.sock social_manager.wsgi:application
+# autostart=true
+# autorestart=true
+# stderr_logfile=/var/log/gunicorn/gunicorn.err.log
+# stdout_logfile=/var/log/gunicorn/gunicorn.out.log
+# [group:guni]
+# programs:gunicorn
