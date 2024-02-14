@@ -4,7 +4,7 @@ from signin.views import home,index,post_tweet,social_accounts,profile_view,post
 
 urlpatterns = [
 
-    path('home',home),
+    path('',home),
     # # path('logout', views.logout_view),
     path('index',index),
     
