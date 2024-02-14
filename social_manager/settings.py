@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-49@##0%hf)79-s9k@8qybje)(87!_w7c&l8zdj+bll_$$%y^l)
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["127.0.0.1", "13.127.88.229","socialmediamanager.in.net"]
 
 
 
@@ -61,6 +61,7 @@ INSTALLED_APPS = [
     "allauth.socialaccount.providers.github",
    
 ]
+
 SITE_ID = 2 
 
 MIDDLEWARE = [
@@ -143,10 +144,19 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
+#STATIC_URL = 'static/'
+
+#STATICFILES_DIRS = [
+ #   BASE_DIR /'static'
+#]
+
 STATIC_URL = 'static/'
 
+STATIC_ROOT =  'staticfiles' #os.path.join(BASE_DIR, 'static')
+
 STATICFILES_DIRS = [
-    BASE_DIR /'social_manager/static'
+    os.path.join(BASE_DIR, 'static/'),
+    'static'
 ]
 
 # Default primary key field type
