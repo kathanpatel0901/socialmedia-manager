@@ -140,3 +140,6 @@ GitHub.sublime-settings
 
 #pem
 *.pem
+
+#custom
+db-production.sqlite3
