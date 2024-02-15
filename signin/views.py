@@ -78,8 +78,8 @@ def tweet(request):
     CONSUMER_SECRATE ='L4Q4EsxJLc5Byw3428sRLbxIVMua8ZdqVDiycUYpB9HpuTKAqM'
     TWITTER_API_KEY = '2PegHCEvjFbsF7mLgJbxQQzks'
     TWITTER_API_SECRET_KEY = 'XsTi5z1MmOZ9tUu8r5yituADNvrnFQmIbzsnqmgUUPfRKwc2hI'
-    TWITTER_ACCESS_TOKEN = '1698066183910768640-yoYoKex5ojvVusVfYtUVLzWyluNxoi'
-    TWITTER_ACCESS_TOKEN_SECRET = 'guPeSs9K16f0ZIL3g6StOKWZERKZORi5mYaDYbgfWeb8i'
+    TWITTER_ACCESS_TOKEN = '1698066183910768640-qVGbLnFiIwvJ7uWKWcXYYp1yjOOzyF'
+    TWITTER_ACCESS_TOKEN_SECRET = 'ycObapiXdEf91PQBye23LuoSb1IGDEqAzdqWKQlpxfjyi'
 
     if request.method == 'POST':
         content = request.POST.get('content')
