@@ -84,33 +84,12 @@ def tweet(request):
     if request.method == 'POST':
         content = request.POST.get('content')
 
-        if content:
-            print('Content:', content)
-        
-        
-            auth = OAuth2AppHandler(consumer_key=CONSUMER_KEY,consumer_secret=CONSUMER_SECRATE)
+        if content:        
+            auth = OAuth2AppHandler(CONSUMER_KEY,CONSUMER_SECRATE)
             api = Client(auth)
             test = api.create_tweet(text=content)
-            print("==================",test)
-
             return render(request,'dashboard/post_success.html')
-
     return render(request, 'dashboard/tweet.html')
 
 
 
-    # if request.method == 'POST':
-    #   content = request.POST.get('content','')
-
-    #   if content:
-    #     client = tweepy.Client(consumer_key=CONSUMER_KEY,
-    #                    consumer_secret=CONSUMER_SECRATE,
-    #                    access_token=TWITTER_ACCESS_TOKEN,
-    #                    access_token_secret=TWITTER_ACCESS_TOKEN_SECRET)
-    #     print('client===========',client)
-    #     response = client.create_tweet(text='hello world')
-
-    #     print(response)
-    #     return render(request,'dashboard/post_success.html')
-
-    # return render(request, 'dashboard/tweet.html')

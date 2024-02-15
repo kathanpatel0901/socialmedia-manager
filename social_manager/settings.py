@@ -116,13 +116,15 @@ WSGI_APPLICATION = 'social_manager.wsgi.application'
 
 #     }
 # }
+if config("SERVER_TYPE")=="development":
+    db_name = "db-development.sqlite3"
+else:
+    db_name = "db-production.sqlite3"
 
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-        
-
+        'NAME': BASE_DIR / db_name,
     }
 }
 
