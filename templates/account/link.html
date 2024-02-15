@@ -2,7 +2,7 @@
 {% load socialaccount %}
 {% block content %}
 
-{%load static%}
+{% load static %}
 
 <div class="container">
     <div class="signup-form">
@@ -12,10 +12,10 @@
             <a href="{% provider_login_url 'linkedin_oauth2' %}">
                 <button type="button" class="btn btn-google  ">
                     <img src="{% static 'sigoogle2.png' %}" alt="Button Image" />
-                  </button>
+                </button>
             </a>
         </div>
     </div>
-</div> 
+</div>
 
-{%endblock%}
+{% endblock %}

@@ -1,14 +1,12 @@
-{% extends "base/base.html" %} 
+{% extends "base/base.html" %}
 
-{% load static %} 
+{% load static %}
 {% load account %}
-{% comment %} {% load socialaccount %}  {% endcomment %}
 {% block content %}
-{% csrf_token %}
 
-{% if request.user.is_authenticated%}
+{% if request.user.is_authenticated %}
 <div class="flex m-auto border w-[90%] justify-center  bg-blue-200 h-20 rounded rounded-lg">
-  
+
   <div class="w-[90%] mt-6">
     <h1 class="ml-3"> Welcome, {% user_display user %}!</h1>
   </div>
@@ -17,17 +15,16 @@
   </div>
 </div>
 
-{%else%}
-
+{% else %}
 <div class="m-auto w-[90%] justify-center">
-  <h1 class="text-light font-bold "align='center'" ">
+  <h1 class="text-light font-bold " align='center'" ">
     You are not sign in
   </h1>
 </div>
 <div class="signup-form">
   <h2>Sign up with your account</h2>
   <form action="">
-    {% comment %} provider_login_url 'google' {% endcomment %}
+    {% csrf_token %}
     <a href="{% url 'account_login' %}">
       <button type="button" class="btn btn-google">
         <img src="{% static 'sigoogle2.png' %}" alt="Button Image" />
@@ -36,21 +33,8 @@
   </form>
 </div>
 
-{%endif%}
-  
-{% comment %} </div> 
-<div class="container">
- <div class="signup-form">
-   <h2>Sign up with your account</h2>
-   <form action="">
-     provider_login_url 'google'
-     <a href="{% url 'account_login' %}?next=/home">
-       <button type="button" class="btn btn-google btn-outline-dark">
-         <img src="{% static 'sigoogle2.png' %}" alt="Button Image" />
-       </button>
-     </a>
-   </form>
- </div>
-</div> {%endcomment%}
+{% endif %}
+
+
 
 {% endblock content %}

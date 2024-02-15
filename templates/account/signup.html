@@ -28,12 +28,12 @@
       <div class="w-full border my-3 rounded-lg">
         {{ form.password2 }}
       </div>
-     
+
       {% if redirect_field_value %}
       <input type="text" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
       {% endif %}
       <button type="submit" class=" bg-blue-700 text-white rounded-lg w-[100%] my-3 p-2">
-        {% trans "Sign Up"%}
+        {% trans "Sign Up" %}
       </button>
     </div>
   </form>

@@ -1,48 +1,49 @@
 {% extends "base/sidebar.html" %}
 {% load socialaccount %}
-{%load static%}
+{% load static %}
 {% block sidebar %}
 {% providers_media_js %}
 
 
-    <div class="container ">
-        <div class="col">   
-            <h1 class=" text-center bg-light-100 h-[52px] "> Link your accounts 
-            </h1>
-            <div class="text-center mt-5">
-                <a href="{% provider_login_url 'twitter' %}" class="btn btn-twitter btn-outline-dark">Link your 
-                        <img src="{% static 'x_white.png' %}" style="width:25px" alt="Button Image" />
-                </a>
-                
-                <a href="{% provider_login_url 'facebook' %}"  class="btn btn-outline-dark ms-3"> Link your 
-                        <img src="{% static 'Facebook_Logo.png' %}" style="width:25px" class="ms-2" alt="Button Image" />   
-                </a>
-                
-                <a href="{% provider_login_url 'linkedin_oauth2' %}" class="btn btn-outline-dark ms-3"> Link your 
-                    <img src="{% static 'inwhite.png' %}" style="width:25px" class="ms-2" alt="Button Image" />   
+<div class="container ">
+    <div class="col">
+        <h1 class=" text-center bg-light-100 h-[52px] "> Link your accounts
+        </h1>
+        <div class="text-center mt-5">
+            <a href="{% provider_login_url 'twitter' %}" class="btn btn-twitter btn-outline-dark">Link your
+                <img src="{% static 'x_white.png' %}" style="width:25px" alt="Button Image" />
             </a>
 
-            <a href="{% provider_login_url 'github' %}" class="btn btn-outline-dark ms-3"> Link your 
-                <img src="{% static 'github-white.png' %}" style="width:25px" class="ms-2" alt="Button Image" />   
+            <a href="{% provider_login_url 'facebook' %}" class="btn btn-outline-dark ms-3"> Link your
+                <img src="{% static 'Facebook_Logo.png' %}" style="width:25px" class="ms-2" alt="Button Image" />
             </a>
-            
-                {% if request.user.is_authenticated %} 
-                {% if request.user.socialaccount_set.all %}
-                {% with social_account=request.user.socialaccount_set.first %}
-                <div>
+
+            <a href="{% provider_login_url 'linkedin_oauth2' %}" class="btn btn-outline-dark ms-3"> Link your
+                <img src="{% static 'inwhite.png' %}" style="width:25px" class="ms-2" alt="Button Image" />
+            </a>
+
+            <a href="{% provider_login_url 'github' %}" class="btn btn-outline-dark ms-3"> Link your
+                <img src="{% static 'github-white.png' %}" style="width:25px" class="ms-2" alt="Button Image" />
+            </a>
+
+            {% if request.user.is_authenticated %}
+            {% if request.user.socialaccount_set.all %}
+            {% with social_account=request.user.socialaccount_set.first %}
+            <div>
                 <hr>
-                    <a>{{request.user.username}} 
-                        <img src=" {{ social_account.get_avatar_url }}" alt="hugenerd" width="30" height="30" class="rounded-circle">
-                       
-                    </a>
-                      
-                </div>
-                {% endwith %}
-                {% endif %}
-                {% endif %}
+                <a>{{request.user.username}}
+                    <img src=" {{ social_account.get_avatar_url }}" alt="hugenerd" width="30" height="30"
+                        class="rounded-circle">
+
+                </a>
+
             </div>
+            {% endwith %}
+            {% endif %}
+            {% endif %}
         </div>
     </div>
+</div>
 
 
 {% endblock sidebar %}

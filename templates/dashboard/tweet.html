@@ -2,17 +2,16 @@
 {% load socialaccount %}
 {% block sidebar %}
 {% load crispy_forms_tags %}
-{% comment %} {% providers_media_js %} {% endcomment %}
 <h1 class=" text-center bg-gray-100 h-[52px] "> <span class="font-bold text-3xl ">Set Posts from here
-</span>
+  </span>
 </h1>
-  <div class="signup-form">
-    <form action="" method="post">
-         {% csrf_token %}
-         <input type="text" name="content">
-         <button type="submit">Tweet</button>
-    </form>
-    
-  </div>
+<div class="signup-form">
+  <form action="" method="post">
+    {% csrf_token %}
+    <input type="text" name="content">
+    <button type="submit">Tweet</button>
+  </form>
+
+</div>
 
 {% endblock sidebar %}
