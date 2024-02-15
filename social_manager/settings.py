@@ -290,3 +290,6 @@ TWITTER_ACCESS_TOKEN_SECRET = "9tQzV0z2dc2vEE7PY9Eiz10m7A1Qt3yayrZZrSVvL7J9m"
 # stdout_logfile=/var/log/gunicorn/gunicorn.out.log
 # [group:guni]
 # programs:gunicorn
+
+# create backup : python manage.py dumpdata > db_backup.json
+# restore backup : python manage.py loaddata db_backup.json
