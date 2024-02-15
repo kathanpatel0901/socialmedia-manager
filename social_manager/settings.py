@@ -116,24 +116,17 @@ WSGI_APPLICATION = 'social_manager.wsgi.application'
 
 #     }
 # }
+if config("SERVER_TYPE")=="development":
+    db_name = "db-development.sqlite3"
+else:
+    db_name = "db-production.sqlite3"
 
 DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.postgresql",
-        # "NAME": "socialmediamanager",
-        "USER": "postgres",
-        "PASSWORD": "Admin123",
-        "HOST": 'socialmediamanager.cvcyeo2eczmn.ap-south-1.rds.amazonaws.com',
-        "PORT": 5432,
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / db_name,
     }
 }
-
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db.sqlite3',
-#     }
-# }
 
 
 # Password validation
