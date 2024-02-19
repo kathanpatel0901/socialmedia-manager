@@ -2,7 +2,6 @@
 
 {% load static %} 
 {% load account %}
-{% comment %} {% load socialaccount %}  {% endcomment %}
 {% block content %}
 {% csrf_token %}
 
@@ -20,14 +19,13 @@
 {%else%}
 
 <div class="m-auto w-[90%] justify-center">
-  <h1 class="text-light font-bold "align='center'" ">
+  <h1 class="text-light font-bold">
     You are not sign in
   </h1>
 </div>
 <div class="signup-form">
   <h2>Sign up with your account</h2>
   <form action="">
-    {% comment %} provider_login_url 'google' {% endcomment %}
     <a href="{% url 'account_login' %}">
       <button type="button" class="btn btn-google">
         <img src="{% static 'sigoogle2.png' %}" alt="Button Image" />
@@ -37,20 +35,5 @@
 </div>
 
 {%endif%}
-  
-{% comment %} </div> 
-<div class="container">
- <div class="signup-form">
-   <h2>Sign up with your account</h2>
-   <form action="">
-     provider_login_url 'google'
-     <a href="{% url 'account_login' %}?next=/home">
-       <button type="button" class="btn btn-google btn-outline-dark">
-         <img src="{% static 'sigoogle2.png' %}" alt="Button Image" />
-       </button>
-     </a>
-   </form>
- </div>
-</div> {%endcomment%}
 
 {% endblock content %}

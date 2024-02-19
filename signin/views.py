@@ -27,6 +27,8 @@ def home(request):
 
 
 def login(request):
+    import pdb;pdb.set_trace()
+    print(request.data)
     return render(request, 'account/login.html')
     
 def social_accounts(request):

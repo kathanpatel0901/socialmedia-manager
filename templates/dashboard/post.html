@@ -2,28 +2,17 @@
 {% load socialaccount %}
 {% block sidebar %}
 {% load crispy_forms_tags %}
-{% comment %} {% providers_media_js %} {% endcomment %}
+
 <h1 class=" text-center bg-gray-100 h-[52px] "> <span class="font-bold text-3xl ">Set Posts from here
 </span>
 </h1>
+
   <div class="signup-form">
     {% crispy form %} 
-    
   </div>
-  
   <a href="https://twitter.com/share?ref_src=twsrc%5Etfw" class="twitter-share-button" data-show-count="false">Tweet</a><script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
 {% endblock sidebar %}
     
 
 <!-- templates/post_tweet.html -->
-
-{% comment %} {% extends 'base.html' %}
-
-{% block content %}
-  <h2>Post a Tweet</h2>
-  <form method="post" action="{% url 'post_tweet' %}">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Post Tweet</button>
-  </form>
-{% endblock %} {% endcomment %}
+<!-- My project aims to create a social media manager for academic evolution at My university. My plan to leverage the Twitter API for authentication and tweet management. This involves allowing users to authenticate their accounts through Twitter and enabling the management of tweets related to academic resources, updates, events, and community engagement. -->

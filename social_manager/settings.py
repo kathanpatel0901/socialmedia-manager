@@ -12,7 +12,6 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 
 from pathlib import Path
 
-from decouple import config
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -26,7 +25,7 @@ SECRET_KEY = 'django-insecure-49@##0%hf)79-s9k@8qybje)(87!_w7c&l8zdj+bll_$$%y^l)
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
-ALLOWED_HOSTS = ["127.0.0.1", "13.127.88.229","socialmediamanager.in.net"]
+ALLOWED_HOSTS = ["127.0.0.1", "13.127.88.229","socialmediamanager.in.net","192.168.1.20"]
 
 
 
@@ -59,6 +58,7 @@ INSTALLED_APPS = [
     'allauth.socialaccount.providers.twitter_oauth2',
     'allauth.socialaccount.providers.linkedin_oauth2',
     "allauth.socialaccount.providers.github",
+    # "allauth.socailaccount.providers.pinterest",
    
 ]
 
@@ -109,10 +109,13 @@ WSGI_APPLICATION = 'social_manager.wsgi.application'
 #     'default': {
 #         'ENGINE': 'django.db.backends.postgresql',
 #         'NAME':'socialmedia-manager',
-#         'USER':'kathan09',
+#         'USER':'admin09',
 #         'PASSWORD':'KatPtl910411',
 #         'HOST':'socialmedia-manager.cvcyeo2eczmn.ap-south-1.rds.amazonaws.com',
 #         'PORT':5432,
+#         'OPTIONS': {
+#             'options': '-c search_path=public',
+#         },
 
 #     }
 # }
@@ -250,8 +253,15 @@ SOCIALACCOUNT_PROVIDERS = {
             'read:org',
         ],
     },
+
+     'pinterest': {
+        'SCOPE': ['user_accounts:read'],
+        "API_VERSION": "v5",
+    }
     
 }
+
+
 # ACCOUNT_EMAIL_REQUIRED = True
 # ACCOUNT_USERNAME_REQUIRED = False
 # ACCOUNT_AUTHENTICATION_METHOD = 'email'
@@ -265,8 +275,8 @@ LOGOUT_REDIRECT_URL ='/index'
 
 TWITTER_API_KEY = 'K6j9cjrkcddpNgLZcurk627tE'
 TWITTER_API_SECRET_KEY = '7avCQF3YcfyazKiLMXA7LRKo4nV6P67Syxj0J5BYflzeNcY6iv'
-TWITTER_ACCESS_TOKEN = '1698066183910768640-9RqKMzlmO7muSZ8T7CexRkXGjVC4pu'
-TWITTER_ACCESS_TOKEN_SECRET = '9tQzV0z2dc2vEE7PY9Eiz10m7A1Qt3yayrZZrSVvL7J9m'
+TWITTER_ACCESS_TOKEN = '1758379615968514048-g8GOVnszAiBdUZo3XqZbRrVM66Gk5z'
+TWITTER_ACCESS_TOKEN_SECRET = 'SMfpOOTSu7vzTgzV0008bfdndv7TQJSnXzWgwznGqRJuN'
 
 
 
