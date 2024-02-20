@@ -1,5 +1,17 @@
 My project aims to create a social media manager for academic evolution at My university. my plan to leverage the Twitter API for authentication and tweet management. This involves allowing users to authenticate their accounts through Twitter and enabling the management of tweets related to academic resources, updates, events, and community engagement.
 
+sudo nano /etc/nginx/sites-available/example.com
 
 
+sudo certbot --nginx -d socialmediamanager.in.net
+
+http://unix:/run/gunicorn.sock
+
+https://socialmediamanager.in.net
+
+
+
+linkedin access token:
+
+AQXGQ2DnanFDgGSOhk3RSeAwHWX9yVuIwfbbmc_o12yU5redsqwBsxoD4H-fJlepcA4-N7_n9XxDqgK0pQnwFuKH3kpeEn92IaVXh3fKv9xrL7YGweTFQI_zGI-rTDzgS8g_A-gQPJs4iXzRwW9g0spxAYhLjWnRHAavHmd9NgdRqx2XQkv20EUTrxcOFQD1JZv0mcZ6UmIdtV2HXINWQsd3DBTcMBYZH4X85SJffs2uOTc1bqyoTYGkhEmnwMH130j1h7PQI7rG4_osADz2l_cbNi4lLcy2wSRhmeX6HMlYT3cyTQsxDLd_YFvLCrxGy12Yr40_pOQJRppBGOYFFP1Xac7h4Q
 

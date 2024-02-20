@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-49@##0%hf)79-s9k@8qybje)(87!_w7c&l8zdj+bll_$$%y^l)
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
-ALLOWED_HOSTS = ["127.0.0.1", "13.127.88.229","socialmediamanager.in.net","192.168.1.20"]
+ALLOWED_HOSTS = ["*"]
 
 
 
@@ -40,6 +40,9 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.sites',
     
+    #css
+    'bootstrap5',
+    'django_bootstrap5',
     #forms_app
     'crispy_forms',
     'crispy_bootstrap5',
@@ -234,7 +237,7 @@ SOCIALACCOUNT_PROVIDERS = {
        'linkedin': {
         'SCOPE': [
             'r_basicprofile',
-            'r_emailaddress'
+            'r_emailaddress'    
         ],
         'PROFILE_FIELDS': [
             'id',
@@ -266,7 +269,7 @@ SOCIALACCOUNT_PROVIDERS = {
 # ACCOUNT_USERNAME_REQUIRED = False
 # ACCOUNT_AUTHENTICATION_METHOD = 'email'
 ACCOUNT_EMAIL_VERIFICATION = 'none'
-LOGIN_REDIRECT_URL ='/'
+LOGIN_REDIRECT_URL ='/social_account'
 LOGOUT_REDIRECT_URL ='/index'
 
 # SOCIALACCOUNT_ADAPTER = 'signin.adapters.google_adapter.GoogleSocialAccountAdapter'
