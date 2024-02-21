@@ -6,29 +6,29 @@
 {%load static%}
 
 <div class="container">
-    <div class="signup-form">
-        <h1 class=" text-center bg-gray-100 h-[52px] "> <span class="font-bold text-3xl ">hello world</span>
-        </h1>
-        <div class="container">
-            <a href="{% provider_login_url 'google' %}">
-                <button type="button" class="btn btn-google  ">
-                    <img src="{% static 'sigoogle2.png' %}" alt="Button Image" />
-                  </button>
-            </a>
-        </div>
+  <div class="signup-form">
+    <h1 class=" text-center bg-gray-100 h-[52px] "> <span class="font-bold text-3xl ">Login With</span>
+    </h1>
+    <div class="container">
+      <a href="{% provider_login_url 'google' %}">
+        <button type="button" class="btn btn-google  ">
+          <img src="{% static 'sigoogle2.png' %}" alt="Button Image" />
+        </button>
+      </a>
     </div>
-</div> 
+  </div>
+</div>
 
 {%endblock%}
 
 <div class="signup-form">
-    <h2>Sign up with your account</h2>
-    <form action="">
-      provider_login_url 'google'
-      <a href="{% url 'account_login' %}?next=/home">
-        <button type="button" class="btn btn-google btn-outline-dark">
-          <img src="{% static 'sigoogle2.png' %}" alt="Button Image" />
-        </button>
-      </a>
-    </form>
-  </div> 
+  <h2>Sign up with your account</h2>
+  <form action="">
+    provider_login_url 'google'
+    <a href="{% url 'account_login' %}?next=/home">
+      <button type="button" class="btn btn-google btn-outline-dark">
+        <img src="{% static 'sigoogle2.png' %}" alt="Button Image" />
+      </button>
+    </a>
+  </form>
+</div>

@@ -200,13 +200,14 @@ AUTHENTICATION_BACKEND =[
 #client_secrate = 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
 
 SOCIALACCOUNT_PROVIDERS = {
-    'google': {
+  'google': {
         'SCOPE': [
             'profile',
             'email',
         ],
         'AUTH_PARAMS': {
             'access_type': 'online',
+            'FETCH_USERINFO' : True,  
         },
         'OAUTH_PKCE_ENABLED': True,
     },
@@ -268,7 +269,6 @@ SOCIALACCOUNT_PROVIDERS = {
 # ACCOUNT_EMAIL_REQUIRED = True
 # ACCOUNT_USERNAME_REQUIRED = False
 # ACCOUNT_AUTHENTICATION_METHOD = 'email'
-ACCOUNT_EMAIL_VERIFICATION = 'none'
 LOGIN_REDIRECT_URL ='/social_account'
 LOGOUT_REDIRECT_URL ='/index'
 

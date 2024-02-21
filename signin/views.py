@@ -30,11 +30,15 @@ def login(request):
     import pdb;pdb.set_trace()
     print(request.data)
     return render(request, 'account/login.html')
-    
+
 def social_accounts(request):
     return render(request,'dashboard/social_accounts.html')
 
-def profile_view(request):
+@login_required
+def profile_view(request): 
+   user = request.user
+   context={'username':user.username}
+   print(context)
    return render(request, 'dashboard/profile.html')
 
 

@@ -1,15 +1,15 @@
-{% extends "base/base.html" %} 
+{% extends "base/base.html" %}
 
-{% load static %} 
+{% load static %}
 {% load account %}
 {% block content %}
 {% csrf_token %}
 
 {% if request.user.is_authenticated%}
 <div class="flex m-auto border w-[90%] justify-center  bg-blue-200 h-20 rounded rounded-lg">
-  
+
   <div class="w-[90%] mt-6">
-    <h1 class="ml-3"> Welcome, {% user_display user %}!</h1>
+    <h1 class="ml-3"> Welcome, {{request.user.username}}!</h1>
   </div>
   <div class=" my-6 hover:text-blue-600">
     <a href="{% url 'account_logout' %}" class="">Sign Out</a>
