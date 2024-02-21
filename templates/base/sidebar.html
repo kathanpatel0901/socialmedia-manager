@@ -1,6 +1,103 @@
 {% extends "base/base.html" %}
 {% load account %}
 {% block content %}
+<style>
+    html,
+    body {
+        height: 100%;
+    }
+
+    body {
+        display: flex;
+        flex-direction: column;
+    }
+
+    main {
+        flex: 1;
+    }
+
+    hr {
+        margin: 1rem 0;
+        color: rgb(42, 199, 220);
+        background-color: currentColor;
+        border: 0;
+        opacity: 0.5;
+    }
+</style>
+<!-- <style>
+    html,
+    body {
+        height: 100%;
+    }
+
+    body {
+        display: flex;
+        flex-direction: column;
+        font-family: 'Roboto', sans-serif;
+        margin: 0;
+        padding: 0;
+    }
+
+    main {
+        flex: 1;
+        padding: 2rem;
+    }
+
+    hr {
+        margin: 1rem 0;
+        border: none;
+        border-top: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .sidebar {
+        display: flex;
+        flex-direction: column;
+        background-color: #343a40;
+        color: #fff;
+        padding: 1rem;
+    }
+
+    .sidebar a {
+        display: flex;
+        align-items: center;
+        padding: 0.5rem 1rem;
+        border-radius: 0.25rem;
+        transition: all 0.2s ease-in-out;
+    }
+
+    .sidebar a:hover {
+        background-color: rgba(255, 255, 255, 0.1);
+    }
+
+    .sidebar a i {
+        font-size: 1.5rem;
+        margin-right: 0.5rem;
+    }
+
+    .dropdown-menu {
+        border-radius: 0.25rem;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .dropdown-item {
+        padding: 0.5rem 1rem;
+        transition: all 0.2s ease-in-out;
+    }
+
+    .dropdown-item:hover {
+        background-color: rgba(255, 255, 255, 0.1);
+    }
+
+    footer {
+        background-color: #343a40;
+        color: #fff;
+        padding: 1rem;
+    }
+
+    footer p {
+        margin: 0;
+    }
+</style> -->
 
 <body>
     <div class="container-fluid">
@@ -10,52 +107,51 @@
                     <ul class="nav flex-column mb-sm-auto" id="menu">
                         <li class="mb-4">
                             <a href="index" class="text-light text-decoration-none">
-                                <span class="material-icons" style="display: inline-block; vertical-align: middle;">home</span>
+                                <span class="material-icons"
+                                    style="display: inline-block; vertical-align: middle;">home</span>
                                 <span style="display: inline-block; vertical-align: middle;">Home</span>
                             </a>
                         </li>
                         <li class="mb-4">
                             <a href="profile" class="text-light text-decoration-none">
-                                <span class="material-icons" style="display: inline-block; vertical-align: middle;">person</span>
+                                <span class="material-icons"
+                                    style="display: inline-block; vertical-align: middle;">person</span>
                                 <span style="display: inline-block; vertical-align: middle;">Profile</span>
                             </a>
                         </li>
                         <li class="mb-4">
                             <a href="post_view" class="text-light text-decoration-none">
-                                <span class="material-icons" style="display: inline-block; vertical-align: middle;">post_add</span>
+                                <span class="material-icons"
+                                    style="display: inline-block; vertical-align: middle;">post_add</span>
                                 <span style="display: inline-block; vertical-align: middle;">Post</span>
+                            </a>
                         </li>
                         <li>
                             <a href="social_account" class="text-light text-decoration-none">
-                                <span class="material-icons" style="display: inline-block; vertical-align: middle;">add_link</span>
+                                <span class="material-icons"
+                                    style="display: inline-block; vertical-align: middle;">add_link</span>
                                 <span style="display: inline-block; vertical-align: middle;">Social Account</span>
+                            </a>
                         </li>
-
-
                     </ul>
-                    <hr>
-                    {% if request.user.is_authenticated %}
 
+                    {% if request.user.is_authenticated %}
                     <div>
+                        <hr>
                         <a class="d-flex align-items-center text-white text-decoration-none dropdown-toggle"
                             id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="true">
                             {% if request.user.socialaccount_set.all %}
                             {% with social_account=request.user.socialaccount_set.first %}
-                            <img src=" {{ social_account.get_avatar_url }}" alt="hugenerd" style="width:35px;" class="rounded-circle">
+                            <img src=" {{ social_account.get_avatar_url }}" alt="hugenerd" style="width:35px;"
+                                class="rounded-circle">
                             <span class="d-none d-sm-inline mx-3">{{request.user.username}}</span>
                             {% endwith %}
                             {% endif %}
                         </a>
-
                         <ul class="dropdown-menu dropdown-menu-dark text-small shadow">
-
                             <li><a class="dropdown-item" href="{% url 'account_logout' %} ">Sign out</a></li>
-
                         </ul>
-
-
                     </div>
-
                     {%else%}
                     <div class="dropdown pb-4">
                         <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle"
@@ -64,20 +160,67 @@
                                 class="rounded-circle">
                             <span class="d-none d-sm-inline mb-4">{{request.user.username}}</span>
                         </a>
-
                         <ul class="dropdown-menu dropdown-menu-dark text-small shadow">
-
                             <li><a class="dropdown-item" href="/index">Sign In</a></li>
-
                         </ul>
-
                         {%endif%}
                     </div>
-
                 </div>
             </div>
         </div>
     </div>
     {% block sidebar %}{% endblock sidebar %}
 </body>
+<footer class="bg-dark py-3">
+    <div class="container ">
+        <hr>
+        <div class="row">
+            <div class="col-12 mt-4 mt-md-0 text-center">
+                <p class="text-muted">Copyright © Social Media Manager 2024. All rights reserved.</p>
+            </div>
+        </div>
+    </div>
+</footer>
 {% endblock content %}
+
+<!-- <div class="row ali">
+            <div class="col-lg-6 col-md-12 mb-4 mb-md-0 ite">
+                <h5 class="text-uppercase mb-4 ">Social Media Manager</h5>
+                <p>
+                    Social Media Manager Attract clients and showcase your expertise in managing social media accounts
+                    for businesses/individuals.
+                </p>
+                <p>
+                    <a href="mailto:socialmediamanager386@gmail.com">socialmediamanager386@gmail.com</a>
+                    <br>
+                    +91 910411400
+                </p>
+            </div>
+            <div class="col-lg-6 col-md-12">
+                <h5 class="text-uppercase mb-4">Useful Links</h5>
+                <ul class="list-unstyled mb-0">
+                    <li><a href="#" class="text-muted">Home</a></li>
+                    <li><a href="#" class="text-muted">Company</a></li>
+                    <li><a href="#" class="text-muted">Services</a></li>
+                    <li><a href="#" class="text-muted">Contact Us</a></li>
+                </ul>
+            </div>
+        </div> -->
+<!-- <footer class="footer mt-auto py-3 bg-dark text-white">
+    <div class="container text-center">
+        <div class="row">
+            <div class="col-md-12">
+                <ul class="list-inline">
+                    <li class="list-inline-item"><a href="#">About Us</a></li>
+                    <li class="list-inline-item"><a href="#">Contact</a></li>
+                    <li class="list-inline-item"><a href="#">Privacy Policy</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <p class="text-muted">Cord4 &copy;. All rights reserved.</p>
+            </div>
+        </div>
+    </div>
+</footer> -->
