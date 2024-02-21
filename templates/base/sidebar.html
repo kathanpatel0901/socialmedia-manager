@@ -3,66 +3,78 @@
 {% block content %}
 
 <body>
-    <div class="bg-dark sidebar" rolr="cdb-sidebar">
-        <div class="d-flex flex-column px-3 pt-2 min-vh-100">
-            <ul class="nav flex-column mb-sm-auto" id="menu">
-                <li class="mb-2">
-                    <a href="profile" class="text-light text-decoration-none">
-                        <i class="fs-4 bi-house"></i> <span class="ms-1 d-none d-sm-inline">User Profile</span>
-                    </a>
-                </li>
-                <li class="mb-2">
-                    <a href="post_view" class="text-light text-decoration-none">
-                        <i class="fs-4 bi-speedometer2"></i> <span class="ms-1 d-none d-sm-inline">Posts</span> </a>
-                </li>
-                <li>
-                    <a href="social_account" class="text-light text-decoration-none">
-                        <i class="fs-4 bi-table"></i> <span class="ms-1 d-none d-sm-inline">Social Accounts</span></a>
-                </li>
-                <!-- <li>
-                                    <a href="tweet" class="nav-link px-0 align-middle"> Tweet</a>
-                                </li> -->
-
-            </ul>
-            <hr>
-            {% if request.user.is_authenticated %}
-
-            <div class="dropdown pb-4 ">
-                <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle"
-                    id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
-                    {% if request.user.socialaccount_set.all %}
-                    {% with social_account=request.user.socialaccount_set.first %}
-                    <img src=" {{ social_account.get_avatar_url }}" alt="hugenerd" width="30" height="30"
-                        class="rounded-circle">
-                    <span class="d-none d-sm-inline mx-1">{{request.user.username}}</span>
-                    {% endwith %}
-                    {% endif %}
-                </a>
-
-                <ul class="dropdown-menu dropdown-menu-dark text-small shadow">
-
-                    <li><a class="dropdown-item" href="{% url 'account_logout' %} ">Sign out</a></li>
-
-                </ul>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-auto bg-dark sticky-top">
+                <div class="bg-dark sidebar d-flex flex-sm-column flex-row flex-nowrap" role="cdb-sidebar">
+                    <ul class="nav flex-column mb-sm-auto" id="menu">
+                        <li class="mb-4">
+                            <a href="index" class="text-light text-decoration-none">
+                                <span class="material-icons" style="display: inline-block; vertical-align: middle;">home</span>
+                                <span style="display: inline-block; vertical-align: middle;">Home</span>
+                            </a>
+                        </li>
+                        <li class="mb-4">
+                            <a href="profile" class="text-light text-decoration-none">
+                                <span class="material-icons" style="display: inline-block; vertical-align: middle;">person</span>
+                                <span style="display: inline-block; vertical-align: middle;">Profile</span>
+                            </a>
+                        </li>
+                        <li class="mb-4">
+                            <a href="post_view" class="text-light text-decoration-none">
+                                <span class="material-icons" style="display: inline-block; vertical-align: middle;">post_add</span>
+                                <span style="display: inline-block; vertical-align: middle;">Post</span>
+                        </li>
+                        <li>
+                            <a href="social_account" class="text-light text-decoration-none">
+                                <span class="material-icons" style="display: inline-block; vertical-align: middle;">add_link</span>
+                                <span style="display: inline-block; vertical-align: middle;">Social Account</span>
+                        </li>
 
 
-            </div>
+                    </ul>
+                    <hr>
+                    {% if request.user.is_authenticated %}
 
-            {%else%}
-            <div class="dropdown pb-4">
-                <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle"
-                    id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
-                    <img src="https://github.com/mdo.png" alt="hugenerd" width="30" height="30" class="rounded-circle">
-                    <span class="d-none d-sm-inline mx-1">{{request.user.username}}</span>
-                </a>
+                    <div>
+                        <a class="d-flex align-items-center text-white text-decoration-none dropdown-toggle"
+                            id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="true">
+                            {% if request.user.socialaccount_set.all %}
+                            {% with social_account=request.user.socialaccount_set.first %}
+                            <img src=" {{ social_account.get_avatar_url }}" alt="hugenerd" style="width:35px;" class="rounded-circle">
+                            <span class="d-none d-sm-inline mx-3">{{request.user.username}}</span>
+                            {% endwith %}
+                            {% endif %}
+                        </a>
 
-                <ul class="dropdown-menu dropdown-menu-dark text-small shadow">
+                        <ul class="dropdown-menu dropdown-menu-dark text-small shadow">
 
-                    <li><a class="dropdown-item" href="/index">Sign In</a></li>
+                            <li><a class="dropdown-item" href="{% url 'account_logout' %} ">Sign out</a></li>
 
-                </ul>
+                        </ul>
 
-                {%endif%}
+
+                    </div>
+
+                    {%else%}
+                    <div class="dropdown pb-4">
+                        <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle"
+                            id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
+                            <img src="https://github.com/mdo.png" alt="hugenerd" width="30" height="30"
+                                class="rounded-circle">
+                            <span class="d-none d-sm-inline mb-4">{{request.user.username}}</span>
+                        </a>
+
+                        <ul class="dropdown-menu dropdown-menu-dark text-small shadow">
+
+                            <li><a class="dropdown-item" href="/index">Sign In</a></li>
+
+                        </ul>
+
+                        {%endif%}
+                    </div>
+
+                </div>
             </div>
         </div>
     </div>

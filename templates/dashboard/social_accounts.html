@@ -21,23 +21,7 @@
 
         <a href="{% provider_login_url 'github' %}" class="btn btn-outline-dark ms-3"> Link your
             <img src="{% static 'github-white.png' %}" style="width:25px" class="ms-2" alt="Button Image" />
-        </a>
-
-        {% if request.user.is_authenticated %}
-        {% if request.user.socialaccount_set.all %}
-        {% with social_account=request.user.socialaccount_set.first %}
-        <div>
-            <hr>
-            <a>{{request.user.username}}
-                <img src=" {{ social_account.get_avatar_url }}" alt="hugenerd" width="30" height="30"
-                    class="rounded-circle">
-
-            </a>
-
-        </div>
-        {% endwith %}
-        {% endif %}
-        {% endif %}
+        </a>    
     </div>
 </div>
 {% endblock sidebar %}

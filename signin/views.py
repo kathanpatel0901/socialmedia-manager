@@ -23,7 +23,8 @@ def home(request):
 #    return render(request, "dashboard/home.html")
  return index(request)
 
-
+def test(request):
+   return render(request, 'base/test.html')
 
 
 def login(request):
@@ -36,10 +37,15 @@ def social_accounts(request):
 
 @login_required
 def profile_view(request): 
-   user = request.user
-   context={'username':user.username}
-   print(context)
-   return render(request, 'dashboard/profile.html')
+    social_account = SocialAccount.objects.get(user=request.user, provider='google')
+    profile_data = social_account.extra_data
+    profile_picture_url = profile_data.get('picture')
+    name = profile_data.get('name')
+    birthday = profile_data.get('birthday')
+    gender = profile_data.get('gender')
+    print("birthday",birthday)
+
+    return render(request, 'dashboard/profile.html')
 
 
 def google_redirect(request):
@@ -77,6 +83,15 @@ def post_success(request):
 #     return render(request, 'dashboard/post.html', {'form': form})
 
 
+
+#TO fetch account data
+def my_callback_view(request):
+    social_account = SocialAccount.objects.get(user=request.user, provider='google')
+    profile_data = social_account.extra_data
+    profile_picture_url = profile_data.get('picture')
+    name = profile_data.get('name')
+    birthday = profile_data.get('birthday')
+    gender = profile_data.get('gender')
 
 def tweet(request):
     BEARER_TOKEN = 'AAAAAAAAAAAAAAAAAAAAAB6AsQEAAAAAKUpf0jySlMJCNFSb%2B73NY%2FwKPyc%3DGRBoKmU6Y8KIsLiRrNboMNqAJ7flBFHuLrNsitBu61G4c4E4dP'
