@@ -1,7 +1,7 @@
 {% extends "base/base.html" %}
 {% load account %}
 {% block content %}
-<style>
+<!-- <style>
     html,
     body {
         height: 100%;
@@ -64,7 +64,7 @@
     .dropdown-item:hover {
         background-color: rgba(255, 255, 255, 0.1);
     }
-</style>
+</style> -->
 
 <body>
     <div class="container-fluid">
@@ -87,7 +87,7 @@
                             </a>
                         </li>
                         <li class="mb-4">
-                            <a href="post_view" class="text-light text-decoration-none">
+                            <a href="/tweet" class="text-light text-decoration-none">
                                 <span class="material-icons"
                                     style="display: inline-block; vertical-align: middle;">post_add</span>
                                 <span style="display: inline-block; vertical-align: middle;">Post</span>
@@ -100,6 +100,8 @@
                                 <span style="display: inline-block; vertical-align: middle;">Social Account</span>
                             </a>
                         </li>
+
+
                     </ul>
 
                     {% if request.user.is_authenticated %}

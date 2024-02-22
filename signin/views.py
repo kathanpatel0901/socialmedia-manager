@@ -39,7 +39,9 @@ def social_accounts(request):
 def profile_view(request): 
     
     social_account = SocialAccount.objects.get(user=request.user, provider='google')
+    print('social_account',social_account)
     profile_data = social_account.extra_data
+    print('profile:data', profile_data)
     profile_picture_url = profile_data.get('picture')
     name = profile_data.get('name')
     sname = profile_data.get('given_name')
@@ -65,7 +67,34 @@ def post_tweet(request):
    return render(request, 'dashboard/post.html' )
 
 def post_success(request):
-   return render(request, 'dashboard/post_success.html')
+    return render(request, "dashboard/post_success.html")
+
+def tweet(request):
+    twitter_auth_keys = {
+        "consumer_key": "ULYeOm844iifGFuE32YyLnzT0",
+        "consumer_secret": "xQ9YJjXLDmIjf67e6ZGrxxrhZxg4pyFlnV6qbLYEMEfrbavxDb",
+        "access_token": "1758379615968514048-7fCJHGXHwU52KMAS2p1HMOQCjlIymx",
+        "access_token_secret": "95eCaWA79LD48G8PgT2pzFAb6CGIqURA9hXm6y1OrUmvJ",
+    }
+
+    if request.method == "POST":
+        content = request.POST.get("content")
+
+        if content:
+            print("authentication")
+            client = tweepy.Client(
+                consumer_key=twitter_auth_keys["consumer_key"],
+                consumer_secret=twitter_auth_keys["consumer_secret"],
+                access_token=twitter_auth_keys["access_token"],
+                access_token_secret=twitter_auth_keys["access_token_secret"],
+            )
+            print("postig tweet")
+            client.create_tweet(text=content)
+            print("==================")
+
+            return render(request, "dashboard/post_success.html")
+
+    return render(request, "dashboard/tweet.html")
 
 # @login_required
 # def post_tweet(request):
@@ -99,31 +128,6 @@ def my_callback_view(request):
     birthday = profile_data.get('birthday')
     gender = profile_data.get('gender')
 
-def tweet(request):
-    BEARER_TOKEN = 'AAAAAAAAAAAAAAAAAAAAAB6AsQEAAAAAKUpf0jySlMJCNFSb%2B73NY%2FwKPyc%3DGRBoKmU6Y8KIsLiRrNboMNqAJ7flBFHuLrNsitBu61G4c4E4dP'
-    CONSUMER_KEY = 'Y2hCQXhVVzl0Y0RMWmR2T19XZ3Y6MTpjaQ'
-    CONSUMER_SECRATE ='L4Q4EsxJLc5Byw3428sRLbxIVMua8ZdqVDiycUYpB9HpuTKAqM'
-    TWITTER_API_KEY = '2PegHCEvjFbsF7mLgJbxQQzks'
-    TWITTER_API_SECRET_KEY = 'XsTi5z1MmOZ9tUu8r5yituADNvrnFQmIbzsnqmgUUPfRKwc2hI'
-    TWITTER_ACCESS_TOKEN = '1698066183910768640-qVGbLnFiIwvJ7uWKWcXYYp1yjOOzyF'
-    TWITTER_ACCESS_TOKEN_SECRET = 'ycObapiXdEf91PQBye23LuoSb1IGDEqAzdqWKQlpxfjyi'
-
-    if request.method == 'POST':
-        content = request.POST.get('content')
-
-        if content:
-            print('Content:', content)
-        
-        
-            auth = OAuth2AppHandler(consumer_key=CONSUMER_KEY,consumer_secret=CONSUMER_SECRATE)
-            api = Client(auth)
-            test = api.create_tweet(text=content)
-            print("==================",test)
-
-            return render(request,'dashboard/post_success.html')
-
-    return render(request, 'dashboard/tweet.html')
-
 
 
     # if request.method == 'POST':
@@ -141,3 +145,6 @@ def tweet(request):
     #     return render(request,'dashboard/post_success.html')
 
     # return render(request, 'dashboard/tweet.html')
+
+
+

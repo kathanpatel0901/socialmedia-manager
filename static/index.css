@@ -18,8 +18,8 @@ body {
 .signup-form form {
   margin-top: 20px;
 }
-
-.signup-form {
+.signup-form .btn-google,
+.signup-form .btn-facebook {
   width: 100%;
   margin-bottom: 10px;
 }
@@ -39,14 +39,15 @@ body {
   left: 0;
   height: 100%;
   width: 200px;
-  background-color: rgba(153, 6, 6, 0.5);
+  background-color: rgba(0, 0, 0, 0.5);
   padding: 20px;
   box-sizing: border-box;
 }
 
 .content {
-  margin-left: 200px; /* or any other width you prefer */
+  margin-left: 200px;
 }
+
 html,
 body {
   height: 100%;
