@@ -3,7 +3,17 @@
 {% load account %}
 {% block content %}
 {%load static%}
+<style>
+  .btn-google {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
 
+  .sign-in-text {
+    margin-left: 5px;
+  }
+</style>
 <div class="container">
   <div class="signup-form">
     <h1 class="text-center bg-gray-100 h-[52px]">
@@ -11,8 +21,9 @@
     </h1>
     <div class="container">
       <a href="{% provider_login_url 'google' %}">
-        <button type="button" class="btn btn-google">
-          <img src="{% static 'sigoogle2.png' %}" alt="Button Image" />
+        <button type="button" class="btn btn-outline-dark btn-google ">
+          <img src="{% static 'glogo.png' %}" alt="Button Image" style="width: 22px;" />
+          <span class="sign-in-text">Sign in with Google</span>
         </button>
       </a>
     </div>

@@ -4,7 +4,17 @@
 {% load account %}
 {% block content %}
 {% csrf_token %}
+<style>
+  .btn-google {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
 
+  .sign-in-text {
+    margin-left: 5px;
+  }
+</style>
 {% if request.user.is_authenticated%}
 <div class="flex m-auto border w-[90%] justify-center  bg-blue-200 h-20 rounded rounded-lg">
 
@@ -27,8 +37,9 @@
   <h2>Sign up with your account</h2>
   <form action="">
     <a href="{% url 'account_login' %}">
-      <button type="button" class="btn btn-google">
-        <img src="{% static 'sigoogle2.png' %}" alt="Button Image" />
+      <button type="button" class="btn btn-outline-dark btn-google ">
+        <img src="{% static 'glogo.png' %}" alt="Button Image" style="width: 22px;" />
+        <span class="sign-in-text">Sign in with Google</span>
       </button>
     </a>
   </form>
