@@ -37,14 +37,20 @@ def social_accounts(request):
 
 @login_required
 def profile_view(request): 
+    
     social_account = SocialAccount.objects.get(user=request.user, provider='google')
     profile_data = social_account.extra_data
     profile_picture_url = profile_data.get('picture')
     name = profile_data.get('name')
+    sname = profile_data.get('given_name')
+    email = profile_data.get('email')
     birthday = profile_data.get('birthday')
     gender = profile_data.get('gender')
-    print("birthday",birthday)
-
+    
+    user= request.user
+    last_login = user.last_login
+    date_joined = user.date_joined
+    
     return render(request, 'dashboard/profile.html')
 
 

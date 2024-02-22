@@ -204,6 +204,9 @@ SOCIALACCOUNT_PROVIDERS = {
         'SCOPE': [
             'profile',
             'email',
+            'https://www.googleapis.com/auth/user.birthday.read',
+            'https://www.googleapis.com/auth/user.gender.read',
+            'https://www.googleapis.com/auth/user.phonenumbers.read',
         ],
         'AUTH_PARAMS': {
             'access_type': 'online',

@@ -144,7 +144,7 @@
                             {% with social_account=request.user.socialaccount_set.first %}
                             <img src=" {{ social_account.get_avatar_url }}" alt="hugenerd" style="width:35px;"
                                 class="rounded-circle">
-                            <span class="d-none d-sm-inline mx-3">{{request.user.username}}</span>
+                            <span class="d-none d-sm-inline mx-3">{{social_account.extra_data.given_name}}</span>
                             {% endwith %}
                             {% endif %}
                         </a>
