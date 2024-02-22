@@ -1,9 +1,8 @@
-
-  body {
-  background: #076585;  
-  background: -webkit-linear-gradient(to left, #b4e3ff, #076585); 
-  background: linear-gradient(to left, #b4e3ff, #076585); 
-} 
+body {
+  background: #076585;
+  background: -webkit-linear-gradient(to left, #b4e3ff, #076585);
+  background: linear-gradient(to left, #b4e3ff, #076585);
+}
 .signup-form {
   max-width: 400px;
   margin: 0 auto;
@@ -25,9 +24,9 @@
   margin-bottom: 10px;
 }
 
-.test{
-    height:200px;
-    width:200px;
+.test {
+  height: 200px;
+  width: 200px;
 }
 
 body {
@@ -39,12 +38,34 @@ body {
   top: 0;
   left: 0;
   height: 100%;
-  width: 200px; /* or any other width you prefer */
-  background-color: rgba(0, 0, 0, 0.5); /* or any other transparent color you prefer */
+  width: 200px;
+  background-color: rgba(0, 0, 0, 0.5);
   padding: 20px;
   box-sizing: border-box;
 }
 
 .content {
-  margin-left: 200px; /* or any other width you prefer */
+  margin-left: 200px;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+}
+
+main {
+  flex: 1;
+}
+
+hr {
+  margin: 1rem 0;
+  color: rgb(42, 199, 220);
+  background-color: currentColor;
+  border: 0;
+  opacity: 0.5;
 }

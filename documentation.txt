@@ -10,8 +10,10 @@ http://unix:/run/gunicorn.sock
 https://socialmediamanager.in.net
 
 
+git token:	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
 
 linkedin access token:
 
 AQXGQ2DnanFDgGSOhk3RSeAwHWX9yVuIwfbbmc_o12yU5redsqwBsxoD4H-fJlepcA4-N7_n9XxDqgK0pQnwFuKH3kpeEn92IaVXh3fKv9xrL7YGweTFQI_zGI-rTDzgS8g_A-gQPJs4iXzRwW9g0spxAYhLjWnRHAavHmd9NgdRqx2XQkv20EUTrxcOFQD1JZv0mcZ6UmIdtV2HXINWQsd3DBTcMBYZH4X85SJffs2uOTc1bqyoTYGkhEmnwMH130j1h7PQI7rG4_osADz2l_cbNi4lLcy2wSRhmeX6HMlYT3cyTQsxDLd_YFvLCrxGy12Yr40_pOQJRppBGOYFFP1Xac7h4Q
 
+pip install django-bootstrap-v5
