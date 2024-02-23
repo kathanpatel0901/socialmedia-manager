@@ -1,9 +1,19 @@
 {% extends "base/sidebar.html" %}
 {% load socialaccount %}
 {% block sidebar %}
+{% load crispy_forms_tags %}
 
+<h1 class=" text-center bg-gray-100 h-[52px] "> <span class="font-bold text-3xl ">Set Posts from here
+  </span>
+</h1>
+<div class="signup-form">
+  <form action="" method="post">
+    {% csrf_token %}
+    {% crispy form %}
+    <button type="submit">Post Now</button>
+    <button type="submit">Post Schedule</button>            
+  </form>
+
+</div>
 
 {% endblock sidebar %}
-
-<!-- templates/post_tweet.html -->
-<!-- My project aims to create a social media manager for academic evolution at My university. My plan to leverage the Twitter API for authentication and tweet management. This involves allowing users to authenticate their accounts through Twitter and enabling the management of tweets related to academic resources, updates, events, and community engagement. -->

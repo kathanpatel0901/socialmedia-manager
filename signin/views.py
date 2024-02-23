@@ -4,7 +4,7 @@ from django.contrib.auth import logout
 from django.views import View
 from allauth.socialaccount.models import SocialAccount
 from django.contrib.auth.decorators import login_required
-from .forms import TweetForm
+from .forms import PostForm
 from django.conf import settings
 import tweepy
 from tweepy.auth import OAuth1UserHandler, OAuth2AppHandler
@@ -63,13 +63,13 @@ def twitter_redirect(request):
     return render(request, 'account/post.html')
 
 # views.py
-def post_tweet(request):
-   return render(request, 'dashboard/post.html' )
+
 
 def post_success(request):
     return render(request, "dashboard/post_success.html")
 
-def tweet(request):
+def post(request):
+    form = PostForm()
     twitter_auth_keys = {
         "consumer_key": "ULYeOm844iifGFuE32YyLnzT0",
         "consumer_secret": "xQ9YJjXLDmIjf67e6ZGrxxrhZxg4pyFlnV6qbLYEMEfrbavxDb",
@@ -94,7 +94,7 @@ def tweet(request):
 
             return render(request, "dashboard/post_success.html")
 
-    return render(request, "dashboard/tweet.html")
+    return render(request, "dashboard/post.html", {"form":form})
 
 # @login_required
 # def post_tweet(request):

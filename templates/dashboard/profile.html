@@ -17,27 +17,25 @@
                             <img src="{{ social_account.get_avatar_url }}" alt="Avatar" class="rounded-circle my-5"
                                 style="width: 20%;" />
                         </div>
-                        <div class="col-md-8">
+                        <div class="container">
                             <div class="card-body p-4">
-                                <div class="row pt-1">
-                                    <div class="col-md-15">
-                                        <h6>Name:</h6>
-                                        <p class="text-muted">{{ social_account.extra_data.name }}</p>
+                                <div class="mx-auto">
+                                    <div>
+                                        <h6>Name:
+                                            <span class="text-muted">{{social_account.extra_data.name}}</span>
+                                        </h6>
+
                                     </div>
                                     <div>
-                                        <h6>Email:</h6>
-                                        <p class="text-muted">{{ social_account.extra_data.email }}</p>
+                                        <h6>Email: <span class="text-muted">{{social_account.extra_data.email}}</span>
+                                        </h6>
                                     </div>
                                     <div>
-                                        <h6>Joining Date and Time:</h6>
-                                        <p class="text-muted">{{ request.user.date_joined}}</p>
+                                        <h6>Joining Date and Time: <span
+                                                class="text-muted ">{{request.user.date_joined}}</span></h6>
                                     </div>
                                 </div>
-                                <div class="d-flex justify-content-start">
-                                    <a href="#!"><i class="fab fa-facebook-f fa-lg me-3"></i></a>
-                                    <a href="#!"><i class="fab fa-twitter fa-lg me-3"></i></a>
-                                    <a href="#!"><i class="fab fa-instagram fa-lg"></i></a>
-                                </div>
+
                             </div>
                         </div>
                     </div>

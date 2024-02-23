@@ -10,7 +10,30 @@ class TweetForm(forms.Form):
         super(TweetForm, self).__init__(*args, **kwargs)
         self.helper = FormHelper(self)
         self.helper.form_method = 'post'
-        self.helper.layout = Layout(
-            'tweet_content',
-            Submit('submit', 'Post Tweet')
+        self.helper.layout = Layout('tweet_content', Submit('submit', 'Post Tweet')
         )
+
+
+class PostForm(forms.Form):
+    
+    CHOICE=[
+        ('Twiter','Twitter'),
+        ('Facebook','Facebook'),
+        ('Instagram','Instagram'),
+        ('Linkedin','Linkedin'),
+        ('Pintrest','Pinterest'),   
+    ]
+    
+    post_text = forms.CharField(
+        label="Enter tags & text for your post...",
+        max_length= 100,               
+    )
+    
+    media_post = forms.FileField(
+        label="Upload Media..."
+    )
+    
+    social_account = forms.MultipleChoiceField(choices=CHOICE, widget=forms.CheckboxSelectMultiple(attrs={'class':'inline'})
+    )
+    
+    
