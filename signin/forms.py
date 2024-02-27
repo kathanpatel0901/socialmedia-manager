@@ -1,9 +1,10 @@
 from django import forms
 from crispy_forms.helper import FormHelper
-from crispy_forms.layout import Layout, Submit
-
+from crispy_forms.layout import Layout, Submit,Field
+from crispy_forms.bootstrap import FormActions 
+from .models import Post
 class TweetForm(forms.Form):
-    # tweet_content = forms.CharField(label='Tweet Content',widget=forms.Textarea(attrs={'rows': 3, 'placeholder': 'What\'s happening?'}), max_length=280,required=True)
+
     tweet_content = forms.CharField( label='tweet_content', max_length=250)
 
     def __init__(self, *args, **kwargs):
@@ -14,26 +15,22 @@ class TweetForm(forms.Form):
         )
 
 
-class PostForm(forms.Form):
+class PostForm(forms.ModelForm):
     
-    CHOICE=[
-        ('Twiter','Twitter'),
-        ('Facebook','Facebook'),
-        ('Instagram','Instagram'),
-        ('Linkedin','Linkedin'),
-        ('Pintrest','Pinterest'),   
-    ]
-    
-    post_text = forms.CharField(
-        label="Enter tags & text for your post...",
-        max_length= 100,               
-    )
-    
-    media_post = forms.FileField(
-        label="Upload Media..."
-    )
-    
-    social_account = forms.MultipleChoiceField(choices=CHOICE, widget=forms.CheckboxSelectMultiple(attrs={'class':'inline'})
-    )
-    
-    
+    class Meta:
+        model = Post
+        fields = ['post_text', 'post_media', 'social_media']
+     
+    def __init__(self, *args, **kwargs):
+        super(PostForm, self).__init__(*args, **kwargs)
+        self.fields['post_media'].required = False
+        self.helper = FormHelper()
+        self.helper.form_method = 'post'
+        self.helper.layout = Layout(
+            'post_text',    
+            'post_media',
+            Field('social_media', css_class='checkbox-inline'),
+            Submit('post_now', 'Post Now', css_class='btn-primary'),
+            Submit('post_schedule', 'Post Schedule', css_class='btn-secondary'),
+        
+    )   

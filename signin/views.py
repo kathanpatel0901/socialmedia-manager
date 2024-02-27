@@ -78,9 +78,11 @@ def post(request):
     }
 
     if request.method == "POST":
-        content = request.POST.get("content")
-
-        if content:
+        form = PostForm(request.POST, request.FILES)
+        
+        if form.is_valid():
+            social_accounts = form.cleaned_data["social_media"]
+            content = form.cleaned_data["post_text"]
             print("authentication")
             client = tweepy.Client(
                 consumer_key=twitter_auth_keys["consumer_key"],
