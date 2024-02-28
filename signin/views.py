@@ -69,34 +69,48 @@ def post_success(request):
     return render(request, "dashboard/post_success.html")
 
 def post(request):
-    form = PostForm()
-    twitter_auth_keys = {
-        "consumer_key": "ULYeOm844iifGFuE32YyLnzT0",
-        "consumer_secret": "xQ9YJjXLDmIjf67e6ZGrxxrhZxg4pyFlnV6qbLYEMEfrbavxDb",
-        "access_token": "1758379615968514048-7fCJHGXHwU52KMAS2p1HMOQCjlIymx",
-        "access_token_secret": "95eCaWA79LD48G8PgT2pzFAb6CGIqURA9hXm6y1OrUmvJ",
-    }
-
-    if request.method == "POST":
-        form = PostForm(request.POST, request.FILES)
+    try:
+        error_message=None
+        form = PostForm()
+        twitter_auth_keys = {
+            "consumer_key": "ULYeOm844iifGFuE32YyLnzT0",
+            "consumer_secret": "xQ9YJjXLDmIjf67e6ZGrxxrhZxg4pyFlnV6qbLYEMEfrbavxDb",
+            "access_token": "1758379615968514048-7fCJHGXHwU52KMAS2p1HMOQCjlIymx",
+            "access_token_secret": "95eCaWA79LD48G8PgT2pzFAb6CGIqURA9hXm6y1OrUmvJ",
+        }
         
-        if form.is_valid():
-            social_accounts = form.cleaned_data["social_media"]
-            content = form.cleaned_data["post_text"]
-            print("authentication")
-            client = tweepy.Client(
-                consumer_key=twitter_auth_keys["consumer_key"],
-                consumer_secret=twitter_auth_keys["consumer_secret"],
-                access_token=twitter_auth_keys["access_token"],
-                access_token_secret=twitter_auth_keys["access_token_secret"],
-            )
-            print("postig tweet")
-            client.create_tweet(text=content)
-            print("==================")
 
-            return render(request, "dashboard/post_success.html")
+        if request.method == "POST":
+            form = PostForm(request.POST, request.FILES)
+            if form.is_valid():
+                social_media = form.cleaned_data["social_media"]    
+                if social_media == "Twitter":
+                    content = form.cleaned_data["post_text"]
+                    media_files = ["https://drive.google.com/file/d/1jQLUgm_Q-fT6ixV5qM-hc65DfCOnmZsG/view?usp=sharing"]
+                    client = tweepy.Client(
+                        consumer_key=twitter_auth_keys["consumer_key"],
+                        consumer_secret=twitter_auth_keys["consumer_secret"],
+                        access_token=twitter_auth_keys["access_token"],
+                        access_token_secret=twitter_auth_keys["access_token_secret"],
+                    )
+                    
+                    formatted_media_ids = []    
+                    for media_file in media_files:
+                        media = tweepy.Media(media_file)
+                        response = client.upload_media(media)
+                        media_id = response["media_id"]     
+                        formatted_media_ids.append(media_id)
 
-    return render(request, "dashboard/post.html", {"form":form})
+                    client.create_tweet(text=content, media_ids=media_id)
+                    
+                    return render(request, "dashboard/post_success.html")
+                else:
+                    error_message = ("Posting to selected social media is not supported yet.")
+                
+    except Exception as e:
+        error_message = str(e)
+    
+    return render(request, "dashboard/post.html", {"form" : form, "error_message": error_message})  
 
 # @login_required
 # def post_tweet(request):

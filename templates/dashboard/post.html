@@ -3,15 +3,14 @@
 {% block sidebar %}
 {% load crispy_forms_tags %}
 
-<h1 class=" text-center bg-gray-100 h-[52px] "> <span class="font-bold text-3xl ">Set Posts from here
+<h1 class=" text-center"> <span>Set Posts from here
   </span>
 </h1>
 <div class="signup-form mt-5">
+<p class="text-danger text-center">{{error_message}}</p>
     <h2>Create a New Post</h2>
-    <form method="post" enctype="multipart/form-data">
-        {% csrf_token %}
-        {% crispy form %}
-    </form>
+    {% csrf_token %}{% crispy form %}
+
 </div>
 
 {% endblock sidebar %}
