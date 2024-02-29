@@ -17,6 +17,7 @@ class Post(models.Model):
     social_media = models.CharField(max_length=20, choices=SOCIAL_MEDIA_CHOICES)    
     post_date_time = models.DateTimeField(default = timezone.now)
     post_type = models.CharField(max_length = 20)
+    post_schedule_time = models.DateTimeField()
     
 
     def __str__(self):

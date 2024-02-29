@@ -1,6 +1,6 @@
 
 from django.urls import path
-from signin.views import home,index,social_accounts,profile_view,post_success,post,test
+from signin.views import home,index,social_accounts,profile_view,post_success,post,test,schedule_post
 
 urlpatterns = [
 
@@ -14,8 +14,10 @@ urlpatterns = [
     path('profile', profile_view),
     path('post_success', post_success),
     path('test',test),
+    path('schedule-post',schedule_post),
     # path('login', login),
     # path('google-redirect/', google_redirect, name='google_redirect'),
     # path('twitter-redirect/', twitter_redirect, name='twitter_redirect'),
    
 ]   
+                

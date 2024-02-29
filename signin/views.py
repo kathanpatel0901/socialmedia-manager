@@ -5,6 +5,8 @@ from django.views import View
 from allauth.socialaccount.models import SocialAccount
 from django.contrib.auth.decorators import login_required
 from .forms import PostForm
+from .forms import SchedulePostForm
+from .tasks import schedule_post_task
 from django.conf import settings
 import tweepy
 from tweepy.auth import OAuth1UserHandler, OAuth2AppHandler
@@ -68,70 +70,54 @@ def twitter_redirect(request):
 def post_success(request):
     return render(request, "dashboard/post_success.html")
 
+
 def post(request):
+    error_message = None
+    form = PostForm()
     try:
-        error_message=None
-        form = PostForm()
         twitter_auth_keys = {
             "consumer_key": "ULYeOm844iifGFuE32YyLnzT0",
             "consumer_secret": "xQ9YJjXLDmIjf67e6ZGrxxrhZxg4pyFlnV6qbLYEMEfrbavxDb",
             "access_token": "1758379615968514048-7fCJHGXHwU52KMAS2p1HMOQCjlIymx",
             "access_token_secret": "95eCaWA79LD48G8PgT2pzFAb6CGIqURA9hXm6y1OrUmvJ",
         }
-        
 
         if request.method == "POST":
             form = PostForm(request.POST, request.FILES)
-            if form.is_valid():
+            if "post_now" in request.POST and form.is_valid():
                 social_media = form.cleaned_data["social_media"]    
                 if social_media == "Twitter":
                     content = form.cleaned_data["post_text"]
-                    media_files = ["https://drive.google.com/file/d/1jQLUgm_Q-fT6ixV5qM-hc65DfCOnmZsG/view?usp=sharing"]
                     client = tweepy.Client(
                         consumer_key=twitter_auth_keys["consumer_key"],
                         consumer_secret=twitter_auth_keys["consumer_secret"],
                         access_token=twitter_auth_keys["access_token"],
                         access_token_secret=twitter_auth_keys["access_token_secret"],
                     )
-                    
-                    formatted_media_ids = []    
-                    for media_file in media_files:
-                        media = tweepy.Media(media_file)
-                        response = client.upload_media(media)
-                        media_id = response["media_id"]     
-                        formatted_media_ids.append(media_id)
-
-                    client.create_tweet(text=content, media_ids=media_id)
-                    
-                    return render(request, "dashboard/post_success.html")
+                    client.create_tweet(text=content )
+                    return render(request, "dashboard/post_success.html")   
                 else:
                     error_message = ("Posting to selected social media is not supported yet.")
-                
     except Exception as e:
         error_message = str(e)
     
-    return render(request, "dashboard/post.html", {"form" : form, "error_message": error_message})  
+    return render(request, "dashboard/post.html", {"form" : form, "error_message": error_message}) 
 
-# @login_required
-# def post_tweet(request):
-#     if request.method == 'POST':
-#         form = TweetForm(request.POST)
-#         if form.is_valid():
-#             tweet_content = form.cleaned_data['tweet_content']
-
-#             auth = tweepy.OAuth1UserHandler(settings.TWITTER_API_KEY, settings.TWITTER_API_SECRET_KEY)
-#             auth.set_access_token(settings.TWITTER_ACCESS_TOKEN, settings.TWITTER_ACCESS_TOKEN_SECRET)
-
-#             api = tweepy.API(auth)
-
-#             # Post the tweet
-#             api.update_status(tweet_content)
-
-#             return redirect('post_success')  # Create a success page or redirect as needed
-#     else:
-#         form = TweetForm()
-
-#     return render(request, 'dashboard/post.html', {'form': form})
+def schedule_post(request):
+    error_message = None
+    form = SchedulePostForm()
+    if request.method == "POST":
+        form = SchedulePostForm(request.POST, request.FILES)
+        if form.is_valid():
+            post_schedule_time = form.cleaned_data["post_schedule_time"]
+            content = form.cleaned_data["post_text"]
+            social_media = form.cleaned_data["social_media"]
+            
+            # Queue Celery task for scheduled post
+            schedule_post_task.apply_async(args=[content, social_media], eta=post_schedule_time)
+            
+            return render(request, "dashboard/SchedulePostSuccess.html")   
+    return render(request, "dashboard/SchedulePost.html", {"form": form, "error_message": error_message})
 
 
 
