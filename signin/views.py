@@ -112,11 +112,11 @@ def schedule_post(request):
             post_schedule_time = form.cleaned_data["post_schedule_time"]
             content = form.cleaned_data["post_text"]
             social_media = form.cleaned_data["social_media"]
-            
+
             # Queue Celery task for scheduled post
             schedule_post_task.apply_async(args=[content, social_media], eta=post_schedule_time)
-            
             return render(request, "dashboard/SchedulePostSuccess.html")   
+        
     return render(request, "dashboard/SchedulePost.html", {"form": form, "error_message": error_message})
 
 
