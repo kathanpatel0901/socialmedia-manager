@@ -1,0 +1,5 @@
+{
+    "python.analysis.extraPaths": [
+        "./social_manager"
+    ]
+}
