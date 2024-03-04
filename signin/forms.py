@@ -84,3 +84,32 @@ class SchedulePostForm(forms.ModelForm):
 #             Field('post_schedule_time', placeholder="YYYY-MM-DD HH:MM:SS"),
 #             Submit('post_schedule', 'Post Schedule', css_class='btn-primary'),
 #         )
+
+
+# forms.py
+# from django import forms
+# from .models import Link, Post
+
+
+# class PostForm(forms.ModelForm):
+#     def __init__(self, *args, **kwargs):
+#         user = kwargs.pop("user", None)
+#         super(PostForm, self).__init__(*args, **kwargs)
+#         if user:
+#             links = Link.objects.filter(user=user)
+#             social_media_choices = [
+#                 (link.social_media, link.social_media) for link in links
+#             ]
+#             self.fields["social_media"] = forms.ChoiceField(
+#                 choices=social_media_choices
+#             )
+
+#     class Meta:
+#         model = Post
+#         fields = [
+#             "social_media",
+#             "post_text",
+#             "post_media",
+#             "post_type",
+#             "post_schedule_time",
+#         ]
