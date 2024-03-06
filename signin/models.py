@@ -34,7 +34,7 @@ class Post(models.Model):
     post_schedule_time = models.DateTimeField()
 
     def __str__(self):
-        return f"Post {self.id} by {self.user.username} on {self.link.social_media}"
+        return f"Post {self.id} by {self.user.username} on {self.social_media}"
 
     def save(self, *args, **kwargs):
         if not self.id:

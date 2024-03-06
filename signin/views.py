@@ -1,16 +1,48 @@
 from django.shortcuts import render, redirect
-from django.http import HttpResponse
 from django.contrib.auth import logout
-from django.views import View
-from allauth.socialaccount.models import SocialAccount
+from django.views.generic import View
+from allauth.socialaccount.models import SocialAccount, SocialApp
 from django.contrib.auth.decorators import login_required
-from .forms import PostForm
-from .forms import SchedulePostForm
+from .forms import PostForm, SchedulePostForm
 from .tasks import schedule_post_task
-from django.conf import settings
 import tweepy
-from tweepy.auth import OAuth1UserHandler, OAuth2AppHandler
-from tweepy.client import Client, Response
+from .models import Link
+from allauth.socialaccount.views import ConnectionsView
+from requests_oauthlib import OAuth2Session
+from django.http import Http404
+
+
+def link(request):
+    social_app = SocialApp.objects.get(provider="twitter_oauth2")
+    client_id = social_app.client_id
+    client_secret = social_app.secret
+    print("Client_id:", client_id)
+    print("Secret:", client_secret)
+    scope = "tweet.read"
+    redirect_uri = "http://127.0.0.1:8000/social_account"
+    auth = tweepy.OAuth1UserHandler(
+        consumer_key=client_id,
+        consumer_secret=client_secret,
+        callback=redirect_uri,
+    )
+    print("AUTH_URL", auth.get_authorization_url())
+    return render(request, "dashboard/social_accounts.html")
+
+    # return render(request, "dashboard/social_accounts.html")
+
+    # Handle the case where the SocialApp object for Twitter provider does not exist
+
+    # Handle GET requests
+    # You can render a template or redirect the user to another page
+    # client_id = "bkY4YzlOWmRQVlhmbHczQVBxaUE6MTpjaQ"
+    # client_secret = "UD6w6PzOSkG7jYLotKJoNk2jitzgwUYfawC3_IAHNyriseCj_B"
+    # if request.method == "POST":
+    #     auth = tweepy.OAuth2UserHandler(client_id, client_secret)
+    #     api = tweepy.API(auth)
+    #     if request.user.is_authenticated:
+    #         return render(request, "dashboard/socail_account.html")
+    #     else:
+    #         return render(request, "account/index.html")
 
 
 def index(request):
@@ -82,10 +114,10 @@ def post(request):
     form = PostForm()
     try:
         twitter_auth_keys = {
-            "consumer_key": "ULYeOm844iifGFuE32YyLnzT0",
-            "consumer_secret": "xQ9YJjXLDmIjf67e6ZGrxxrhZxg4pyFlnV6qbLYEMEfrbavxDb",
-            "access_token": "1758379615968514048-7fCJHGXHwU52KMAS2p1HMOQCjlIymx",
-            "access_token_secret": "95eCaWA79LD48G8PgT2pzFAb6CGIqURA9hXm6y1OrUmvJ",
+            "consumer_key": "EYbwRSP5iVELsnzXQP5TIeLy9",
+            "consumer_secret": "qg0PkaLFBGTGoQkGO5zZCrIAh0yLcUN5dUYdRu1jYNi8IQwmlv",
+            "access_token": "1758379615968514048-CJdisV2q46phy9T45BMt23jsP3k0UX",
+            "access_token_secret": "6ga5QraENN6dQ5zPwPx3qyJdJdGjdM0IaQiKOhsGwm8fe",
         }
 
         if request.method == "POST":
@@ -135,10 +167,6 @@ def schedule_post(request):
         "dashboard/SchedulePost.html",
         {"form": form, "error_message": error_message},
     )
-
-
-def social_account_link(request):
-    social_account = SocialAccount.objects.get(user=request.user, provider="google")
 
 
 # TO fetch account data

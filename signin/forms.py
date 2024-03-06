@@ -2,7 +2,7 @@ from django import forms
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Submit, Field
 from crispy_forms.bootstrap import FormActions
-from .models import Post
+from .models import Post, Link
 from django.forms import DateTimeInput
 
 

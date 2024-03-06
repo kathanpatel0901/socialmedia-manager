@@ -7,20 +7,30 @@
 <div class="col container">
     <h1 class=" text-center text-light mt-5"> Link your accounts </h1>
     <div class="text-center mt-5">
-        <a href="{% provider_login_url 'twitter_oauth2' %}" class="btn btn-twitter btn-outline-dark">Link your
-            <img src="{% static 'x_white.png' %}" style="width:25px" alt="Button Image" />
+
+        {% csrf_token %}
+        <a href="{% url 'social_link' %}"
+            class="btn btn-twitter btn-outline-dark">Link your
+            <img src="{% static 'x_white.png' %}" style="width:25px"
+                alt="Button Image" />
         </a>
 
-        <a href="{% provider_login_url 'facebook' %}" class="btn btn-outline-dark ms-3"> Link your
-            <img src="{% static 'Facebook_Logo.png' %}" style="width:25px" class="ms-2" alt="Button Image" />
+        <a href="{% provider_login_url 'facebook' %}"
+            class="btn btn-outline-dark ms-3"> Link your
+            <img src="{% static 'Facebook_Logo.png' %}" style="width:25px"
+                class="ms-2" alt="Button Image" />
         </a>
 
-        <a href="{% provider_login_url 'linkedin_oauth2' %}" class="btn btn-outline-dark ms-3"> Link your
-            <img src="{% static 'inwhite.png' %}" style="width:25px" class="ms-2" alt="Button Image" />
+        <a href="{% provider_login_url 'linkedin_oauth2' %}"
+            class="btn btn-outline-dark ms-3"> Link your
+            <img src="{% static 'inwhite.png' %}" style="width:25px"
+                class="ms-2" alt="Button Image" />
         </a>
 
-        <a href="{% provider_login_url 'github' %}" class="btn btn-outline-dark ms-3"> Link your
-            <img src="{% static 'github-white.png' %}" style="width:25px" class="ms-2" alt="Button Image" />
+        <a href="{% provider_login_url 'github' %}"
+            class="btn btn-outline-dark ms-3"> Link your
+            <img src="{% static 'github-white.png' %}" style="width:25px"
+                class="ms-2" alt="Button Image" />
         </a>
     </div>
 </div>
