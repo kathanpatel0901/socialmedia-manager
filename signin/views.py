@@ -26,7 +26,7 @@ def link(request):
         callback=redirect_uri,
     )
     print("AUTH_URL", auth.get_authorization_url())
-    return render(request, "dashboard/social_accounts.html",{"a":auth_url})
+    return render(request, "dashboard/social_accounts.html")
 
     # return render(request, "dashboard/social_accounts.html")
 
