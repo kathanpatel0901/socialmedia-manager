@@ -56,6 +56,7 @@ INSTALLED_APPS = [
     "allauth.socialaccount.providers.twitter_oauth2",
     "allauth.socialaccount.providers.linkedin_oauth2",
     "allauth.socialaccount.providers.github",
+    # "social_django",
     # "allauth.socailaccount.providers.pinterest",
 ]
 

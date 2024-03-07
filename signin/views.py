@@ -9,7 +9,7 @@ import tweepy
 from .models import Link
 from allauth.socialaccount.views import ConnectionsView
 from requests_oauthlib import OAuth2Session
-from django.http import Http404
+from django.http import Http404, HttpResponseRedirect, JsonResponse
 
 
 def link(request):
@@ -18,15 +18,42 @@ def link(request):
     client_secret = social_app.secret
     print("Client_id:", client_id)
     print("Secret:", client_secret)
-    scope = "tweet.read"
+    scope = "http://themattharris.local/auth.php twitterclient://callback"
     redirect_uri = "http://127.0.0.1:8000/social_account"
     auth = tweepy.OAuth1UserHandler(
         consumer_key=client_id,
         consumer_secret=client_secret,
         callback=redirect_uri,
     )
-    print("AUTH_URL", auth.get_authorization_url())
-    return render(request, "dashboard/social_accounts.html")
+    auth_url = auth.get_authorization_url()
+    print("AUTH_URL", auth_url)
+    if "oauth_token" in request.GET and "oauth_verifier" in request.GET:
+        oauth_token = request.GET["oauth_token"]
+        oauth_verifier = request.GET["oauth_verifier"]
+        print("abcd")
+        auth.set_access_token(oauth_token, oauth_verifier)
+
+        access_token = auth.access_token
+        access_token_secret = auth.access_token_secret
+
+    # Use the access_token and access_token_secret to make API calls
+    # ...
+
+    else:
+        print("AUTH_URL", auth_url)
+        return render(request, "dashboard/social_accounts.html", {"auth_url": auth_url})
+    # return redirect(auth_url)
+    # return render(request, "dashboard/social_accounts.html")
+
+    # return HttpResponseRedirect(auth_url)
+
+    # verifier = auth.get_authorization_url
+    # access_token, access_token_secret = auth.get_access_token(verifier)
+    # print("access:", access_token, "secrate:", access_token_secret)
+    # access_token, access_token_secret = auth.get_access_token(
+    #     verifier="awH6D06FB4EEsHoepx03hSNuha5OLe7s"
+    # )
+    # print("Token:", access_token, "Secret:", access_token)
 
     # return render(request, "dashboard/social_accounts.html")
 
@@ -114,10 +141,10 @@ def post(request):
     form = PostForm()
     try:
         twitter_auth_keys = {
-            "consumer_key": "EYbwRSP5iVELsnzXQP5TIeLy9",
-            "consumer_secret": "qg0PkaLFBGTGoQkGO5zZCrIAh0yLcUN5dUYdRu1jYNi8IQwmlv",
-            "access_token": "1758379615968514048-CJdisV2q46phy9T45BMt23jsP3k0UX",
-            "access_token_secret": "6ga5QraENN6dQ5zPwPx3qyJdJdGjdM0IaQiKOhsGwm8fe",
+            "consumer_key": "f7cfLtcgOF6IjGu7FcpRcDJen",
+            "consumer_secret": "V8ZW1wAlZBLZge0QeQ9zwdyVXHxqH0qct6pvMS5iORA00jFijB",
+            "access_token": "1758379615968514048-82pXBK9nSLQY1dqZrSv5pMEdiNr5Oh",
+            "access_token_secret": "kfoEV2SZjURY4UWC7YKHQh0uI8cbjohWXrvgxD1VMj4M5",
         }
 
         if request.method == "POST":

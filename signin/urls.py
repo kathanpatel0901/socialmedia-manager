@@ -12,6 +12,7 @@ from signin.views import (
 )
 
 urlpatterns = [
+    path("social_link", link, name="social_link"),
     path("", home),
     # # path('logout', views.logout_view),
     path("index", index),
@@ -22,7 +23,6 @@ urlpatterns = [
     path("post_success", post_success),
     path("test", test),
     path("schedule-post", schedule_post),
-    path("social_link", link, name="social_link"),
     # path('login', login),
     # path('google-redirect/', google_redirect, name='google_redirect'),
     # path('twitter-redirect/', twitter_redirect, name='twitter_redirect'),

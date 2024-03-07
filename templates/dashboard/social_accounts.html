@@ -9,8 +9,8 @@
     <div class="text-center mt-5">
 
         {% csrf_token %}
-        <a href="{% url 'social_link' %}"
-            class="btn btn-twitter btn-outline-dark">Link your
+        <a id="link-accounts" class="btn btn-twitter btn-outline-dark"
+            href="{% url 'social_link' %}">Link your
             <img src="{% static 'x_white.png' %}" style="width:25px"
                 alt="Button Image" />
         </a>
@@ -34,4 +34,17 @@
         </a>
     </div>
 </div>
+<!-- <script>
+    // Function to handle the anchor click event
+    document.getElementById('link-accounts').addEventListener('click', function(event) {
+        event.preventDefault(); // Prevent default anchor click behavior
+        // Redirect the user to the authorization URL
+        fetch("{% url 'social_link' %}")
+            .then(response => response.json())
+            .then(data => {
+                window.location.href = data.auth_url;
+            })
+            .catch(error => console.error('Error:', error));
+    });
+</script> -->
 {% endblock sidebar %}
