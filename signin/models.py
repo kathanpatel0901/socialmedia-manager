@@ -16,6 +16,7 @@ class Link(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     social_media = models.CharField(max_length=20, choices=SOCIAL_MEDIA_CHOICES)
     access_token = models.CharField(max_length=200)
+    access_token_secret = models.CharField(max_length=200)
 
     def __str__(self):
         return f"{self.user.username} - {self.social_media}"

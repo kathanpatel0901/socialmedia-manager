@@ -16,8 +16,6 @@ def link(request):
     social_app = SocialApp.objects.get(provider="twitter_oauth2")
     client_id = social_app.client_id
     client_secret = social_app.secret
-    print("Client_id:", client_id)
-    print("Secret:", client_secret)
     scope = "http://themattharris.local/auth.php twitterclient://callback"
     redirect_uri = "http://127.0.0.1:8000/social_account"
     auth = tweepy.OAuth1UserHandler(
@@ -26,22 +24,26 @@ def link(request):
         callback=redirect_uri,
     )
     auth_url = auth.get_authorization_url()
-    print("AUTH_URL", auth_url)
-    if "oauth_token" in request.GET and "oauth_verifier" in request.GET:
-        oauth_token = request.GET["oauth_token"]
-        oauth_verifier = request.GET["oauth_verifier"]
-        print("abcd")
-        auth.set_access_token(oauth_token, oauth_verifier)
 
-        access_token = auth.access_token
-        access_token_secret = auth.access_token_secret
+    print("Client_id:", client_id)
+    print("Secret:", client_secret)
+    print("authURl::", auth_url)
+    return redirect(auth_url)
+    # if "oauth_token" in request.GET and "oauth_verifier" in request.GET:
+    #     oauth_token = request.GET["oauth_token"]
+    #     oauth_verifier = request.GET["oauth_verifier"]
+    #     print("abcd")
+    # auth.set_access_token(oauth_token, oauth_verifier)
+
+    # access_token = auth.access_token
+    # access_token_secret = auth.access_token_secret
 
     # Use the access_token and access_token_secret to make API calls
     # ...
 
-    else:
-        print("AUTH_URL", auth_url)
-        return render(request, "dashboard/social_accounts.html", {"auth_url": auth_url})
+    # else:
+    # print("AUTH_URL", auth_url)
+    # return render(request, "dashboard/social_accounts.html", {"auth_url": auth_url})
     # return redirect(auth_url)
     # return render(request, "dashboard/social_accounts.html")
 
