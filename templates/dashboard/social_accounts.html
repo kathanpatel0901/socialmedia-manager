@@ -8,9 +8,9 @@
     <h1 class=" text-center text-light mt-5"> Link your accounts </h1>
     <div class="text-center mt-5">
 
-        {% csrf_token %}
-        <a id="link-accounts" class="btn btn-twitter btn-outline-dark"
-            href="{% url 'social_link' %}">Link your
+        <a
+        class="btn btn-twitter btn-outline-dark"
+            href="{% url 'Twitter_auth' %}">Link your
             <img src="{% static 'x_white.png' %}" style="width:25px"
                 alt="Button Image" />
         </a>
@@ -21,7 +21,7 @@
                 class="ms-2" alt="Button Image" />
         </a>
 
-        <a href="{% provider_login_url 'linkedin_oauth2' %}"
+        <a href="{% url 'Twitter_auth' %}"
             class="btn btn-outline-dark ms-3"> Link your
             <img src="{% static 'inwhite.png' %}" style="width:25px"
                 class="ms-2" alt="Button Image" />
@@ -35,6 +35,27 @@
     </div>
 </div>
 {% endblock sidebar %}
+<!-- <script
+    src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+    $(document).ready(function () {
+        // Function to handle Twitter OAuth flow
+        $('#twitter-link').click(function (e) {
+            e.preventDefault();
+            $.ajax({
+                type: 'GET',
+                url: "{% url 'social_link' %}",
+                success: function (response) {
+                    console.log('Redirecting to Twitter authorization page...');
+                    window.location.href = response.url;
+                },
+                error: function (xhr, status, error) {
+                    console.error('Error:', error);
+                }
+            });
+        });
+    });
+</script> -->
 <!-- <script>
 // Function to handle the anchor click event
     document.getElementById('link-accounts').addEventListener('click', function(event) {
@@ -48,3 +69,9 @@
             .catch(error => console.error('Error:', error));
     });
 </script> -->
+
+<!-- <a id="link-accounts" class="btn btn-twitter btn-outline-dark"
+            href="{% url 'access-token' %}">Get access token
+            <img src="{% static 'x_white.png' %}" style="width:25px"
+                alt="Button Image" />
+        </a> -->

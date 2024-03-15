@@ -8,11 +8,16 @@ from signin.views import (
     post,
     test,
     schedule_post,
-    link,
+    tauth,
+    taccess,
+    goto,
 )
 
 urlpatterns = [
-    path("social_link", link, name="social_link"),
+    # path("Linkedin/auth/", Linkedin_auth.as_view(), name="Linkedin_auth"),
+    path("Twitter", tauth, name="Twitter_auth"),
+    path("Twitter/goto", goto),
+    path("Taccess", taccess, name="access-token"),
     path("", home),
     # # path('logout', views.logout_view),
     path("index", index),

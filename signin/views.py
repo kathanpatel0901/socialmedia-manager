@@ -7,28 +7,85 @@ from .forms import PostForm, SchedulePostForm
 from .tasks import schedule_post_task
 import tweepy
 from .models import Link
-from allauth.socialaccount.views import ConnectionsView
-from requests_oauthlib import OAuth2Session
-from django.http import Http404, HttpResponseRedirect, JsonResponse
+from django.http import HttpResponse
+from django.contrib.auth.models import User
+from django.views import View
+from linkedin_api import Linkedin
 
 
-def link(request):
+@login_required
+def tauth(request):
     social_app = SocialApp.objects.get(provider="twitter_oauth2")
     client_id = social_app.client_id
     client_secret = social_app.secret
-    scope = "http://themattharris.local/auth.php twitterclient://callback"
-    redirect_uri = "http://127.0.0.1:8000/social_account"
-    auth = tweepy.OAuth1UserHandler(
+    redirect_uri = "http://127.0.0.1:8000/Twitter/goto"
+    auth_user = tweepy.OAuth1UserHandler(
         consumer_key=client_id,
         consumer_secret=client_secret,
         callback=redirect_uri,
     )
-    auth_url = auth.get_authorization_url()
-
-    print("Client_id:", client_id)
-    print("Secret:", client_secret)
+    auth_url = auth_user.get_authorization_url()
     print("authURl::", auth_url)
+    request.session["auth_user"] = auth_user
+    request.session["auth_url"] = auth_url
+
     return redirect(auth_url)
+
+
+@login_required
+def taccess(request):
+    return render(request, "dashboard/social_accounts.html")
+
+
+def goto(request):
+    auth_verifier = request.GET.get("oauth_verifier")
+    auth_user = request.session.get("auth_user")
+
+    print("verifier::", auth_verifier)
+    return render(request, "dashboard/Taccess.html")
+    # auth_user_2 = tweepy.OAuth1UserHandler(
+    #     consumer_key=self.client_id,
+    #     consumer_secret=self.client_secret,
+    #     callback=self.redirect_uri,
+    # )
+    # auth_user_2.request_token = {
+    #     "oauth_token": request_token,
+    #     "oauth_token_secret": request_secret,
+    # }
+    # auth_verifier = request.GET.get
+    # access_token, acess_token_secret = auth_user_2.get_access_token(verifier)
+    # print("Client_id:", self.client_id)
+    # print("Secret:", self.client_secret)
+
+
+# class Linkedin_auth(View):
+#     def link(self, request):
+#         l_auth = Linkedin(username="kathan-patel-78973b1a3", password="Kathan@0901")
+
+
+def token(self, request):
+    oauth_verifier = request.GET.get("oauth_verifier")
+    print("verifier", oauth_verifier)
+    auth = tweepy.OAuth1UserHandler(
+        consumer_key=self.client_id,
+        consumer_secret=self.client_secret,
+        callback=self.redirect_uri,
+    )
+
+    # Obtain the access token and access token secret using the OAuth verifier
+    access_token, access_token_secret = auth.get_access_token(oauth_verifier)
+
+    # Create or update the Link model with the obtained access tokens
+    link, created = Link.objects.update_or_create(
+        user=request.user,  # Assuming you have a user associated with the authorization
+        social_media="twitter",  # Assuming Twitter is the social media platform
+        defaults={
+            "access_token": access_token,
+            "access_token_secret": access_token_secret,
+        },
+    )
+    return render(request, "dashboard/social_accounts.html")
+
     # if "oauth_token" in request.GET and "oauth_verifier" in request.GET:
     #     oauth_token = request.GET["oauth_token"]
     #     oauth_verifier = request.GET["oauth_verifier"]
