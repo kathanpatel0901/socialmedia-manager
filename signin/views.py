@@ -12,28 +12,31 @@ from django.contrib.auth.models import User
 from django.views import View
 from linkedin_api import Linkedin
 
+AUTH_USER = tweepy.OAuth1UserHandler(
+    consumer_key="DnvvrDTD4Ala5NcMop7fYPlQ2",
+    consumer_secret="2AlrKAMN0r8J8jmVBR5tZbnBt0MyKyqc9IvpJVPH1jG6G8jZSZ",
+    callback="http://127.0.0.1:8000/Taccess",
+)
+
+# social_app = SocialApp.objects.get(provider="twitter_oauth2")
+# client_id = social_app.client_id
+# client_secret = social_app.secret
+# redirect_uri = "http://127.0.0.1:8000/Twitter/Taccess"
+
 
 @login_required
 def tauth(request):
-    social_app = SocialApp.objects.get(provider="twitter_oauth2")
-    client_id = social_app.client_id
-    client_secret = social_app.secret
-    redirect_uri = "http://127.0.0.1:8000/Twitter/goto"
-    auth_user = tweepy.OAuth1UserHandler(
-        consumer_key=client_id,
-        consumer_secret=client_secret,
-        callback=redirect_uri,
-    )
-    auth_url = auth_user.get_authorization_url()
+    auth_url = AUTH_USER.get_authorization_url()
     print("authURl::", auth_url)
-    request.session["auth_user"] = auth_user
-    request.session["auth_url"] = auth_url
-
     return redirect(auth_url)
 
 
 @login_required
 def taccess(request):
+    auth_url = request.GET.get("oauth_verifier")
+    print("oauth_verifier::", auth_url)
+    access_token, access_token_secret = AUTH_USER.get_access_token(verifier=auth_url)
+    print("access_token, access_token_secret::", access_token, access_token_secret)
     return render(request, "dashboard/social_accounts.html")
 
 

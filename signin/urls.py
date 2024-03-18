@@ -10,13 +10,11 @@ from signin.views import (
     schedule_post,
     tauth,
     taccess,
-    goto,
 )
 
 urlpatterns = [
     # path("Linkedin/auth/", Linkedin_auth.as_view(), name="Linkedin_auth"),
     path("Twitter", tauth, name="Twitter_auth"),
-    path("Twitter/goto", goto),
     path("Taccess", taccess, name="access-token"),
     path("", home),
     # # path('logout', views.logout_view),
