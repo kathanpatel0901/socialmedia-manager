@@ -1,0 +1,24 @@
+
+#database
+username:kathan09
+password: KatPtl910411
+
+
+
+AWS:
+
+
+#IAM user
+accesskey : AKIAW3MEDKN4WEYFNQZ3
+secret key: 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
+
+
+
+#Twitter:
+client id :RlJtZWNNYkZ4S2R6c1VsRE5lLWc6MTpjaQ
+client secret: wgi3qkZSHRVDw-MGNSIfyizypRH699ZsVJdRAzqkY506x3LuSC
+
+
+#linkedin
+
+linkedin access token: AQXW3oJFdjgfXPOaxxbEsgNxsb9mymE8YPdnMpo_kr92sWj9ohrIfSgVEdFZT0b-DDrNfjlMywYAqNkgCeabMJqdtBHogvr206EOi0jG-7xG1tkxFWItsOM3UGUUOFDzenMSnv-t0CD8OERKqNnin8_4v6UHMSamFFDGdloYmM7Yt6irF72nHS6oOj-s0pmw_01GOvMkyyhL7r7DZ9wY5LLzCV0PEFG5ykCGAhsoxybd-1LWKOUSKzNjqOCd-T9gMvSceuv1x_a55nGSaiavX0A7OeDq8PiHtslfWDVUJWWLCi3bTNKmHWuE_ybKlUCZZHMJTi39oZzwaLVrR6jYllgoB-mN0Q
