@@ -1,3 +1,8 @@
+website : socialmediamanager.in.net
+email: socialmediamanager386@gmail.com
+definaton : My project aims to create a social media manager for society in that we link their social media accounts and then they post through our website on their social media platforms they also schdule post  and post single media on all social media platform which they have been selected  and link
+
+
 My project aims to create a social media manager for academic evolution at My university. my plan to leverage the Twitter API for authentication and tweet management. This involves allowing users to authenticate their accounts through Twitter and enabling the management of tweets related to academic resources, updates, events, and community engagement.
 
 sudo nano /etc/nginx/sites-available/example.com
@@ -18,41 +23,29 @@ AQXGQ2DnanFDgGSOhk3RSeAwHWX9yVuIwfbbmc_o12yU5redsqwBsxoD4H-fJlepcA4-N7_n9XxDqgK0
 
 pip install django-bootstrap-v5
 
-from django.shortcuts import render, redirect
-from .forms import PostForm
-import tweepy
 
-def post(request):
-    form = PostForm()
-    twitter_auth_keys = {
-        "consumer_key": "ULYeOm844iifGFuE32YyLnzT0",
-        "consumer_secret": "xQ9YJjXLDmIjf67e6ZGrxxrhZxg4pyFlnV6qbLYEMEfrbavxDb",
-        "access_token": "1758379615968514048-7fCJHGXHwU52KMAS2p1HMOQCjlIymx",
-        "access_token_secret": "95eCaWA79LD48G8PgT2pzFAb6CGIqURA9hXm6y1OrUmvJ",
-    }
+[Unit]
+Description=Celery Service
+After=network.target
 
-    if request.method == "POST":
-        form = PostForm(request.POST, request.FILES)  # Bind the form with POST data
+[Service]
+Type=forking
+User=cord4
+Group=www-data
+WorkingDirectory=/home/cord4/Kathan/social_manager/social_manager
+ExecStart=/home/cord4/Kathan/social_manager/envs1/bin/celery -A social_manager worker --loglevel=info
+Restart=always
 
-        if form.is_valid():
-            social_media = form.cleaned_data["social_media"]  # Get selected social media
+[Install]
+WantedBy=multi-user.target
 
-            if social_media == "Twitter":
-                content = form.cleaned_data["post_text"]  # Retrieve post_text from form
 
-                # Post the tweet
-                client = tweepy.Client(
-                    consumer_key=twitter_auth_keys["consumer_key"],
-                    consumer_secret=twitter_auth_keys["consumer_secret"],
-                    access_token=twitter_auth_keys["access_token"],
-                    access_token_secret=twitter_auth_keys["access_token_secret"],
-                )
-                client.create_tweet(text=content)
 
-                return redirect("post_success")  # Redirect to post success page
-            else:
-                # If social media is not Twitter, display an error message
-                error_message = "Posting to selected social media is not supported yet."
-                return render(request, "dashboard/post.html", {"form": form, "error_message": error_message})
+ (work) celery -A social_manager worker --loglevel=info
 
-    return render(request, "dashboard/post.html", {"form": form})
+  python -m celery -A social_manager worker
+
+  python -m celery -A social_manager worker -l info
+
+  git remote set-url origin master https://github.com/kathanpatel0901/socialmedia-manager.git
+
