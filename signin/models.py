@@ -2,6 +2,7 @@ from django.db import models
 import uuid
 from django.utils import timezone
 from django.contrib.auth.models import User
+from allauth.socialaccount.models import SocialAccount
 
 SOCIAL_MEDIA_CHOICES = [
     ("Twitter", "Twitter"),
@@ -13,13 +14,14 @@ SOCIAL_MEDIA_CHOICES = [
 
 
 class Link(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    social_media = models.CharField(max_length=20, choices=SOCIAL_MEDIA_CHOICES)
+    user = models.ForeignKey(SocialAccount, on_delete=models.CASCADE)
+    Twitter_username = models.CharField(max_length=50)
+    social_media = models.CharField(max_length=20)
     access_token = models.CharField(max_length=200)
     access_token_secret = models.CharField(max_length=200)
 
     def __str__(self):
-        return f"{self.user.username} - {self.social_media}"
+        return f"{self.Twitter_username} - {self.social_media}"
 
 
 class Post(models.Model):
