@@ -7,14 +7,25 @@ from .forms import PostForm, SchedulePostForm
 from .tasks import schedule_post_task
 import tweepy
 from .models import Link
-
-
 from linkedin_api import Linkedin
+from pyfacebook import GraphAPI
+from github import Github, Auth
+
+LINKEDIN_ID = "86mlue1q95me5q"
+LINKEDIN_SECRET = "RIGzXPJbqnIZdS3f"
+REDIRECT_URL = "http://127.0.0.1:8000/social_account"
+LINKEDIN_USERNAME = "kathan-patel-78973b1a3"
+LINKEDIN_PASSWORD = "Kathan@0901"
 
 
-class Linkedin_auth(View):
-    def link(self, request):
-        l_auth = Linkedin(username="kathan-patel-78973b1a3", password="Kathan@0901")
+def linkedin(request):
+    recip = ["shubham-gor-9017b2228", "archan-patel-5a2174194"]
+    # l_auth = Linkedin("patelkathan6@gmail.com", "Kathan@0901")
+    l_auth = Linkedin("patelkathan6@gmail.com", "Kathan@0901")
+    profile = l_auth.get_profile("kathan-patel")
+    print("Linkedin_Auth_Url=", profile)
+    return render(request, "dashboard/social_accounts.html")
+
 
 def index(request):
     if request.user.is_authenticated:
@@ -126,6 +137,44 @@ def taccess(request):
             access_token_secret=access_token_secrett,
         )
 
+    return render(request, "dashboard/social_accounts.html")
+
+
+@login_required
+def facebook_auth(request):
+    api = GraphAPI(
+        app_id="901647908422952",
+        app_secret="acd41f193030e7f7e366d11b7659b871",
+        oauth_flow=True,
+    )
+    auth_url = api.get_authorization_url()
+    # api.exchange_user_access_token(response="http://127.0.0.1:8000/social_account")
+    print("facebook_url::", auth_url)
+    return render(request, "dashboard/social_accounts.html")
+
+
+# def facebook_access(request):
+
+
+def github_auth(request):
+    url = "https://github.com/apps/social-app-auth"
+    return redirect(url)
+
+
+GIT_CLIENT_ID = "Iv1.2b28b44755244ce6"
+GIT_CLIENT_SECRET = "75783268896ec8d9313e8a7559c9c8f218519ae7"
+
+
+def github_access(request):
+    code = request.GET.get("code")
+    print("code ::", code)
+    auth = Github()
+    app = auth.get_oauth_application(
+        "Iv1.2b28b44755244ce6", "75783268896ec8d9313e8a7559c9c8f218519ae7"
+    )
+    token = app.get_access_token(code)
+    print("Token::", token)
+    
     return render(request, "dashboard/social_accounts.html")
 
 

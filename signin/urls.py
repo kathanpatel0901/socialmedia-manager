@@ -10,12 +10,20 @@ from signin.views import (
     schedule_post,
     tauth,
     taccess,
+    linkedin,
+    facebook_auth,
+    github_auth,
+    github_access,
 )
 
 urlpatterns = [
     # path("Linkedin/auth/", Linkedin_auth.as_view(), name="Linkedin_auth"),
     path("Twitter", tauth, name="Twitter_auth"),
     path("Taccess", taccess, name="access-token"),
+    path("Linkedin_auth", linkedin, name="linkedin"),
+    path("facebook_auth", facebook_auth, name="facebook"),
+    path("github_auth", github_auth, name="github"),
+    path("github_access", github_access, name="github_access"),
     path("", home),
     # # path('logout', views.logout_view),
     path("index", index),
