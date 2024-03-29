@@ -70,67 +70,101 @@
     <div class="container-fluid">
         <div class="row">
             <div class="col-sm-auto bg-dark sticky-top">
-                <div class="bg-dark sidebar d-flex flex-sm-column flex-row flex-nowrap" role="cdb-sidebar">
+                <div
+                    class="bg-dark sidebar d-flex flex-sm-column flex-row flex-nowrap"
+                    role="cdb-sidebar">
                     <ul class="nav flex-column mb-sm-auto" id="menu">
                         <li class="mb-4">
-                            <a href="index" class="text-light text-decoration-none">
+                            <a href="index"
+                                class="text-light text-decoration-none">
                                 <span class="material-icons"
                                     style="display: inline-block; vertical-align: middle;">home</span>
-                                <span style="display: inline-block; vertical-align: middle;">Home</span>
+                                <span
+                                    style="display: inline-block; vertical-align: middle;">Home</span>
                             </a>
                         </li>
                         <li class="mb-4">
-                            <a href="profile" class="text-light text-decoration-none">
+                            <a href="profile"
+                                class="text-light text-decoration-none">
                                 <span class="material-icons"
                                     style="display: inline-block; vertical-align: middle;">person</span>
-                                <span style="display: inline-block; vertical-align: middle;">Profile</span>
-                            </a>
-                        </li>
-                        <li class="mb-4">
-                            <a href="/post" class="text-light text-decoration-none">
-                                <span class="material-icons"
-                                    style="display: inline-block; vertical-align: middle;">post_add</span>
-                                <span style="display: inline-block; vertical-align: middle;">Post</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="social_account" class="text-light text-decoration-none">
-                                <span class="material-icons"
-                                    style="display: inline-block; vertical-align: middle;">add_link</span>
-                                <span style="display: inline-block; vertical-align: middle;">Social Account</span>
+                                <span
+                                    style="display: inline-block; vertical-align: middle;">Profile</span>
                             </a>
                         </li>
 
+                        <li class="mb-4">
+                            <a href="/post"
+                                class="text-light text-decoration-none">
+                                <span class="material-icons"
+                                    style="display: inline-block; vertical-align: middle;">post_add</span>
+                                <span
+                                    style="display: inline-block; vertical-align: middle;">Post</span>
+                            </a>
+                        </li>
+                        <li class="mb-4">
+                            <a href="/viewshow"
+                                class="text-light text-decoration-none">
+                                <span class="material-icons"
+                                    style="display: inline-block; vertical-align: middle;">visibility</span>
+                                <span
+                                    style="display: inline-block; vertical-align: middle;">Show
+                                    Post</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="social_account"
+                                class="text-light text-decoration-none">
+                                <span class="material-icons"
+                                    style="display: inline-block; vertical-align: middle;">add_link</span>
+                                <span
+                                    style="display: inline-block; vertical-align: middle;">Social
+                                    Account</span>
+                            </a>
+                        </li>
 
                     </ul>
 
                     {% if request.user.is_authenticated %}
                     <div>
                         <hr>
-                        <a class="d-flex align-items-center text-white text-decoration-none dropdown-toggle"
-                            id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="true">
+                        <a
+                            class="d-flex align-items-center text-white text-decoration-none dropdown-toggle"
+                            id="dropdownUser1" data-bs-toggle="dropdown"
+                            aria-expanded="true">
                             {% if request.user.socialaccount_set.all %}
                             {% with social_account=request.user.socialaccount_set.first %}
-                            <img src=" {{ social_account.get_avatar_url }}" alt="hugenerd" style="width:35px;"
+                            <img src=" {{ social_account.get_avatar_url }}"
+                                alt="hugenerd" style="width:35px;"
                                 class="rounded-circle">
-                            <span class="d-none d-sm-inline mx-3">{{social_account.extra_data.given_name}}</span>
+                            <span
+                                class="d-none d-sm-inline mx-3">{{social_account.extra_data.given_name}}</span>
                             {% endwith %}
                             {% endif %}
                         </a>
-                        <ul class="dropdown-menu dropdown-menu-dark text-small shadow">
-                            <li><a class="dropdown-item" href="{% url 'account_logout' %} ">Sign out</a></li>
+                        <ul
+                            class="dropdown-menu dropdown-menu-dark text-small shadow">
+                            <li><a class="dropdown-item"
+                                    href="{% url 'account_logout' %} ">Sign
+                                    out</a></li>
                         </ul>
                     </div>
                     {%else%}
                     <div class="dropdown pb-4">
-                        <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle"
-                            id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
-                            <img src="https://github.com/mdo.png" alt="hugenerd" width="30" height="30"
+                        <a href="#"
+                            class="d-flex align-items-center text-white text-decoration-none dropdown-toggle"
+                            id="dropdownUser1" data-bs-toggle="dropdown"
+                            aria-expanded="false">
+                            <img src="https://github.com/mdo.png" alt="hugenerd"
+                                width="30" height="30"
                                 class="rounded-circle">
-                            <span class="d-none d-sm-inline mb-4">{{request.user.username}}</span>
+                            <span
+                                class="d-none d-sm-inline mb-4">{{request.user.username}}</span>
                         </a>
-                        <ul class="dropdown-menu dropdown-menu-dark text-small shadow">
-                            <li><a class="dropdown-item" href="/index">Sign In</a></li>
+                        <ul
+                            class="dropdown-menu dropdown-menu-dark text-small shadow">
+                            <li><a class="dropdown-item" href="/index">Sign
+                                    In</a></li>
                         </ul>
                         {%endif%}
                     </div>
@@ -145,7 +179,8 @@
         <hr>
         <div class="row">
             <div class="col-12 mt-4 mt-md-0 text-center">
-                <p class="text-muted">Copyright © Social Media Manager 2024. All rights reserved.</p>
+                <p class="text-muted">Copyright © Social Media Manager 2024. All
+                    rights reserved.</p>
             </div>
         </div>
     </div>

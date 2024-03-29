@@ -14,6 +14,9 @@ from signin.views import (
     facebook_auth,
     github_auth,
     github_access,
+    showpost,
+    retrivepost,
+    viewshow,
 )
 
 urlpatterns = [
@@ -24,6 +27,9 @@ urlpatterns = [
     path("facebook_auth", facebook_auth, name="facebook"),
     path("github_auth", github_auth, name="github"),
     path("github_access", github_access, name="github_access"),
+    path("get-tweets",retrivepost, name= "get-tweets"),
+    path("show-post",showpost),
+    path("viewshow", viewshow),
     path("", home),
     # # path('logout', views.logout_view),
     path("index", index),

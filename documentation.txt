@@ -33,7 +33,7 @@ Type=forking
 User=cord4
 Group=www-data
 WorkingDirectory=/home/cord4/Kathan/social_manager/social_manager
-ExecStart=/home/cord4/Kathan/social_manager/envs1/bin/celery -A social_manager worker --loglevel=info
+ExecStart=/home/cord4/Kathan/social_manager/env/bin/celery -A social_manager worker --loglevel=info
 Restart=always
 
 [Install]
@@ -49,3 +49,44 @@ WantedBy=multi-user.target
 
   git remote set-url origin master https://github.com/kathanpatel0901/socialmedia-manager.git
 
+gunicorn --bind 0.0.0.0:8000 social_manager.wsgi
+
+
+#gunicron.service 
+
+[Unit]
+Description=gunicorn daemon
+Requires=gunicorn.socket
+After=network.target
+
+[Service]
+User=cord4
+Group=www-data
+WorkingDirectory=/home/cord4/Kathan/social_manager/social_manager
+ExecStart=/home/cord4/Kathan/social_manager/env/bin/gunicorn \
+          --access-logfile /var/log/gunicorn/access.log \
+          --error-logfile /var/log/gunicorn/error.log \
+          --workers 3 \
+          --bind unix:/run/gunicorn.sock \
+          social_manager.wsgi:application
+
+[Install]
+WantedBy=multi-user.target
+
+
+#nginx sites-avaliale 
+server {
+    listen 80;
+    server_name socialmediamanager.in.net 192.168.1.27 127.0.0.1;
+
+    location = /favicon.ico { access_log off; log_not_found off; }
+    location /static/ {
+        root /home/cord4/Kathan/social_manager/social_manager;
+    }
+
+    location / {
+        include proxy_params;
+        proxy_pass http://192.168.1.27:8000;
+
+    }
+}

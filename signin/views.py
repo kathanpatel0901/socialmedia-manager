@@ -111,9 +111,9 @@ def tauth(request):
 
 @login_required
 def taccess(request):
-    auth_url = request.GET.get("oauth_verifier")
-    print("oauth_verifier::", auth_url)
-    access_tokenn, access_token_secrett = AUTH_USER.get_access_token(verifier=auth_url)
+    verifier = request.GET.get("oauth_verifier")
+    print("oauth_verifier::", verifier)
+    access_tokenn, access_token_secrett = AUTH_USER.get_access_token(verifier=verifier)
     print("access_token, access_token_secret::", access_tokenn, access_token_secrett)
     client = tweepy.Client(
         consumer_key=CONSUMER_KEY,
@@ -121,13 +121,17 @@ def taccess(request):
         access_token=access_tokenn,
         access_token_secret=access_token_secrett,
     )
+
     user = client.get_me()
     username = user.data.username
+    userid = user.data.id
+
+    print("Username::", username)
+    print("Userid ::", userid)
     social_account = request.user.socialaccount_set.first()
-    print("Username::", user.data.username)
     xy = Link.objects.filter(Twitter_username=username).first()
     if xy:
-        print("reapet")
+        print("repeat")
     else:
         Link.objects.create(
             user=social_account,
@@ -140,54 +144,17 @@ def taccess(request):
     return render(request, "dashboard/social_accounts.html")
 
 
-@login_required
-def facebook_auth(request):
-    api = GraphAPI(
-        app_id="901647908422952",
-        app_secret="acd41f193030e7f7e366d11b7659b871",
-        oauth_flow=True,
-    )
-    auth_url = api.get_authorization_url()
-    # api.exchange_user_access_token(response="http://127.0.0.1:8000/social_account")
-    print("facebook_url::", auth_url)
-    return render(request, "dashboard/social_accounts.html")
-
-
-# def facebook_access(request):
-
-
-def github_auth(request):
-    url = "https://github.com/apps/social-app-auth"
-    return redirect(url)
-
-
-GIT_CLIENT_ID = "Iv1.2b28b44755244ce6"
-GIT_CLIENT_SECRET = "75783268896ec8d9313e8a7559c9c8f218519ae7"
-
-
-def github_access(request):
-    code = request.GET.get("code")
-    print("code ::", code)
-    auth = Github()
-    app = auth.get_oauth_application(
-        "Iv1.2b28b44755244ce6", "75783268896ec8d9313e8a7559c9c8f218519ae7"
-    )
-    token = app.get_access_token(code)
-    print("Token::", token)
-    
-    return render(request, "dashboard/social_accounts.html")
-
-
 def post(request):
     error_message = None
     form = PostForm()
     try:
         user = request.user.id
         userna = request.user.username
+
         print("id::", user)
         print("name::", userna)
         twitter_auth = Link.objects.get(
-            Twitter_username="Kathanpatel0901", social_media="Twitter"
+            Twitter_username="socialmanager09", social_media="Twitter"
         )
         access_token = twitter_auth.access_token
         access_token_secret = twitter_auth.access_token_secret
@@ -211,7 +178,10 @@ def post(request):
                         access_token=access_token,
                         access_token_secret=access_token_secret,
                     )
+                    print("user_info==", AUTH_USER)
                     client.create_tweet(text=content)
+                    user_screen_name = "socialmanager09"
+
                     return render(request, "dashboard/post_success.html")
                 else:
                     error_message = (
@@ -223,6 +193,39 @@ def post(request):
     return render(
         request, "dashboard/post.html", {"form": form, "error_message": error_message}
     )
+
+
+CLIENT_ID = "bkY4YzlOWmRQVlhmbHczQVBxaUE6MTpjaQ"
+CLIENT_SECRET = "to1M9-wYHJSYYsRo1EkavkQX6p1HAW_T-VAB7i-_aMcfWESomE"
+SCOPE = [
+    "tweet.read",
+    "tweet.write",
+]
+AUTH = tweepy.OAuth2UserHandler(
+    client_id=CLIENT_ID,
+    redirect_uri="http://127.0.0.1:8000/show-post",
+    scope=SCOPE,
+    client_secret=CLIENT_SECRET,
+)
+
+
+def viewshow(request):
+    return render(request, "dashboard/showpost.html")
+
+
+def retrivepost(request):
+    auth_url = AUTH.get_authorization_url()
+    print("url::", auth_url)
+    return redirect(auth_url)
+
+
+def showpost(request):
+    response_url = request.get_full_path()
+    print("response url::", response_url)
+    access_token = AUTH.fetch_token(response_url)
+    print("access_token::",access_token)
+
+    return render(request, "dashboard/showpost.html")
 
 
 def schedule_post(request):
@@ -272,3 +275,41 @@ def my_callback_view(request):
     #     return render(request,'dashboard/post_success.html')
 
     # return render(request, 'dashboard/tweet.html')
+
+
+@login_required
+def facebook_auth(request):
+    api = GraphAPI(
+        app_id="901647908422952",
+        app_secret="acd41f193030e7f7e366d11b7659b871",
+        oauth_flow=True,
+    )
+    auth_url = api.get_authorization_url()
+    # api.exchange_user_access_token(response="http://127.0.0.1:8000/social_account")
+    print("facebook_url::", auth_url)
+    return render(request, "dashboard/social_accounts.html")
+
+
+# def facebook_access(request):
+
+
+def github_auth(request):
+    url = "https://github.com/apps/social-app-auth"
+    return redirect(url)
+
+
+GIT_CLIENT_ID = "Iv1.2b28b44755244ce6"
+GIT_CLIENT_SECRET = "75783268896ec8d9313e8a7559c9c8f218519ae7"
+
+
+def github_access(request):
+    code = request.GET.get("code")
+    print("code ::", code)
+    auth = Github()
+    app = auth.get_oauth_application(
+        "Iv1.2b28b44755244ce6", "75783268896ec8d9313e8a7559c9c8f218519ae7"
+    )
+    token = app.get_access_token(code)
+    print("Token::", token)
+
+    return render(request, "dashboard/social_accounts.html")
