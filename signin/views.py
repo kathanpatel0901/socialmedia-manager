@@ -292,6 +292,8 @@ def facebook_auth(request):
 
 # def facebook_access(request):
 
+def instabasic(request):
+    return render(request, "dashboard/social_accounts.html")
 
 def github_auth(request):
     url = "https://github.com/apps/social-app-auth"

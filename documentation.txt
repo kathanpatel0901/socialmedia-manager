@@ -51,7 +51,6 @@ WantedBy=multi-user.target
 
 gunicorn --bind 0.0.0.0:8000 social_manager.wsgi
 
-
 #gunicron.service 
 
 [Unit]
@@ -73,11 +72,12 @@ ExecStart=/home/cord4/Kathan/social_manager/env/bin/gunicorn \
 [Install]
 WantedBy=multi-user.target
 
-
-#nginx sites-avaliale 
+  GNU nano 4.8                                                                     /etc/nginx/sites-available/social_manager                                                                               
 server {
     listen 80;
-    server_name socialmediamanager.in.net 192.168.1.27 127.0.0.1;
+    server_name socialmediamanager.in.net;
+    server_name 192.168.1.27;
+    server_name 110.227.237.132;
 
     location = /favicon.ico { access_log off; log_not_found off; }
     location /static/ {
@@ -86,7 +86,47 @@ server {
 
     location / {
         include proxy_params;
-        proxy_pass http://192.168.1.27:8000;
+        proxy_pass http://unix:/run/gunicorn.sock;
 
     }
 }
+
+
+
+openssl req -x509 -newkey rsa:2048 -keyout server.key -out server.crt -days 365 -subj "/C=IN/ST=Gujarat/L=Ahemedabad/O=cord4/CN=socialmediamanager.in.net"
+openssl req -x509 -newkey rsa:2048 -keyout server.key -out server.crt -days 365 -subj "/C=IN/ST=Gujarat/L=Ahemedabad/O=cord4/CN=socialmediamanager.in.net" -nopass
+openssl rsa -in /home/cord4/Kathan/social_manager/server.key -out /home/cord4/Kathan/social_manager/server_nopass.key
+
+
+
+
+For HTTPS new server block
+
+server {
+  listen 443 ssl;  
+  server_name socialmediamanager.in.net;  
+
+  location = /favicon.ico { access_log off; log_not_found off; }
+    location /static/ {
+        root /home/cord4/Kathan/social_manager/social_manager;
+    }
+
+  location / {
+    include proxy_params;
+    proxy_pass http://unix:/run/gunicorn.sock;
+  }
+
+  ssl_certificate /home/cord4/server.crt;  # Replace with the actual path to your certificate
+  ssl_certificate_key /home/cord4/server.key;  # Replace with the actual path to your key
+}
+
+/home/cord4/server.key
+/home/cord4/server.crt
+
+sudo ln -s /etc/nginx/sites-available/social_manager /etc/nginx/sites-enabled
+
+sudo certbot --nginx -d socialmediamanager.in.net -d www.socialmediamanager.in.net 
+
+sudo chown cord4:www-data /home/cord4/server.crt /home/cord4/server.key
+
+ipv4:106.215.20.147

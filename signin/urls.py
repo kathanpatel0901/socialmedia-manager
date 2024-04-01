@@ -17,6 +17,7 @@ from signin.views import (
     showpost,
     retrivepost,
     viewshow,
+    instabasic,
 )
 
 urlpatterns = [
@@ -27,8 +28,8 @@ urlpatterns = [
     path("facebook_auth", facebook_auth, name="facebook"),
     path("github_auth", github_auth, name="github"),
     path("github_access", github_access, name="github_access"),
-    path("get-tweets",retrivepost, name= "get-tweets"),
-    path("show-post",showpost),
+    path("get-tweets", retrivepost, name="get-tweets"),
+    path("show-post", showpost),
     path("viewshow", viewshow),
     path("", home),
     # # path('logout', views.logout_view),
@@ -40,6 +41,7 @@ urlpatterns = [
     path("post_success", post_success),
     path("test", test),
     path("schedule-post", schedule_post),
+    path("instabasic", instabasic, name="instabasic"),
     # path('login', login),
     # path('google-redirect/', google_redirect, name='google_redirect'),
     # path('twitter-redirect/', twitter_redirect, name='twitter_redirect'),
