@@ -1,8 +1,10 @@
 from django.shortcuts import render, redirect
+from django.urls import reverse
 from django.contrib.auth import logout
 from django.views.generic import View
 from allauth.socialaccount.models import SocialAccount
 from django.contrib.auth.decorators import login_required
+from django.views.decorators.csrf import csrf_exempt
 from .forms import PostForm, SchedulePostForm
 from .tasks import schedule_post_task
 import tweepy
@@ -10,6 +12,8 @@ from .models import Link
 from linkedin_api import Linkedin
 from pyfacebook import GraphAPI
 from github import Github, Auth
+
+from pyfacebook import FacebookApi
 
 LINKEDIN_ID = "86mlue1q95me5q"
 LINKEDIN_SECRET = "RIGzXPJbqnIZdS3f"
@@ -97,7 +101,7 @@ CONSUMER_SECRET = "2AlrKAMN0r8J8jmVBR5tZbnBt0MyKyqc9IvpJVPH1jG6G8jZSZ"
 AUTH_USER = tweepy.OAuth1UserHandler(
     consumer_key=CONSUMER_KEY,
     consumer_secret=CONSUMER_SECRET,
-    callback="http://127.0.0.1:8000/Taccess",
+    callback="https://socialmediamanager.in.net/Taccess",
 )
 
 
@@ -223,7 +227,7 @@ def showpost(request):
     response_url = request.get_full_path()
     print("response url::", response_url)
     access_token = AUTH.fetch_token(response_url)
-    print("access_token::",access_token)
+    print("access_token::", access_token)
 
     return render(request, "dashboard/showpost.html")
 
@@ -277,23 +281,49 @@ def my_callback_view(request):
     # return render(request, 'dashboard/tweet.html')
 
 
-@login_required
+APP_ID = "739598838303413"
+APP_SECRET = "0ac55bfa64593d4c757ce4ff9f25521d"
+API = GraphAPI(
+    app_id=APP_ID,
+    app_secret=APP_SECRET,
+    oauth_flow=True,
+)
+FREDIRECT_URL = "https://socialmediamanager.in.net/facebook_access"
+
+
 def facebook_auth(request):
-    api = GraphAPI(
-        app_id="901647908422952",
-        app_secret="acd41f193030e7f7e366d11b7659b871",
-        oauth_flow=True,
-    )
-    auth_url = api.get_authorization_url()
-    # api.exchange_user_access_token(response="http://127.0.0.1:8000/social_account")
+    auth_url_tup = API.get_authorization_url(redirect_uri=FREDIRECT_URL)
+    auth_url = auth_url_tup[0]
     print("facebook_url::", auth_url)
-    return render(request, "dashboard/social_accounts.html")
+    # redirect_url = reverse("facebook_access") + f"?response_url={auth_url}"
+    return redirect(auth_url)
+
+
+PAGE_ID = "61557606137208", "61556785282295"
+
+
+def facebook_access(request):
+    response_url = request.build_absolute_uri()
+    print("RESPONSE URL:", response_url)
+    # print("access_token::", access_token)
+    # access_token = API.exchange_user_access_token(
+    #     response=response_url, redirect_uri=FREDIRECT_URL
+    # )
+    # api = GraphAPI(app_id=APP_ID, app_secret=APP_SECRET, access_token=access_token)
+    # data = api.post_object(
+    #     object_id="61556785282295",
+    #     connection="feed",
+    #     data={"message": "this is post using social media manager"},
+    # )
+    # print("facebook post::", data)
+    context = {"response_url": response_url}
+    return render(request, "dashboard/social_accounts.html", context)
 
 
 # def facebook_access(request):
-
 def instabasic(request):
     return render(request, "dashboard/social_accounts.html")
+
 
 def github_auth(request):
     url = "https://github.com/apps/social-app-auth"
