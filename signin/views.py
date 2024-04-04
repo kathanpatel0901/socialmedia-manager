@@ -306,9 +306,9 @@ def facebook_access(request):
     response_url = request.build_absolute_uri()
     print("RESPONSE URL:", response_url)
     # print("access_token::", access_token)
-    # access_token = API.exchange_user_access_token(
-    #     response=response_url, redirect_uri=FREDIRECT_URL
-    # )
+    access_token = API.exchange_user_access_token(
+        response=response_url, redirect_uri=FREDIRECT_URL
+    )
     # api = GraphAPI(app_id=APP_ID, app_secret=APP_SECRET, access_token=access_token)
     # data = api.post_object(
     #     object_id="61556785282295",
@@ -316,7 +316,7 @@ def facebook_access(request):
     #     data={"message": "this is post using social media manager"},
     # )
     # print("facebook post::", data)
-    context = {"response_url": response_url}
+    context = {"response_url": access_token}
     return render(request, "dashboard/social_accounts.html", context)
 
 
