@@ -43,3 +43,6 @@ class Post(models.Model):
         if not self.id:
             self.post_date_time = timezone.now()
         return super().save(*args, **kwargs)
+
+class Git(models.Model):
+    user = models.CharField(max_length=100)

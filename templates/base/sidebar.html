@@ -1,70 +1,7 @@
 {% extends "base/base.html" %}
 {% load account %}
 {% block content %}
-<!-- <style>
-    html,
-    body {
-        height: 100%;
-    }
-
-    body {
-        display: flex;
-        flex-direction: column;
-        font-family: 'Roboto', sans-serif;
-        margin: 0;
-        padding: 0;
-    }
-
-    main {
-        flex: 1;
-        padding: 2rem;
-    }
-
-    hr {
-        margin: 1rem 0;
-        border: none;
-        border-top: 1px solid rgba(255, 255, 255, 0.2);
-    }
-
-    .sidebar {
-        display: flex;
-        flex-direction: column;
-        background-color: #343a40;
-        color: #fff;
-        padding: 1rem;
-    }
-
-    .sidebar a {
-        display: flex;
-        align-items: center;
-        padding: 0.5rem 1rem;
-        border-radius: 0.25rem;
-        transition: all 0.2s ease-in-out;
-    }
-
-    .sidebar a:hover {
-        background-color: rgba(255, 255, 255, 0.1);
-    }
-
-    .sidebar a i {
-        font-size: 1.5rem;
-        margin-right: 0.5rem;
-    }
-
-    .dropdown-menu {
-        border-radius: 0.25rem;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    }
-
-    .dropdown-item {
-        padding: 0.5rem 1rem;
-        transition: all 0.2s ease-in-out;
-    }
-
-    .dropdown-item:hover {
-        background-color: rgba(255, 255, 255, 0.1);
-    }
-</style> -->
+{% load static %}
 
 <body>
     <div class="container-fluid">
@@ -103,6 +40,16 @@
                             </a>
                         </li>
                         <li class="mb-4">
+                            <a href="/gitpost"
+                                class="text-light text-decoration-none">
+                                <span class="material-icons"
+                                    style="display: inline-block; vertical-align: middle;"><img src="{% static 'github-white.png' %}" style="width:25px"
+                class="ms-2" alt="Button Image" /></span>
+                                <span
+                                    style="display: inline-block; vertical-align: middle;">Git</span>
+                            </a>
+                        </li>
+                        <li class="mb-4">
                             <a href="/viewshow"
                                 class="text-light text-decoration-none">
                                 <span class="material-icons"
@@ -118,8 +65,7 @@
                                 <span class="material-icons"
                                     style="display: inline-block; vertical-align: middle;">add_link</span>
                                 <span
-                                    style="display: inline-block; vertical-align: middle;">Social
-                                    Account</span>
+                                    style="display: inline-block; vertical-align: middle;">Social Account</span>
                             </a>
                         </li>
 

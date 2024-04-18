@@ -66,6 +66,27 @@ class SchedulePostForm(forms.ModelForm):
         )
 
 
+class RepositoryForm(forms.Form):
+    repository_name = forms.CharField(
+        label="Repository name", max_length=100, required=False
+    )
+    repository_code = forms.CharField(
+        label="Repository code", max_length=100, required=False
+    )
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.helper = FormHelper()
+        self.helper.form_method = "post"
+        self.helper.layout = Layout(
+            "repository_name",
+            "repository_code",
+            Submit("create", "Create", css_class="btn btn-primary"),
+            Submit("clone", "clone", css_class="btn btn-success"),
+            Submit("push", "Push", css_class="btn btn-warning"),
+        )
+
+
 # class SchedulePostForm(forms.ModelForm):
 
 #     class Meta:

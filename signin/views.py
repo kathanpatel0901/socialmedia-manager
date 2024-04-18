@@ -5,14 +5,15 @@ from django.views.generic import View
 from allauth.socialaccount.models import SocialAccount
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
-from .forms import PostForm, SchedulePostForm
+from .forms import PostForm, SchedulePostForm, RepositoryForm
+from django.http import HttpResponse
 from .tasks import schedule_post_task
 import tweepy
 from .models import Link
 from linkedin_api import Linkedin
 from pyfacebook import GraphAPI
-from github import Github, Auth
-
+from github import Github, Auth, ApplicationOAuth
+import pygit2
 from pyfacebook import FacebookApi
 
 LINKEDIN_ID = "86mlue1q95me5q"
@@ -77,7 +78,7 @@ def profile_view(request):
     last_login = user.last_login
     date_joined = user.date_joined
 
-    return render(request, "dashboard/profile.html")
+    return render(request, "dashboard/profile1.html")
 
 
 def google_redirect(request):
@@ -95,13 +96,13 @@ def post_success(request):
     return render(request, "dashboard/post_success.html")
 
 
-CONSUMER_KEY = "DnvvrDTD4Ala5NcMop7fYPlQ2"
-CONSUMER_SECRET = "2AlrKAMN0r8J8jmVBR5tZbnBt0MyKyqc9IvpJVPH1jG6G8jZSZ"
+CONSUMER_KEY = "vt2I4vRz5qnuhUJcx4DBSpnhK"
+CONSUMER_SECRET = "OP7IpMiHhPcqnWQNSZBha8qbQMSzLmg2xCfV4OQuU0igKbTOOY"
 
 AUTH_USER = tweepy.OAuth1UserHandler(
     consumer_key=CONSUMER_KEY,
     consumer_secret=CONSUMER_SECRET,
-    callback="https://socialmediamanager.in.net/Taccess",
+    callback="http://127.0.0.1:8000/Taccess",
 )
 
 
@@ -148,69 +149,34 @@ def taccess(request):
     return render(request, "dashboard/social_accounts.html")
 
 
-def post(request):
-    error_message = None
-    form = PostForm()
-    try:
-        user = request.user.id
-        userna = request.user.username
-
-        print("id::", user)
-        print("name::", userna)
-        twitter_auth = Link.objects.get(
-            Twitter_username="socialmanager09", social_media="Twitter"
-        )
-        access_token = twitter_auth.access_token
-        access_token_secret = twitter_auth.access_token_secret
-        print("token secrets::", access_token)
-        # twitter_auth_keys = {
-        #     "consumer_key": CONSUMER_KEY,
-        #     "consumer_secret": CONSUMER_SECRET,
-        #     "access_token": ,
-        #     "access_token_secret": "jaHVNjuMSAvQ0KwTDs5GsUvdB5hjyaiAftEFt4uDGQ3Xg",
-        # }
-
-        if request.method == "POST":
-            form = PostForm(request.POST, request.FILES)
-            if "post_now" in request.POST and form.is_valid():
-                social_media = form.cleaned_data["social_media"]
-                if social_media == "Twitter":
-                    content = form.cleaned_data["post_text"]
-                    client = tweepy.Client(
-                        consumer_key=CONSUMER_KEY,
-                        consumer_secret=CONSUMER_SECRET,
-                        access_token=access_token,
-                        access_token_secret=access_token_secret,
-                    )
-                    print("user_info==", AUTH_USER)
-                    client.create_tweet(text=content)
-                    user_screen_name = "socialmanager09"
-
-                    return render(request, "dashboard/post_success.html")
-                else:
-                    error_message = (
-                        "Posting to selected social media is not supported yet."
-                    )
-    except Exception as e:
-        error_message = str(e)
-
-    return render(
-        request, "dashboard/post.html", {"form": form, "error_message": error_message}
-    )
-
-
 CLIENT_ID = "bkY4YzlOWmRQVlhmbHczQVBxaUE6MTpjaQ"
-CLIENT_SECRET = "to1M9-wYHJSYYsRo1EkavkQX6p1HAW_T-VAB7i-_aMcfWESomE"
+CLIENT_SECRET = "mIYHgBwR84rZCXvYQvkJKEu6d1QTJYJEOQQRJjJ-PvX9e1CGqt"
 SCOPE = [
     "tweet.read",
     "tweet.write",
 ]
 AUTH = tweepy.OAuth2UserHandler(
     client_id=CLIENT_ID,
-    redirect_uri="http://127.0.0.1:8000/show-post",
+    redirect_uri="https://socialmediamanager.in.net/taccess2",
     scope=SCOPE,
     client_secret=CLIENT_SECRET,
 )
+
+
+def tauth2(request):
+    auth_url = AUTH.get_authorization_url()
+    print("authURl::", auth_url)
+    return redirect(auth_url)
+
+
+def taccess2(request):
+    AUTH.request_token = {}
+    response_url = request.build_absolute_uri()
+    print("RESPONSE URL:", response_url)
+    access_token = AUTH.fetch_token(
+        authorization_response=response_url,
+    )
+    print("access_token::", access_token)
 
 
 def viewshow(request):
@@ -281,8 +247,9 @@ def my_callback_view(request):
     # return render(request, 'dashboard/tweet.html')
 
 
-APP_ID = "739598838303413"
-APP_SECRET = "0ac55bfa64593d4c757ce4ff9f25521d"
+APP_ID = "3542583976004037"
+APP_SECRET = "6e09f37136dbd7f7ac15b9d7d9673349"
+
 API = GraphAPI(
     app_id=APP_ID,
     app_secret=APP_SECRET,
@@ -305,17 +272,17 @@ PAGE_ID = "61557606137208", "61556785282295"
 def facebook_access(request):
     response_url = request.build_absolute_uri()
     print("RESPONSE URL:", response_url)
-    # print("access_token::", access_token)
-    # access_token = API.exchange_user_access_token(
-    #     response=response_url, redirect_uri=FREDIRECT_URL
-    # )
-    # api = GraphAPI(app_id=APP_ID, app_secret=APP_SECRET, access_token=access_token)
-    # data = api.post_object(
-    #     object_id="61556785282295",
-    #     connection="feed",
-    #     data={"message": "this is post using social media manager"},
-    # )
-    # print("facebook post::", data)
+    access_token = API.exchange_user_access_token(
+        response=response_url, redirect_uri=FREDIRECT_URL
+    )
+    print("access_token::", access_token)
+    api = GraphAPI(app_id=APP_ID, app_secret=APP_SECRET, access_token=access_token)
+    data = api.post_object(
+        object_id="61556785282295",
+        connection="feed",
+        data={"message": "this is post using social media manager"},
+    )
+    print("facebook post::", data)
     context = {"response_url": response_url}
     return render(request, "dashboard/social_accounts.html", context)
 
@@ -326,22 +293,112 @@ def instabasic(request):
 
 
 def github_auth(request):
-    url = "https://github.com/apps/social-app-auth"
+    url = GITAPP.get_login_url(redirect_uri="http://127.0.0.1:8000/github_access")
     return redirect(url)
 
 
-GIT_CLIENT_ID = "Iv1.2b28b44755244ce6"
-GIT_CLIENT_SECRET = "75783268896ec8d9313e8a7559c9c8f218519ae7"
+GITAUTH = Github()
+GITAPP = GITAUTH.get_oauth_application(
+    client_id="Iv1.720847ca221968b2",
+    client_secret="09b5daab4b82a5239a5aeb6526e6606b423fc798",
+)
+GIT_CLIENT_ID = "Iv1.720847ca221968b2"
+GIT_CLIENT_SECRET = "09b5daab4b82a5239a5aeb6526e6606b423fc798"
 
 
 def github_access(request):
     code = request.GET.get("code")
     print("code ::", code)
-    auth = Github()
-    app = auth.get_oauth_application(
-        "Iv1.2b28b44755244ce6", "75783268896ec8d9313e8a7559c9c8f218519ae7"
-    )
-    token = app.get_access_token(code)
-    print("Token::", token)
+    token = GITAPP.get_access_token(code)
+    rtoken = token.refresh_token
 
-    return render(request, "dashboard/social_accounts.html")
+    refresh_token = GITAPP.refresh_access_token(rtoken)
+    auth = GITAPP.get_app_user_auth(token=refresh_token)
+    g = Github(auth=auth)
+    print("refreshToken::", refresh_token)
+    print(auth)
+    user = g.get_user()
+    login = user.login
+    print(user)
+    print("G::", g) 
+    print(login)
+    # repo = user.create_repo("SocialManager")
+    if request.method == "POST":
+        form = RepositoryForm(request.POST)
+        if "create" in request.POST and form.is_valid():
+            repository_name = form.cleaned_data["repository_name"]
+            repository_code = form.cleaned_data["repository_code"]
+            print("repo name :", repository_name)
+            action = request.POST.get("action")
+            if action == "create":
+                try:
+                    repo = user.create_repo(repository_name)
+                    return HttpResponse("Repository created successfully.")
+                except Exception as e:
+                    return HttpResponse("Error Creating repository: " + str(e))
+            # if action == "clone":
+            #     try:
+            #         repoClone = pygit2.clone_repository(repo.git_url, repository_code)
+            #         return HttpResponse("Repository cloned successfully.")
+            #     except Exception as e:
+            #         return HttpResponse("Error Cloning Repository: " + str(e))
+    else:
+        form = RepositoryForm()
+        return render(request, "dashboard/social_accounts.html", {"form": form})
+    # return render(request, "dashboard/social_accounts.html")
+
+
+def gitpost(request):
+    form = RepositoryForm(request.POST)
+    return render(request, "dashboard/git.html", {"form": form})
+
+
+def post(request):
+    error_message = None
+    form = PostForm()
+    try:
+        user = request.user.id
+        userna = request.user.username
+
+        print("id::", user)
+        print("name::", userna)
+        twitter_auth = Link.objects.get(
+            Twitter_username="socialmanager09", social_media="Twitter"
+        )
+        access_token = twitter_auth.access_token
+        access_token_secret = twitter_auth.access_token_secret
+        print("token secrets::", access_token)
+        # twitter_auth_keys = {
+        #     "consumer_key": CONSUMER_KEY,
+        #     "consumer_secret": CONSUMER_SECRET,
+        #     "access_token": ,
+        #     "access_token_secret": "jaHVNjuMSAvQ0KwTDs5GsUvdB5hjyaiAftEFt4uDGQ3Xg",
+        # }
+
+        if request.method == "POST":
+            form = PostForm(request.POST, request.FILES)
+            if "post_now" in request.POST and form.is_valid():
+                social_media = form.cleaned_data["social_media"]
+                if social_media == "Twitter":
+                    content = form.cleaned_data["post_text"]
+                    client = tweepy.Client(
+                        consumer_key=CONSUMER_KEY,
+                        consumer_secret=CONSUMER_SECRET,
+                        access_token=access_token,
+                        access_token_secret=access_token_secret,
+                    )
+                    print("user_info==", AUTH_USER)
+                    client.create_tweet(text=content)
+                    user_screen_name = "socialmanager09"
+
+                    return render(request, "dashboard/post_success.html")
+                else:
+                    error_message = (
+                        "Posting to selected social media is not supported yet."
+                    )
+    except Exception as e:
+        error_message = str(e)
+
+    return render(
+        request, "dashboard/post.html", {"form": form, "error_message": error_message}
+    )

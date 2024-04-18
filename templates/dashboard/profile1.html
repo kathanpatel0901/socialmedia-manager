@@ -2,65 +2,44 @@
 {% load socialaccount %}
 {% block sidebar %}
 {% providers_media_js %}
-
-<body>
-
-    <section class="vh-100">
-        <div class="container align-items-center mt-5 h-50">
-            <div class="row d-flex justify-content-center h-100">
-                <div class="col col-lg-6 mb-4 mb-lg-0">
-                    <div class="card mb-3" style="border-radius: .5rem;">
-                        <div class="row g-0">
-                            {% if request.user.is_authenticated %}
-                            {% if request.user.socialaccount_set.all %}
-                            {% with social_account=request.user.socialaccount_set.first %}
-                            <div class="col-md-4 gradient-custom text-center">
-                                <img src="{{ social_account.get_avatar_url }}" alt="Avatar"
-                                    class="rounded-circle my-5" />
-                                <h4 class="col-md-15">{{request.user.username}}</h4>
-                            </div>
-                            <div class="col-md-8">
-                                <div class="card-body p-4">
-                                    <div class="row pt-1">
-                                        <div class="col-6 mb-3">
-                                            <h6>Email</h6>
-                                            <p class="text-muted">{{ request.user.email }}</p>
-                                        </div>
-                                        <div class="col-6 mb-3">
-                                            <h6>Phone</h6>
-                                            <p class="text-muted">9104114400</p>
-                                        </div>
+<section class="vh-100">
+    <div class="container align-items-center mt-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-6">
+                <div class="card mb-3">
+                    <div class="row g-0">
+                        {% if request.user.is_authenticated %}
+                        {% if request.user.socialaccount_set.all %}
+                        {% with social_account=request.user.socialaccount_set.first %}
+                        <div class="col-md-15 gradient-custom text-center">
+                            <img src="{{ social_account.get_avatar_url }}" alt="Avatar" class="rounded-circle my-5"
+                                style="width: 20%;" />
+                        </div>
+                        <div class="col-md-7">
+                            <div class="card-body p-4">
+                                <div class="mx-auto">
+                                    <div>
+                                        <h6 class="card-title">Name:</h6>
+                                        <p class="card-text text-muted">{{ social_account.extra_data.name }}</p>
                                     </div>
-                                    <h6>Projects</h6>
-                                    <hr class="mt-0 mb-4">
-                                    <div class="row pt-1">
-                                        <div class="col-6 mb-3">
-                                            <h6>Recent</h6>
-                                            <p class="text-muted">Lorem ipsum</p>
-                                        </div>
-                                        <div class="col-6 mb-3">
-                                            <h6>Most Viewed</h6>
-                                            <p class="text-muted">Dolor sit amet</p>
-                                        </div>
+                                    <div>
+                                        <h6 class="card-title">Email:</h6>
+                                        <p class="card-text text-muted">{{ social_account.extra_data.email }}</p>
                                     </div>
-                                    <div class="d-flex justify-content-start">
-                                        <a href="#!"><i class="fab fa-facebook-f fa-lg me-3"></i></a>
-                                        <a href="#!"><i class="fab fa-twitter fa-lg me-3"></i></a>
-                                        <a href="#!"><i class="fab fa-instagram fa-lg"></i></a>
-
+                                    <div>
+                                        <h6 class="card-title">Joining Date and Time:</h6>
+                                        <p class="card-text text-muted">{{ request.user.date_joined }}</p>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
+                    {% endwith %}
+                    {% endif %}
+                    {% endif %}
                 </div>
             </div>
         </div>
-    </section>
-
-</body>
-{% endwith %}
-{% endif %}
-{% endif %}
-
+    </div>
+</section>
 {% endblock sidebar %}
