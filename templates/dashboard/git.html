@@ -1,0 +1,20 @@
+{% extends "base/sidebar.html" %}
+{% load socialaccount %}
+{% block sidebar %}
+{% load crispy_forms_tags %}
+
+<h1 class=" text-center"> <span>Git Hub
+  </span>
+</h1>
+<div class="signup-form mt-5">
+  <p class="text-danger text-center">{{error_message}}</p>
+  <h2>Create a New Post</h2>
+  {% csrf_token %}{% crispy form %}
+</div>
+<style>
+.btn-primary, .btn-secondary{
+  display: block;
+  margin: 0 auto;
+}
+</style>
+{% endblock sidebar %}
