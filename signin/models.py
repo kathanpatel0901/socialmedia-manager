@@ -44,5 +44,10 @@ class Post(models.Model):
             self.post_date_time = timezone.now()
         return super().save(*args, **kwargs)
 
+
 class Git(models.Model):
-    user = models.CharField(max_length=100)
+    user = models.ForeignKey(SocialAccount, on_delete=models.CASCADE)
+    username = models.CharField(max_length=50)
+    code = models.CharField(max_length=200)
+    def __str__(self):
+        return f"{self.user}"

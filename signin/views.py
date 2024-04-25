@@ -1,17 +1,19 @@
-from django.shortcuts import render, redirect
-from django.urls import reverse
 from django.contrib.auth import logout
 from django.views.generic import View
 from allauth.socialaccount.models import SocialAccount
+from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
 from .forms import PostForm, SchedulePostForm, RepositoryForm
+from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from .tasks import schedule_post_task
-import tweepy
-from .models import Link
 from linkedin_api import Linkedin
+from .models import Link, Git
+import tweepy
 from pyfacebook import GraphAPI
+from django.contrib import messages
+from github import GithubException
 from github import Github, Auth, ApplicationOAuth
 import pygit2
 from pyfacebook import FacebookApi
@@ -62,7 +64,6 @@ def social_accounts(request):
 
 @login_required
 def profile_view(request):
-
     social_account = SocialAccount.objects.get(user=request.user, provider="google")
     print("social_account", social_account)
     profile_data = social_account.extra_data
@@ -250,6 +251,7 @@ def my_callback_view(request):
 APP_ID = "3542583976004037"
 APP_SECRET = "6e09f37136dbd7f7ac15b9d7d9673349"
 
+
 API = GraphAPI(
     app_id=APP_ID,
     app_secret=APP_SECRET,
@@ -270,12 +272,12 @@ PAGE_ID = "61557606137208", "61556785282295"
 
 
 def facebook_access(request):
+
     response_url = request.build_absolute_uri()
     print("RESPONSE URL:", response_url)
-<<<<<<< HEAD
-    access_token = API.exchange_user_access_token(
-        response=response_url, redirect_uri=FREDIRECT_URL
-    )
+
+    response = response_url, redirect_uri = FREDIRECT_URL
+    access_token = API.exchange_user_acddcess_token()
     print("access_token::", access_token)
     api = GraphAPI(app_id=APP_ID, app_secret=APP_SECRET, access_token=access_token)
     data = api.post_object(
@@ -285,7 +287,7 @@ def facebook_access(request):
     )
     print("facebook post::", data)
     context = {"response_url": response_url}
-=======
+
     # print("access_token::", access_token)
     access_token = API.exchange_user_access_token(
         response=response_url, redirect_uri=FREDIRECT_URL
@@ -298,7 +300,7 @@ def facebook_access(request):
     # )
     # print("facebook post::", data)
     context = {"response_url": access_token}
->>>>>>> f6e3c3c4cdd763b716ef541e0a95d68881b876d8
+
     return render(request, "dashboard/social_accounts.html", context)
 
 
@@ -323,44 +325,31 @@ GIT_CLIENT_SECRET = "09b5daab4b82a5239a5aeb6526e6606b423fc798"
 
 def github_access(request):
     code = request.GET.get("code")
-    print("code ::", code)
-    token = GITAPP.get_access_token(code)
-    rtoken = token.refresh_token
+    if code:
+        ntoken = GITAPP.get_access_token(code)
+        if ntoken:
+            rtoken = ntoken.refresh_token
+            token = GITAPP.refresh_access_token(refresh_token=rtoken)
+            auth = GITAPP.get_app_user_auth(token=token)
+            g = Github(auth=auth)
+            user = g.get_user()
+            # social_account = request.user.socialaccount_set.first()
+            # Git.objects.create(
+            #     user=social_account,
+            #     username=login,
+            #     code=code,
+            # )
+            print("Token::", user)
+            context = {"token": rtoken}
+    return render(request, "dashboard/social_accounts.html", context)
 
-    refresh_token = GITAPP.refresh_access_token(rtoken)
-    auth = GITAPP.get_app_user_auth(token=refresh_token)
-    g = Github(auth=auth)
-    print("refreshToken::", refresh_token)
-    print(auth)
-    user = g.get_user()
-    login = user.login
-    print(user)
-    print("G::", g) 
-    print(login)
-    # repo = user.create_repo("SocialManager")
-    if request.method == "POST":
-        form = RepositoryForm(request.POST)
-        if "create" in request.POST and form.is_valid():
-            repository_name = form.cleaned_data["repository_name"]
-            repository_code = form.cleaned_data["repository_code"]
-            print("repo name :", repository_name)
-            action = request.POST.get("action")
-            if action == "create":
-                try:
-                    repo = user.create_repo(repository_name)
-                    return HttpResponse("Repository created successfully.")
-                except Exception as e:
-                    return HttpResponse("Error Creating repository: " + str(e))
-            # if action == "clone":
-            #     try:
-            #         repoClone = pygit2.clone_repository(repo.git_url, repository_code)
-            #         return HttpResponse("Repository cloned successfully.")
-            #     except Exception as e:
-            #         return HttpResponse("Error Cloning Repository: " + str(e))
-    else:
-        form = RepositoryForm()
-        return render(request, "dashboard/social_accounts.html", {"form": form})
-    # return render(request, "dashboard/social_accounts.html")
+    # social_account = request.user.socialaccount_set.first()
+    # Git.objects.create(user=social_account, username=login, token=rtoken)
+    # if request.method == "POST":
+    #     form = RepositoryForm(request.POST)
+    #     if "create" in request.POST and form.is_valid():
+    #         repo_name = form.cleaned_data["repository_name"]
+    #         new_repo = user.create_repo(repo_name)
 
 
 def gitpost(request):
@@ -374,21 +363,11 @@ def post(request):
     try:
         user = request.user.id
         userna = request.user.username
-
-        print("id::", user)
-        print("name::", userna)
         twitter_auth = Link.objects.get(
             Twitter_username="socialmanager09", social_media="Twitter"
         )
         access_token = twitter_auth.access_token
         access_token_secret = twitter_auth.access_token_secret
-        print("token secrets::", access_token)
-        # twitter_auth_keys = {
-        #     "consumer_key": CONSUMER_KEY,
-        #     "consumer_secret": CONSUMER_SECRET,
-        #     "access_token": ,
-        #     "access_token_secret": "jaHVNjuMSAvQ0KwTDs5GsUvdB5hjyaiAftEFt4uDGQ3Xg",
-        # }
 
         if request.method == "POST":
             form = PostForm(request.POST, request.FILES)
@@ -417,3 +396,26 @@ def post(request):
     return render(
         request, "dashboard/post.html", {"form": form, "error_message": error_message}
     )
+
+
+#   if request.method == "POST":
+#         form = RepositoryForm(request.POST)
+#         if "create" in request.POST and form.is_valid():
+#             repository_name = form.cleaned_data["repository_name"]
+#             repository_code = form.cleaned_data["repository_code"]
+#             print("repo name :", repository_name)
+#             action = request.POST.get("action")
+#             if action == "create":
+#                 try:
+#                     repo = user.create_repo(repository_name)
+#                     return HttpResponse("Repository created successfully.")
+#                 except Exception as e:
+#                     return HttpResponse("Error Creating repository: " + str(e))
+#             # if action == "clone":
+#             #     try:
+#             #         repoClone = pygit2.clone_repository(repo.git_url, repository_code)
+#             #         return HttpResponse("Repository cloned successfully.")
+#             #     except Exception as e:
+#             #         return HttpResponse("Error Cloning Repository: " + str(e))
+#     else:
+#         form = RepositoryForm()
