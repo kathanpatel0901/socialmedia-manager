@@ -9,9 +9,9 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from .tasks import schedule_post_task
 from linkedin_api import Linkedin
-from .models import Link, Git
+from .models import Link, Git, Facebookuser
 import tweepy
-from pyfacebook import GraphAPI
+from pyfacebook import GraphAPI, FacebookApi
 from django.contrib import messages
 from github import GithubException
 from github import Github, Auth, ApplicationOAuth
@@ -248,65 +248,81 @@ def my_callback_view(request):
     # return render(request, 'dashboard/tweet.html')
 
 
-APP_ID = "3542583976004037"
-APP_SECRET = "6e09f37136dbd7f7ac15b9d7d9673349"
+APP_ID = "1869304440238153"
+APP_SECRET = "05ebb9ddfc65ab76d6ff98ce56c62cdc"
 
-
+CONFIG_ID = "1179387696834598"
 API = GraphAPI(
     app_id=APP_ID,
     app_secret=APP_SECRET,
     oauth_flow=True,
 )
-FREDIRECT_URL = "https://socialmediamanager.in.net/facebook_access"
+FREDIRECT_URL = "https://socialmediamanager.in.net/facebook_access/"
 
 
 def facebook_auth(request):
-    auth_url_tup = API.get_authorization_url(redirect_uri=FREDIRECT_URL)
-    auth_url = auth_url_tup[0]
+    # auth_url_tup = API.get_authorization_url(redirect_uri=FREDIRECT_URL)
+    # auth_url = auth_url_tup[0]
+    auth_url = "https://www.facebook.com/v19.0/dialog/oauth?client_id=1869304440238153&redirect_uri=https://socialmediamanager.in.net/facebook_access/&state=PyFacebook&config_id=1179387696834598"
     print("facebook_url::", auth_url)
     # redirect_url = reverse("facebook_access") + f"?response_url={auth_url}"
     return redirect(auth_url)
 
 
-PAGE_ID = "61557606137208", "61556785282295"
-
-
 def facebook_access(request):
-
     response_url = request.build_absolute_uri()
-    print("RESPONSE URL:", response_url)
-
-    response = response_url, redirect_uri = FREDIRECT_URL
-    access_token = API.exchange_user_acddcess_token()
-    print("access_token::", access_token)
-    api = GraphAPI(app_id=APP_ID, app_secret=APP_SECRET, access_token=access_token)
-    data = api.post_object(
-        object_id="61556785282295",
-        connection="feed",
-        data={"message": "this is post using social media manager"},
-    )
-    print("facebook post::", data)
-    context = {"response_url": response_url}
-
-    # print("access_token::", access_token)
-    access_token = API.exchange_user_access_token(
-        response=response_url, redirect_uri=FREDIRECT_URL
-    )
-    # api = GraphAPI(app_id=APP_ID, app_secret=APP_SECRET, access_token=access_token)
-    # data = api.post_object(
-    #     object_id="61556785282295",
-    #     connection="feed",
-    #     data={"message": "this is post using social media manager"},
+    access_token = API.exchange_user_access_token(response=response_url)
+    # if access_token:
+    #   page_access_token = API.exchange_page_access_token(
+    #      page_id="227651403774182", access_token=access_token
     # )
-    # print("facebook post::", data)
-    context = {"response_url": access_token}
-
+    name = "Kathan Patel"
+    Facebookuser.objects.create(user=name, access_token=access_token)
+    print("RESPONSE URL:", response_url)
+    context = {"response_url": name}
     return render(request, "dashboard/social_accounts.html", context)
 
+PAGE_ID = "227651403774182"
 
-# def facebook_access(request):
-def instabasic(request):
-    return render(request, "dashboard/social_accounts.html")
+def facebok_page_access(request):
+    dbfb = Facebookuser.objects.get(user="Kathan Patel")
+    obj = dbfb.access_token
+    access_token = obj.get("access_token")
+    page_access_token = API.exchange_page_access_token(
+        page_id="227651403774182", access_token=access_token
+    )
+    api = GraphAPI(app_id=APP_ID,app_secret=APP_SECRET,access_token=page_access_token)
+    data = api.post_object(
+        object_id=PAGE_ID,
+        connection="feed",
+        params={"fields":"id,message,created_time,from",},
+        data={"message":"This is a test message by api"},
+    )
+    context = {"access_token": page_access_token}
+    return render(request, "dashboard/social_accounts.html", context)
+
+INSTA_ID = "17841465939257583"
+
+def insta_auth(request):
+    dbfb = Facebookuser.objects.get(user="Kathan Patel")
+    obj = dbfb.access_token
+    access_token = obj.get("access_token")
+    api_i = GraphAPI(app_id=APP_ID,app_secret=APP_SECRET,access_token=access_token)
+    data = api_i.post_object(
+        object_id=INSTA_ID,
+        connection="media",
+        params={"image_url": "https://picsum.photos/200/300",
+                "caption": "Image by socialmedia_manager"},             
+    )
+    container_id = data["id"]
+    publish_data = api_i.post_object(
+        object_id=INSTA_ID,
+        connection="media_publish",
+        params={
+            "creation_id": container_id,
+        }
+    )
+    return render(request, "dashboard/post_success.html")
 
 
 def github_auth(request):

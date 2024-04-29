@@ -3,6 +3,7 @@ import uuid
 from django.utils import timezone
 from django.contrib.auth.models import User
 from allauth.socialaccount.models import SocialAccount
+import json
 
 SOCIAL_MEDIA_CHOICES = [
     ("Twitter", "Twitter"),
@@ -32,6 +33,9 @@ class Post(models.Model):
     post_text = models.CharField(max_length=100)
     post_media = models.FileField(upload_to="post_media/", max_length=10485760)
     social_media = models.CharField(max_length=20, choices=SOCIAL_MEDIA_CHOICES)
+    twitter = models.BooleanField(default=False)
+    facebook = models.BooleanField(default=False)
+    instagram = models.BooleanField(default=False)
     post_date_time = models.DateTimeField(default=timezone.now)
     post_type = models.CharField(max_length=20)
     post_schedule_time = models.DateTimeField()
@@ -49,5 +53,14 @@ class Git(models.Model):
     user = models.ForeignKey(SocialAccount, on_delete=models.CASCADE)
     username = models.CharField(max_length=50)
     code = models.CharField(max_length=200)
+
     def __str__(self):
         return f"{self.user}"
+
+
+class Facebookuser(models.Model):
+    user = models.CharField(max_length=100)
+    access_token = models.JSONField()
+
+
+# class Facebookpage(models.Model):

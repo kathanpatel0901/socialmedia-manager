@@ -21,7 +21,14 @@ class PostForm(forms.ModelForm):
 
     class Meta:
         model = Post
-        fields = ["post_text", "post_media", "social_media"]
+        fields = [
+            "post_text",
+            "post_media",
+            "twitter",
+            "facebook",
+            "instagram",
+            "social_media",
+        ]
 
     def __init__(self, *args, **kwargs):
         super(PostForm, self).__init__(*args, **kwargs)
@@ -32,7 +39,13 @@ class PostForm(forms.ModelForm):
         self.helper.layout = Layout(
             "post_text",
             "post_media",
-            Field("social_media", css_class="checkbox-inline"),
+            Field(
+                "twitter",
+                "facebook",
+                "instagram",
+                css_class="form-check-input",
+                wrapper_class="form-check form-switch",
+            ),
             Submit("post_now", "Post Now", css_class="btn-primary"),
         )
 

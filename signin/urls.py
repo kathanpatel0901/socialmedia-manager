@@ -18,10 +18,11 @@ from signin.views import (
     showpost,
     retrivepost,
     viewshow,
-    instabasic,
     tauth2,
     taccess2,
     gitpost,
+    facebok_page_access,
+    insta_auth,
 )
 
 urlpatterns = [
@@ -31,6 +32,7 @@ urlpatterns = [
     path("Linkedin_auth", linkedin, name="linkedin"),
     path("facebook_auth/", facebook_auth, name="facebook_auth"),
     path("facebook_access/", facebook_access, name="facebook_access"),
+    path("insta_auth", insta_auth, name="insta_auth"),
     path("github_auth", github_auth, name="github"),
     path("github_access", github_access, name="github_access"),
     path("gitpost", gitpost, name="gitpost"),
@@ -38,6 +40,7 @@ urlpatterns = [
     path("show-post", showpost),
     path("viewshow", viewshow),
     path("", home),
+    path("page_access", facebok_page_access),
     # # path('logout', views.logout_view),
     path("index", index),
     # path('social_account', social_accounts),
@@ -47,7 +50,6 @@ urlpatterns = [
     path("post_success", post_success),
     path("test", test),
     path("schedule-post", schedule_post),
-    path("instabasic", instabasic, name="instabasic"),
     path("tauth2", tauth2, name="tauth2"),
     path("taccess2", taccess2, name="taccess2"),
     # path('login', login),
