@@ -140,4 +140,5 @@ GitHub.sublime-settings
 
 #pem
 *.pem
+db.sqlite3
 *.sqlite3
