@@ -1,6 +1,6 @@
 from django import forms
 from crispy_forms.helper import FormHelper
-from crispy_forms.layout import Layout, Submit, Field
+from crispy_forms.layout import Layout, Submit, Field, HTML
 from crispy_forms.bootstrap import FormActions
 from .models import Post, Link
 from django.forms import DateTimeInput
@@ -17,11 +17,18 @@ class TweetForm(forms.Form):
         self.helper.layout = Layout("tweet_content", Submit("submit", "Post Tweet"))
 
 
+
 class PostForm(forms.ModelForm):
 
     class Meta:
         model = Post
-        fields = ["post_text", "post_media", "social_media"]
+        fields = [
+            "post_text",
+            "post_media",
+            "twitter",
+            "facebook",
+            "instagram",
+        ]
 
     def __init__(self, *args, **kwargs):
         super(PostForm, self).__init__(*args, **kwargs)
@@ -32,16 +39,22 @@ class PostForm(forms.ModelForm):
         self.helper.layout = Layout(
             "post_text",
             "post_media",
-            Field("social_media", css_class="checkbox-inline"),
+            HTML("<h6>Social Media*</h6>"),
+            Field(
+                "twitter",
+                "facebook",
+                "instagram",
+                css_class="form-check-input",
+                wrapper_class="form-check form-switch",
+            ),
             Submit("post_now", "Post Now", css_class="btn-primary"),
         )
-
 
 class SchedulePostForm(forms.ModelForm):
 
     class Meta:
         model = Post
-        fields = ["post_text", "post_media", "social_media", "post_schedule_time"]
+        fields = ["post_text", "post_media", "post_schedule_time"]
         widget = {
             "post_schedule_time": DateTimeInput(
                 attrs={"type": "datetime-local"}, format="%Y-%m-%dT%H:%M"
@@ -56,7 +69,7 @@ class SchedulePostForm(forms.ModelForm):
         self.helper.layout = Layout(
             Field("post_text"),
             Field("post_media"),
-            Field("social_media", css_class="checkbox-inline"),
+            #Field("social_media", css_class="checkbox-inline"),
             Field(
                 "post_schedule_time",
                 placeholder="YYYY-MM-DD HH:MM:SS",
