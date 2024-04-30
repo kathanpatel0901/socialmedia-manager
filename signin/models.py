@@ -32,7 +32,7 @@ class Post(models.Model):
     link = models.ForeignKey(Link, on_delete=models.CASCADE)
     post_text = models.CharField(max_length=100)
     post_media = models.FileField(upload_to="post_media/", max_length=10485760)
-    social_media = models.CharField(max_length=20, choices=SOCIAL_MEDIA_CHOICES)
+    #social_media = models.CharField(max_length=20, choices=SOCIAL_MEDIA_CHOICES)
     twitter = models.BooleanField(default=False)
     facebook = models.BooleanField(default=False)
     instagram = models.BooleanField(default=False)
@@ -41,7 +41,7 @@ class Post(models.Model):
     post_schedule_time = models.DateTimeField()
 
     def __str__(self):
-        return f"Post {self.id} by {self.user.username} on {self.social_media}"
+        return f"Post {self.id} by {self.user.username} on {self.post_date_time}"
 
     def save(self, *args, **kwargs):
         if not self.id:
@@ -59,8 +59,10 @@ class Git(models.Model):
 
 
 class Facebookuser(models.Model):
-    user = models.CharField(max_length=100)
-    access_token = models.JSONField()
+    user = models.ForeignKey(SocialAccount, on_delete=models.CASCADE)
+    page_name = models.CharField(max_length=100)
+    page_id = models.IntegerField()
+    page_access_token = models.CharField(max_length=500)
 
 
 # class Facebookpage(models.Model):
