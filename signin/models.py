@@ -32,7 +32,7 @@ class Post(models.Model):
     link = models.ForeignKey(Link, on_delete=models.CASCADE)
     post_text = models.CharField(max_length=100)
     post_media = models.FileField(upload_to="post_media/", max_length=10485760)
-    #social_media = models.CharField(max_length=20, choices=SOCIAL_MEDIA_CHOICES)
+    # social_media = models.CharField(max_length=20, choices=SOCIAL_MEDIA_CHOICES)
     twitter = models.BooleanField(default=False)
     facebook = models.BooleanField(default=False)
     instagram = models.BooleanField(default=False)

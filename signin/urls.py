@@ -26,7 +26,6 @@ from signin.views import (
 )
 
 urlpatterns = [
-    # path("Linkedin/auth/", Linkedin_auth.as_view(), name="Linkedin_auth"),
     path("Twitter", tauth, name="Twitter_auth"),
     path("Taccess", taccess, name="access-token"),
     path("Linkedin_auth", linkedin, name="linkedin"),
@@ -39,11 +38,8 @@ urlpatterns = [
     path("get-tweets", retrivepost, name="get-tweets"),
     path("show-post", showpost),
     path("viewshow", viewshow),
-    path("", home),
     path("page_access", facebok_page_access),
-    # # path('logout', views.logout_view),
     path("index", index),
-    # path('social_account', social_accounts),
     path("post", post),
     path("social_account", social_accounts),
     path("profile", profile_view),
@@ -52,6 +48,10 @@ urlpatterns = [
     path("schedule-post", schedule_post),
     path("tauth2", tauth2, name="tauth2"),
     path("taccess2", taccess2, name="taccess2"),
+    path("", home),
+    # path("Linkedin/auth/", Linkedin_auth.as_view(), name="Linkedin_auth"),
+    # path('logout', views.logout_view),
+    # path('social_account', social_accounts),
     # path('login', login),
     # path('google-redirect/', google_redirect, name='google_redirect'),
     # path('twitter-redirect/', twitter_redirect, name='twitter_redirect'),
