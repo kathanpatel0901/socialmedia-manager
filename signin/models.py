@@ -4,7 +4,10 @@ from django.utils import timezone
 from django.contrib.auth.models import User
 from allauth.socialaccount.models import SocialAccount
 import json
+<<<<<<< HEAD
 
+=======
+>>>>>>> 186d8c7ceb25c27fdfce6c277c305311e6bee04c
 SOCIAL_MEDIA_CHOICES = [
     ("Twitter", "Twitter"),
     ("Facebook", "Facebook"),
@@ -48,6 +51,7 @@ class Post(models.Model):
             self.post_date_time = timezone.now()
         return super().save(*args, **kwargs)
 
+<<<<<<< HEAD
 
 class Git(models.Model):
     user = models.ForeignKey(SocialAccount, on_delete=models.CASCADE)
@@ -66,3 +70,11 @@ class Facebookuser(models.Model):
 
 
 # class Facebookpage(models.Model):
+=======
+class Facebookuser(models.Model):
+    user = models.ForeignKey(SocialAccount, on_delete=models.CASCADE)
+    page_name = models.CharField(max_length=50)
+    page_id = models.IntegerField()
+    page_access_token = models.CharField(max_length=500)
+
+>>>>>>> 186d8c7ceb25c27fdfce6c277c305311e6bee04c

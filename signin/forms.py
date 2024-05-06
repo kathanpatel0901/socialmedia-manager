@@ -17,6 +17,7 @@ class TweetForm(forms.Form):
         self.helper.layout = Layout("tweet_content", Submit("submit", "Post Tweet"))
 
 
+
 class PostForm(forms.ModelForm):
 
     class Meta:
@@ -49,11 +50,11 @@ class PostForm(forms.ModelForm):
             Submit("post_now", "Post Now", css_class="btn-primary"),
         )
 
-
 class SchedulePostForm(forms.ModelForm):
 
     class Meta:
         model = Post
+<<<<<<< HEAD
         fields = [
             "post_text",
             "post_media",
@@ -62,6 +63,9 @@ class SchedulePostForm(forms.ModelForm):
             "instagram",
             "post_schedule_time",
         ]
+=======
+        fields = ["post_text", "post_media", "post_schedule_time"]
+>>>>>>> 186d8c7ceb25c27fdfce6c277c305311e6bee04c
         widget = {
             "post_schedule_time": DateTimeInput(
                 attrs={"type": "datetime-local"}, format="%Y-%m-%dT%H:%M"
@@ -76,6 +80,7 @@ class SchedulePostForm(forms.ModelForm):
         self.helper.layout = Layout(
             Field("post_text"),
             Field("post_media"),
+<<<<<<< HEAD
             HTML("<h6>Social Media*</h6>"),
             Field(
                 "twitter",
@@ -84,6 +89,9 @@ class SchedulePostForm(forms.ModelForm):
                 css_class="form-check-input",
                 wrapper_class="form-check form-switch",
             ),
+=======
+            #Field("social_media", css_class="checkbox-inline"),
+>>>>>>> 186d8c7ceb25c27fdfce6c277c305311e6bee04c
             Field(
                 "post_schedule_time",
                 placeholder="YYYY-MM-DD HH:MM:SS",
