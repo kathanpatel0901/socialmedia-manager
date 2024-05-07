@@ -31,6 +31,7 @@ ALLOWED_HOSTS = [
     "socialmediamanager.in.net",
     "106.215.20.147",
     "127.0.0.0",
+    "34.196.212.31"
 ]
 
 

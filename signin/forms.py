@@ -6,6 +6,14 @@ from .models import Post, Link
 from django.forms import DateTimeInput
 
 
+class DateInput(forms.DateTimeInput):
+    input_type = "date"
+
+
+class TimeInput(forms.TimeInput):
+    input_type = "time"
+
+
 class TweetForm(forms.Form):
 
     tweet_content = forms.CharField(label="tweet_content", max_length=250)
@@ -15,7 +23,6 @@ class TweetForm(forms.Form):
         self.helper = FormHelper(self)
         self.helper.form_method = "post"
         self.helper.layout = Layout("tweet_content", Submit("submit", "Post Tweet"))
-
 
 
 class PostForm(forms.ModelForm):
@@ -50,22 +57,22 @@ class PostForm(forms.ModelForm):
             Submit("post_now", "Post Now", css_class="btn-primary"),
         )
 
+
 class SchedulePostForm(forms.ModelForm):
+    post_schedule_date = forms.DateField(widget=DateInput())
+    post_schedule_time = forms.TimeField(widget=TimeInput())
 
     class Meta:
         model = Post
-<<<<<<< HEAD
         fields = [
             "post_text",
             "post_media",
             "twitter",
             "facebook",
             "instagram",
+            "post_schedule_date",
             "post_schedule_time",
         ]
-=======
-        fields = ["post_text", "post_media", "post_schedule_time"]
->>>>>>> 186d8c7ceb25c27fdfce6c277c305311e6bee04c
         widget = {
             "post_schedule_time": DateTimeInput(
                 attrs={"type": "datetime-local"}, format="%Y-%m-%dT%H:%M"
@@ -80,7 +87,6 @@ class SchedulePostForm(forms.ModelForm):
         self.helper.layout = Layout(
             Field("post_text"),
             Field("post_media"),
-<<<<<<< HEAD
             HTML("<h6>Social Media*</h6>"),
             Field(
                 "twitter",
@@ -89,14 +95,8 @@ class SchedulePostForm(forms.ModelForm):
                 css_class="form-check-input",
                 wrapper_class="form-check form-switch",
             ),
-=======
-            #Field("social_media", css_class="checkbox-inline"),
->>>>>>> 186d8c7ceb25c27fdfce6c277c305311e6bee04c
-            Field(
-                "post_schedule_time",
-                placeholder="YYYY-MM-DD HH:MM:SS",
-                css_class="datetimepicker",
-            ),
+            Field("post_schedule_date", css_class="datetimepicker"),
+            Field("post_schedule_time", css_class="datetimepicker"),
             Submit("post_schedule", "Post Schedule", css_class="btn-primary"),
         )
 

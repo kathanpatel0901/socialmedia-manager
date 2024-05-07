@@ -18,17 +18,17 @@ from signin.views import (
     showpost,
     retrivepost,
     viewshow,
-<<<<<<< HEAD
+
     tauth2,
     taccess2,
     gitpost,
     facebok_page_access,
-=======
+
     instabasic,
     tauth2,
     facebok_page_access,
     taccess2,
->>>>>>> 186d8c7ceb25c27fdfce6c277c305311e6bee04c
+
     insta_auth,
 )
 
@@ -47,11 +47,14 @@ urlpatterns = [
     path("show-post", showpost),
     path("viewshow", viewshow),
     path("", home),
-<<<<<<< HEAD
+
     path("page_access", facebok_page_access),
-=======
+
     path("page_access",facebok_page_access),
->>>>>>> 186d8c7ceb25c27fdfce6c277c305311e6bee04c
+
+
+    path("page_access",facebok_page_access),
+
     # # path('logout', views.logout_view),
     path("index", index),
     # path('social_account', social_accounts),
