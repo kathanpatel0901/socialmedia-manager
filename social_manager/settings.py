@@ -31,6 +31,7 @@ ALLOWED_HOSTS = [
     "socialmediamanager.in.net",
     "106.215.20.147",
     "127.0.0.0",
+    "34.196.212.31"
 ]
 
 
@@ -270,6 +271,7 @@ TWITTER_API_SECRET_KEY = "7avCQF3YcfyazKiLMXA7LRKo4nV6P67Syxj0J5BYflzeNcY6iv"
 TWITTER_ACCESS_TOKEN = "1758379615968514048-g8GOVnszAiBdUZo3XqZbRrVM66Gk5z"
 TWITTER_ACCESS_TOKEN_SECRET = "SMfpOOTSu7vzTgzV0008bfdndv7TQJSnXzWgwznGqRJuN"
 
+#celery Settings
 CELERY_BROKER_URL = "redis://localhost:6379"
 CELERY_RESULT_BACKEND = "redis://localhost:6379"
 

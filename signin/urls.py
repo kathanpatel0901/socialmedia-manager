@@ -18,10 +18,17 @@ from signin.views import (
     showpost,
     retrivepost,
     viewshow,
+
     tauth2,
     taccess2,
     gitpost,
     facebok_page_access,
+
+    instabasic,
+    tauth2,
+    facebok_page_access,
+    taccess2,
+
     insta_auth,
 )
 
@@ -38,7 +45,20 @@ urlpatterns = [
     path("get-tweets", retrivepost, name="get-tweets"),
     path("show-post", showpost),
     path("viewshow", viewshow),
+<<<<<<< HEAD
     path("page_access", facebok_page_access),
+=======
+    path("", home),
+
+    path("page_access", facebok_page_access),
+
+    path("page_access",facebok_page_access),
+
+
+    path("page_access",facebok_page_access),
+
+    # # path('logout', views.logout_view),
+>>>>>>> 63ef55cabaa88db1a76ed21a2457c84024f7588c
     path("index", index),
     path("post", post),
     path("social_account", social_accounts),
@@ -53,6 +73,8 @@ urlpatterns = [
     # path('logout', views.logout_view),
     # path('social_account', social_accounts),
     # path('login', login),
+    path("tauth2", tauth2, name="tauth2"),
+    path("taccess2",taccess2,name="taccess2"),
     # path('google-redirect/', google_redirect, name='google_redirect'),
     # path('twitter-redirect/', twitter_redirect, name='twitter_redirect'),
 ]

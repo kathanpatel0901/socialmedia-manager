@@ -6,6 +6,14 @@ from .models import Post, Link
 from django.forms import DateTimeInput
 
 
+class DateInput(forms.DateTimeInput):
+    input_type = "date"
+
+
+class TimeInput(forms.TimeInput):
+    input_type = "time"
+
+
 class TweetForm(forms.Form):
 
     tweet_content = forms.CharField(label="tweet_content", max_length=250)
@@ -51,6 +59,8 @@ class PostForm(forms.ModelForm):
 
 
 class SchedulePostForm(forms.ModelForm):
+    post_schedule_date = forms.DateField(widget=DateInput())
+    post_schedule_time = forms.TimeField(widget=TimeInput())
 
     class Meta:
         model = Post
@@ -60,6 +70,7 @@ class SchedulePostForm(forms.ModelForm):
             "twitter",
             "facebook",
             "instagram",
+            "post_schedule_date",
             "post_schedule_time",
         ]
         widget = {
@@ -84,11 +95,8 @@ class SchedulePostForm(forms.ModelForm):
                 css_class="form-check-input",
                 wrapper_class="form-check form-switch",
             ),
-            Field(
-                "post_schedule_time",
-                placeholder="YYYY-MM-DD HH:MM:SS",
-                css_class="datetimepicker",
-            ),
+            Field("post_schedule_date", css_class="datetimepicker"),
+            Field("post_schedule_time", css_class="datetimepicker"),
             Submit("post_schedule", "Post Schedule", css_class="btn-primary"),
         )
 

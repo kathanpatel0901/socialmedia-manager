@@ -3,7 +3,6 @@
 *.pot
 *.pyc
 __pycache__
-db.sqlite3
 media
 
 # Backup files # 
@@ -140,5 +139,8 @@ GitHub.sublime-settings
 
 #pem
 *.pem
+<<<<<<< HEAD
 db.sqlite3
 *.sqlite3
+=======
+>>>>>>> 63ef55cabaa88db1a76ed21a2457c84024f7588c

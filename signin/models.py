@@ -32,13 +32,17 @@ class Post(models.Model):
     link = models.ForeignKey(Link, on_delete=models.CASCADE)
     post_text = models.CharField(max_length=100)
     post_media = models.FileField(upload_to="post_media/", max_length=10485760)
+<<<<<<< HEAD
     # social_media = models.CharField(max_length=20, choices=SOCIAL_MEDIA_CHOICES)
+=======
+>>>>>>> 63ef55cabaa88db1a76ed21a2457c84024f7588c
     twitter = models.BooleanField(default=False)
     facebook = models.BooleanField(default=False)
     instagram = models.BooleanField(default=False)
     post_date_time = models.DateTimeField(default=timezone.now)
     post_type = models.CharField(max_length=20)
-    post_schedule_time = models.DateTimeField()
+    post_schedule_date = models.DateField()
+    post_schedule_time = models.TimeField()
 
     def __str__(self):
         return f"Post {self.id} by {self.user.username} on {self.post_date_time}"
