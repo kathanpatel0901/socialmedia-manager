@@ -11,7 +11,8 @@ from .models import Link, Facebookuser
 from linkedin_api import Linkedin
 from pyfacebook import GraphAPI
 from github import Github
-
+from django.utils import timezone
+from datetime import datetime
 
 LINKEDIN_ID = "86mlue1q95me5q"
 LINKEDIN_SECRET = "RIGzXPJbqnIZdS3f"
@@ -409,29 +410,6 @@ def gitpost(request):
     form = RepositoryForm(request.POST)
     return render(request, "dashboard/git.html", {"form": form})
 
-
-def schedule_post(request):
-    error_message = None
-    form = SchedulePostForm()
-    if request.method == "POST":
-        form = SchedulePostForm(request.POST, request.FILES)
-        if form.is_valid():
-            post_schedule_time = form.cleaned_data["post_schedule_time"]
-            content = form.cleaned_data["post_text"]
-            social_media = form.cleaned_data["social_media"]
-
-            # Queue Celery task for scheduled post
-            schedule_post_task.apply_async(
-                args=[content, social_media], eta=post_schedule_time
-            )
-            return render(request, "dashboard/SchedulePostSuccess.html")
-
-    return render(
-        request,
-        "dashboard/SchedulePost.html",
-        {"form": form, "error_message": error_message},
-    )
-
     #   if request.method == "POST":
     #         form = RepositoryForm(request.POST)
     #         if "create" in request.POST and form.is_valid():
@@ -489,9 +467,9 @@ def post(request):
                             )
                             client.create_tweet(text=content)
                             print("Posted to Twitter successfully!")
-                            message += "Successfully Post on twitter"
+                            message += "Successfully Post on twitter \n"
                         except Exception as e:
-                            message += "Failed to post on Twitter"
+                            message += "Failed to post on Twitter: {}\n".format(str(e))
 
                     if facebook:
                         print("Facebook switch is ON")
@@ -512,7 +490,7 @@ def post(request):
                             )
                             print("Posted to Facebook successfully!")
                         except Exception as e:
-                            message += "Failed to post on Facebook"
+                            message += "Failed to post on Facebook: {}\n".format(str(e))
                             print("Failed to post on Facebook:", str(e))
                     if not (twitter or facebook):
                         message = "Please Select any one socaial media platform"
@@ -523,3 +501,102 @@ def post(request):
     return render(
         request, "dashboard/post.html", {"form": form, "error_message": message}
     )
+
+
+def schedule_post(request):
+    message = ""
+    form = PostForm()
+    print("View function executed")
+    try:
+        user_instance = SocialAccount.objects.filter(user=request.user).first()
+        link_instance = Link.objects.filter(user=user_instance).first()
+        facebook_instance = Facebookuser.objects.filter(user=user_instance).first()
+
+        if request.method == "POST":
+            form = PostForm(request.POST, request.FILES)
+            print("Form submitted")
+            print("Form data:", request.POST)
+            if form.is_valid():
+                print("Form is Valid")
+                content = form.cleaned_data["post_text"]
+                twitter = form.cleaned_data.get("twitter")
+                facebook = form.cleaned_data.get("facebook")
+                post_schedule_date = form.cleaned_data.get("post_schedule_date")
+                post_schedule_time = form.cleaned_data.get("post_schedule_time")
+                post_schedule_datetime = datetime.combine(
+                    post_schedule_date, post_schedule_time
+                )
+                twitter_access_token = link_instance.access_token
+                twitter_access_token_secret = link_instance.access_token_secret
+                post_schedule_datetime = timezone.make_aware(post_schedule_datetime)
+                if "post_now" in request.POST:
+                    print("Post Now button clicked")
+
+                    if twitter:
+                        print("Twitter switch is ON")
+                        try:
+                            client = tweepy.Client(
+                                consumer_key=CONSUMER_KEY,
+                                consumer_secret=CONSUMER_SECRET,
+                                access_token=twitter_access_token,
+                                access_token_secret=twitter_access_token_secret,
+                            )
+                            client.create_tweet(text=content)
+                            print("Posted to Twitter successfully!")
+                            message += "Successfully Post on twitter \n"
+                        except Exception as e:
+                            message += "Failed to post on Twitter: {}\n".format(str(e))
+
+                    if facebook:
+                        print("Facebook switch is ON")
+                        try:
+                            page_access_token = facebook_instance.page_access_token
+                            api = GraphAPI(
+                                app_id=APP_ID,
+                                app_secret=APP_SECRET,
+                                access_token=page_access_token,
+                            )
+                            data = api.post_object(
+                                object_id=PAGE_ID,
+                                connection="feed",
+                                params={
+                                    "fields": "id,message,created_time,from",
+                                },
+                                data={"message": content},
+                            )
+                            print("Posted to Facebook successfully!")
+                        except Exception as e:
+                            message += "Failed to post on Facebook: {}\n".format(str(e))
+                            print("Failed to post on Facebook:", str(e))
+                    if not (twitter or facebook):
+                        message = "Please Select any one socaial media platform"
+                else:
+                    message = "Posting on selected media is not supported yet."
+    except Exception as e:
+        message = str(e)
+    return render(
+        request, "dashboard/post.html", {"form": form, "error_message": message}
+    )
+
+
+# def schedule_post(request):
+#     error_message = ""
+#     form = SchedulePostForm()
+#     if request.method == "POST":
+#         form = SchedulePostForm(request.POST, request.FILES)
+#         if form.is_valid():
+#             post_schedule_time = form.cleaned_data["post_schedule_time"]
+#             content = form.cleaned_data["post_text"]
+#             social_media = form.cleaned_data["social_media"]
+
+#             # Queue Celery task for scheduled post
+#             schedule_post_task.apply_async(
+#                 args=[content, social_media], eta=post_schedule_time
+#             )
+#             return render(request, "dashboard/SchedulePostSuccess.html")
+
+#     return render(
+#         request,
+#         "dashboard/SchedulePost.html",
+#         {"form": form, "error_message": error_message},
+#     )
