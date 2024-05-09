@@ -82,7 +82,11 @@ def social_accounts(request):
     facebook_instance = Facebookuser.objects.filter(user=user_social_account).first()
     twitter_exists = link_instance.user
     facebook_exists = facebook_instance.user
-    return render(request, "dashboard/social_accounts.html")
+    return render(
+        request,
+        "dashboard/social_accounts.html",
+        {"twitter_exists": twitter_exists, "facebook_exists": facebook_exists},
+    )
 
 
 @login_required

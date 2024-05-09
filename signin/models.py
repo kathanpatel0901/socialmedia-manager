@@ -39,15 +39,15 @@ class Post(models.Model):
     post_type = models.CharField(max_length=20)
     # post_schedule_date = models.DateField()
     # post_schedule_time = models.TimeField()
-    post_schedule_datetime = models.DateTimeField()
+    # post_schedule_datetime = models.DateTimeField()
 
     def __str__(self):
         return f"Post {self.id} by {self.user.username} on {self.post_date_time}"
 
-    def save(self, *args, **kwargs):
-        if not self.id:
-            self.post_date_time = timezone.now()
-        return super().save(*args, **kwargs)
+    # def save(self, *args, **kwargs):
+    #     if not self.id:
+    #         self.post_date_time = timezone.now()
+    #     return super().save(*args, **kwargs)
 
 
 class Git(models.Model):

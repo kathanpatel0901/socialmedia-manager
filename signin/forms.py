@@ -70,20 +70,20 @@ class SchedulePostForm(forms.ModelForm):
             "twitter",
             "facebook",
             "instagram",
-            "post_schedule_datetime",
+            # "post_schedule_datetime",
         ]
-        widget = {
-            "post_schedule_datetime": DateTimeInput(
-                attrs={"type": "datetime-local"}, format="%Y-%m-%dT%H:%M"
-            ),
-        }
+        # widget = {
+        #     "post_schedule_datetime": DateTimeInput(
+        #         attrs={"type": "datetime-local"}, format="%Y-%m-%dT%H:%M"
+        #     ),
+        # }
 
     def __init__(self, *args, **kwargs):
         super(SchedulePostForm, self).__init__(*args, **kwargs)
         self.fields["post_media"].required = False
         self.helper = FormHelper()
         self.helper.form_method = "post"
-        self.helper.layout = Layout(
+        self.helper.layout = Layout(    
             Field("post_text"),
             Field("post_media"),
             HTML("<h6>Social Media*</h6>"),
@@ -96,11 +96,11 @@ class SchedulePostForm(forms.ModelForm):
             ),
             # Field("post_schedule_date", css_class="datetimepicker"),
             # Field("post_schedule_time", css_class="datetimepicker"),
-            Field(
-                "post_schedule_datetime",
-                placeholder="YYYY-MM-DD HH:MM:SS",
-                css_class="datetimepicker",
-            ),
+            # Field(
+            #     "post_schedule_datetime",
+            #     placeholder="YYYY-MM-DD HH:MM:SS",
+            #     css_class="datetimepicker",
+            # ),
             Submit("post_schedule", "Post Schedule", css_class="btn-primary"),
         )
 

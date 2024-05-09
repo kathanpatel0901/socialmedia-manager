@@ -7,13 +7,21 @@
 <div class="col container">
     <h1 class=" text-center text-light mt-5"> Link your accounts </h1>
     <div class="text-center mt-5">
-        
-        <a
-            class=" btn btn-outline-dark"
-            href="{% url 'Twitter_auth' %}">Link your
-            <img src="{% static 'x_white.png' %}" style="width:25px"
-                alt="Button Image" />
-        </a>
+        {% if twitter_exists %}
+            <a
+                class=" btn btn-outline-dark active"
+                href="{% url 'Twitter_auth' %}">Link your
+                <img src="{% static 'x_white.png' %}" style="width:25px"
+                    alt="Button Image" />
+            </a>
+        {%else%}
+            <a
+                class=" btn btn-outline-dark"
+                href="{% url 'Twitter_auth' %}">Link your
+                <img src="{% static 'x_white.png' %}" style="width:25px"
+                    alt="Button Image" />
+            </a>
+        {% endif %}
 
         <a href="{% url 'facebook_auth' %}"
             class="btn btn-outline-dark ms-3" onclick="return false"> Link your
