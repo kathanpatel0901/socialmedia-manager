@@ -9,8 +9,18 @@ from pyfacebook import GraphAPI
 import tweepy
 from .models import Link, Facebookuser
 from linkedin_api import Linkedin
-from pyfacebook import GraphAPI
-from github import Github
+import pytz
+from base.constant import (
+    CONSUMER_KEY,
+    CONSUMER_SECRET,
+    API,
+    APP_ID,
+    APP_SECRET,
+    PAGE_ID,
+    FREDIRECT_URL,
+    AUTH_USER,
+)
+from base import constant
 from django.utils import timezone
 from datetime import datetime
 
@@ -43,18 +53,18 @@ def home(request):
 
 
 def test(request):
-    user_instance = SocialAccount.objects.filter(user=request.user).first()
-    link_instance = Link.objects.filter(user=user_instance).first()
-    twitter_access_token = link_instance.access_token
-    twitter_access_token_secret = link_instance.access_token_secret
-    client = tweepy.Client(
-        consumer_key=CONSUMER_KEY,
-        consumer_secret=CONSUMER_SECRET,
-        access_token=twitter_access_token,
-        access_token_secret=twitter_access_token_secret,
-    )
-    client.create_tweet(text="HEllo twitter this is test ")
-    print("Posted to Twitter successfully!")
+    # user_instance = SocialAccount.objects.filter(user=request.user).first()
+    # link_instance = Link.objects.filter(user=user_instance).first()
+    # twitter_access_token = link_instance.access_token
+    # twitter_access_token_secret = link_instance.access_token_secret
+    # client = tweepy.Client(
+    #     consumer_key=CONSUMER_KEY,
+    #     consumer_secret=CONSUMER_SECRET,
+    #     access_token=twitter_access_token,
+    #     access_token_secret=twitter_access_token_secret,
+    # )
+    # client.create_tweet(text="HEllo twitter this is test ")
+    # print("Posted to Twitter successfully!")
     return render(request, "base/test.html")
 
 
@@ -67,6 +77,11 @@ def login(request):
 
 
 def social_accounts(request):
+    user_social_account = request.user.socialaccount_set.first()
+    link_instance = Link.objects.filter(user=user_social_account).first()
+    facebook_instance = Facebookuser.objects.filter(user=user_social_account).first()
+    twitter_exists = link_instance.user
+    facebook_exists = facebook_instance.user
     return render(request, "dashboard/social_accounts.html")
 
 
@@ -103,16 +118,6 @@ def twitter_redirect(request):
 
 def post_success(request):
     return render(request, "dashboard/post_success.html")
-
-
-CONSUMER_KEY = "gEpUG3sB4Bv7R7nqiq3KxhCvF"
-CONSUMER_SECRET = "9I4HGBIQI4ylJag7BNuIRcxsfmOW8SI8r7bM98RLGJ5tqTwhpC"
-
-AUTH_USER = tweepy.OAuth1UserHandler(
-    consumer_key=CONSUMER_KEY,
-    consumer_secret=CONSUMER_SECRET,
-    callback="http://127.0.0.1:8000/Taccess",
-)
 
 
 @login_required
@@ -174,61 +179,61 @@ def taccess(request):
     return render(request, "dashboard/social_accounts.html")
 
 
-CLIENT_ID = "bkY4YzlOWmRQVlhmbHczQVBxaUE6MTpjaQ"
-CLIENT_SECRET = "mIYHgBwR84rZCXvYQvkJKEu6d1QTJYJEOQQRJjJ-PvX9e1CGqt"
-SCOPE = [
-    "tweet.read",
-    "tweet.write",
-]
-AUTH = tweepy.OAuth2UserHandler(
-    client_id=CLIENT_ID,
-    redirect_uri="https://socialmediamanager.in.net/taccess2",
-    scope=SCOPE,
-    client_secret=CLIENT_SECRET,
-)
+# CLIENT_ID = "bkY4YzlOWmRQVlhmbHczQVBxaUE6MTpjaQ"
+# CLIENT_SECRET = "mIYHgBwR84rZCXvYQvkJKEu6d1QTJYJEOQQRJjJ-PvX9e1CGqt"
+# SCOPE = [
+#     "tweet.read",
+#     "tweet.write",
+# ]
+# AUTH = tweepy.OAuth2UserHandler(
+#     client_id=CLIENT_ID,
+#     redirect_uri="https://socialmediamanager.in.net/taccess2",
+#     scope=SCOPE,
+#     client_secret=CLIENT_SECRET,
+# )
 
 
-def tauth2(request):
-    auth_url = AUTH.get_authorization_url()
-    print("authURl::", auth_url)
-    return redirect(auth_url)
+# def tauth2(request):
+#     auth_url = AUTH.get_authorization_url()
+#     print("authURl::", auth_url)
+#     return redirect(auth_url)
 
 
-def taccess2(request):
+# def taccess2(request):
 
-    AUTH.request_token = {}
-    response_url = request.build_absolute_uri()
-    print("RESPONSE URL:", response_url)
-    access_token = AUTH.fetch_token(
-        authorization_response=response_url,
-    )
-    print("access_token::", access_token)
+#     AUTH.request_token = {}
+#     response_url = request.build_absolute_uri()
+#     print("RESPONSE URL:", response_url)
+#     access_token = AUTH.fetch_token(
+#         authorization_response=response_url,
+#     )
+#     print("access_token::", access_token)
 
-    response_url = request.build_absolute_uri()
-    print("RESPONSE URL:", response_url)
-    context = {"response_url": response_url}
-    # access_token = AUTH.fetch_token(authorization_response=response_url)
-    # print("access_token::", access_token)
-    return render(request, "dashboard/social_accounts.html", context)
+#     response_url = request.build_absolute_uri()
+#     print("RESPONSE URL:", response_url)
+#     context = {"response_url": response_url}
+#     # access_token = AUTH.fetch_token(authorization_response=response_url)
+#     # print("access_token::", access_token)
+#     return render(request, "dashboard/social_accounts.html", context)
 
 
 def viewshow(request):
     return render(request, "dashboard/showpost.html")
 
 
-def retrivepost(request):
-    auth_url = AUTH.get_authorization_url()
-    print("url::", auth_url)
-    return redirect(auth_url)
+# def retrivepost(request):
+#     auth_url = AUTH.get_authorization_url()
+#     print("url::", auth_url)
+#     return redirect(auth_url)
 
 
-def showpost(request):
-    response_url = request.get_full_path()
-    print("response url::", response_url)
-    access_token = AUTH.fetch_token(response_url)
-    print("access_token::", access_token)
+# def showpost(request):
+#     response_url = request.get_full_path()
+#     print("response url::", response_url)
+#     access_token = AUTH.fetch_token(response_url)
+#     print("access_token::", access_token)
 
-    return render(request, "dashboard/showpost.html")
+#     return render(request, "dashboard/showpost.html")
 
 
 # TO fetch account data
@@ -255,21 +260,6 @@ def my_callback_view(request):
     #     return render(request,'dashboard/post_success.html')
 
     # return render(request, 'dashboard/tweet.html')
-
-
-APP_ID = "1869304440238153"
-APP_SECRET = "05ebb9ddfc65ab76d6ff98ce56c62cdc"
-
-
-CONFIG_ID = "1179387696834598"
-
-
-API = GraphAPI(
-    app_id=APP_ID,
-    app_secret=APP_SECRET,
-    oauth_flow=True,
-)
-FREDIRECT_URL = "https://socialmediamanager.in.net/facebook_access/"
 
 
 def facebook_auth(request):
@@ -308,17 +298,18 @@ def facebook_access(request):
     return render(request, "dashboard/social_accounts.html", context)
 
 
-PAGE_ID = "227651403774182"
-
-
 def facebok_page_access(request):
     dbfb = Facebookuser.objects.get(user="Kathan Patel")
     obj = dbfb.access_token
     access_token = obj.get("access_token")
-    page_access_token = API.exchange_page_access_token(
+    facebok_page_access_token = API.exchange_page_access_token(
         page_id="227651403774182", access_token=access_token
     )
-    api = GraphAPI(app_id=APP_ID, app_secret=APP_SECRET, access_token=page_access_token)
+    api = GraphAPI(
+        app_id=APP_ID,
+        app_secret=APP_SECRET,
+        access_token=facebok_page_access_token,
+    )
     data = api.post_object(
         object_id=PAGE_ID,
         connection="feed",
@@ -327,7 +318,7 @@ def facebok_page_access(request):
         },
         data={"message": "This is a test message by api"},
     )
-    context = {"access_token": page_access_token}
+    context = {"access_token": facebok_page_access_token}
 
     return render(request, "dashboard/social_accounts.html", context)
 
@@ -363,76 +354,6 @@ def instabasic(request):
     return render(request, "dashboard/social_accounts.html")
 
 
-def github_auth(request):
-    url = GITAPP.get_login_url(redirect_uri="http://127.0.0.1:8000/github_access")
-    return redirect(url)
-
-
-GITAUTH = Github()
-GITAPP = GITAUTH.get_oauth_application(
-    client_id="Iv1.720847ca221968b2",
-    client_secret="09b5daab4b82a5239a5aeb6526e6606b423fc798",
-)
-GIT_CLIENT_ID = "Iv1.720847ca221968b2"
-GIT_CLIENT_SECRET = "09b5daab4b82a5239a5aeb6526e6606b423fc798"
-
-
-def github_access(request):
-    code = request.GET.get("code")
-    if code:
-        ntoken = GITAPP.get_access_token(code)
-        if ntoken:
-            rtoken = ntoken.refresh_token
-            token = GITAPP.refresh_access_token(refresh_token=rtoken)
-            auth = GITAPP.get_app_user_auth(token=token)
-            g = Github(auth=auth)
-            user = g.get_user()
-            # social_account = request.user.socialaccount_set.first()
-            # Git.objects.create(
-            #     user=social_account,
-            #     username=login,
-            #     code=code,
-            # )
-            print("Token::", user)
-            context = {"token": rtoken}
-    return render(request, "dashboard/social_accounts.html", context)
-
-    # social_account = request.user.socialaccount_set.first()
-    # Git.objects.create(user=social_account, username=login, token=rtoken)
-    # if request.method == "POST":
-    #     form = RepositoryForm(request.POST)
-    #     if "create" in request.POST and form.is_valid():
-    #         repo_name = form.cleaned_data["repository_name"]
-    #         new_repo = user.create_repo(repo_name)
-
-
-def gitpost(request):
-    form = RepositoryForm(request.POST)
-    return render(request, "dashboard/git.html", {"form": form})
-
-    #   if request.method == "POST":
-    #         form = RepositoryForm(request.POST)
-    #         if "create" in request.POST and form.is_valid():
-    #             repository_name = form.cleaned_data["repository_name"]
-    #             repository_code = form.cleaned_data["repository_code"]
-    #             print("repo name :", repository_name)
-    #             action = request.POST.get("action")
-    #             if action == "create":
-    #                 try:
-    #                     repo = user.create_repo(repository_name)
-    #                     return HttpResponse("Repository created successfully.")
-    #                 except Exception as e:
-    #                     return HttpResponse("Error Creating repository: " + str(e))
-    #             # if action == "clone":
-    #             #     try:
-    #             #         repoClone = pygit2.clone_repository(repo.git_url, repository_code)
-    #             #         return HttpResponse("Repository cloned successfully.")
-    #             #     except Exception as e:
-    #             #         return HttpResponse("Error Cloning Repository: " + str(e))
-    #     else:
-    #         form = RepositoryForm()
-
-
 def post(request):
     message = ""
     form = PostForm()
@@ -453,6 +374,7 @@ def post(request):
                 facebook = form.cleaned_data.get("facebook")
                 twitter_access_token = link_instance.access_token
                 twitter_access_token_secret = link_instance.access_token_secret
+                facebok_page_access_token = facebook_instance.page_access_token
                 if "post_now" in request.POST:
                     print("Post Now button clicked")
 
@@ -474,11 +396,10 @@ def post(request):
                     if facebook:
                         print("Facebook switch is ON")
                         try:
-                            page_access_token = facebook_instance.page_access_token
                             api = GraphAPI(
                                 app_id=APP_ID,
                                 app_secret=APP_SECRET,
-                                access_token=page_access_token,
+                                access_token=facebok_page_access_token,
                             )
                             data = api.post_object(
                                 object_id=PAGE_ID,
@@ -505,78 +426,92 @@ def post(request):
 
 def schedule_post(request):
     message = ""
-    form = PostForm()
+    form = SchedulePostForm()
     print("View function executed")
-    try:
-        user_instance = SocialAccount.objects.filter(user=request.user).first()
-        link_instance = Link.objects.filter(user=user_instance).first()
-        facebook_instance = Facebookuser.objects.filter(user=user_instance).first()
 
-        if request.method == "POST":
-            form = PostForm(request.POST, request.FILES)
-            print("Form submitted")
-            print("Form data:", request.POST)
-            if form.is_valid():
-                print("Form is Valid")
-                content = form.cleaned_data["post_text"]
-                twitter = form.cleaned_data.get("twitter")
-                facebook = form.cleaned_data.get("facebook")
-                post_schedule_date = form.cleaned_data.get("post_schedule_date")
-                post_schedule_time = form.cleaned_data.get("post_schedule_time")
-                post_schedule_datetime = datetime.combine(
-                    post_schedule_date, post_schedule_time
+    if request.method == "POST":
+        form = SchedulePostForm(request.POST, request.FILES)
+        print("Form submitted")
+        print("Form data:", request.POST)
+        if form.is_valid():
+            print("Form is Valid")
+            content = form.cleaned_data["post_text"]
+            twitter = form.cleaned_data.get("twitter")
+            facebook = form.cleaned_data.get("facebook")
+            # post_schedule_date = form.cleaned_data.get("post_schedule_date")
+            # post_schedule_time = form.cleaned_data.get("post_schedule_time")
+            # post_schedule_datetime = datetime.combine(
+            #     post_schedule_date, post_schedule_time
+            # )
+
+            # post_schedule_datetime = pytz.timezone("UTC").localize(
+            #     post_schedule_datetime
+            # )
+            post_schedule_datetime = form.cleaned_data.get("post_schedule_datetime")
+            user_instance = SocialAccount.objects.filter(user=request.user).first()
+            link_instance = Link.objects.filter(user=user_instance).first()
+            # facebook_instance = Facebookuser.objects.filter(user=user_instance).first()
+            twitter_access_token = link_instance.access_token
+            twitter_access_token_secret = link_instance.access_token_secret
+            # facebok_page_access_token = facebook_instance.page_access_token
+
+            if "post_schedule" in request.POST:
+                schedule_post_task.apply_async(
+                    args=[
+                        content,
+                        twitter,
+                        facebook,
+                        twitter_access_token,
+                        twitter_access_token_secret,
+                    ],
+                    eta=post_schedule_datetime,
                 )
-                twitter_access_token = link_instance.access_token
-                twitter_access_token_secret = link_instance.access_token_secret
-                post_schedule_datetime = timezone.make_aware(post_schedule_datetime)
-                if "post_now" in request.POST:
-                    print("Post Now button clicked")
-
-                    if twitter:
-                        print("Twitter switch is ON")
-                        try:
-                            client = tweepy.Client(
-                                consumer_key=CONSUMER_KEY,
-                                consumer_secret=CONSUMER_SECRET,
-                                access_token=twitter_access_token,
-                                access_token_secret=twitter_access_token_secret,
-                            )
-                            client.create_tweet(text=content)
-                            print("Posted to Twitter successfully!")
-                            message += "Successfully Post on twitter \n"
-                        except Exception as e:
-                            message += "Failed to post on Twitter: {}\n".format(str(e))
-
-                    if facebook:
-                        print("Facebook switch is ON")
-                        try:
-                            page_access_token = facebook_instance.page_access_token
-                            api = GraphAPI(
-                                app_id=APP_ID,
-                                app_secret=APP_SECRET,
-                                access_token=page_access_token,
-                            )
-                            data = api.post_object(
-                                object_id=PAGE_ID,
-                                connection="feed",
-                                params={
-                                    "fields": "id,message,created_time,from",
-                                },
-                                data={"message": content},
-                            )
-                            print("Posted to Facebook successfully!")
-                        except Exception as e:
-                            message += "Failed to post on Facebook: {}\n".format(str(e))
-                            print("Failed to post on Facebook:", str(e))
-                    if not (twitter or facebook):
-                        message = "Please Select any one socaial media platform"
-                else:
-                    message = "Posting on selected media is not supported yet."
-    except Exception as e:
-        message = str(e)
+                message = "Post Scheduled successfully"
+                print("Post Schedule button clicked")
+            else:
+                message = "Failed to Schedule  Post"
     return render(
-        request, "dashboard/post.html", {"form": form, "error_message": message}
+        request, "dashboard/SchedulePost.html", {"form": form, "error_message": message}
     )
+
+    #     if twitter:
+    #         print("Twitter switch is ON")
+    #         try:
+    #             client = tweepy.Client(
+    #                 consumer_key=CONSUMER_KEY,
+    #                 consumer_secret=CONSUMER_SECRET,
+    #                 access_token=twitter_access_token,
+    #                 access_token_secret=twitter_access_token_secret,
+    #             )
+    #             client.create_tweet(text=content)
+    #             print("Posted to Twitter successfully!")
+    #             message += "Successfully Post on twitter \n"
+    #         except Exception as e:
+    #             message += "Failed to post on Twitter: {}\n".format(str(e))
+
+    #     if facebook:
+    #         print("Facebook switch is ON")
+    #         try:
+    #             api = GraphAPI(
+    #                 app_id=APP_ID,
+    #                 app_secret=APP_SECRET,
+    #                 access_token=facebok_page_access_token,
+    #             )
+    #             data = api.post_object(
+    #                 object_id=PAGE_ID,
+    #                 connection="feed",
+    #                 params={
+    #                     "fields": "id,message,created_time,from",
+    #                 },
+    #                 data={"message": content},
+    #             )
+    #             print("Posted to Facebook successfully!")
+    #         except Exception as e:
+    #             message += "Failed to post on Facebook: {}\n".format(str(e))
+    #     if not (twitter or facebook):
+    #         message = "Please Select any one socaial media platform"
+    # else:
+    #     message = "Posting on selected media is not supported yet."
 
 
 # def schedule_post(request):

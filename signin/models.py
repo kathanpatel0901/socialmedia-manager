@@ -37,8 +37,9 @@ class Post(models.Model):
     instagram = models.BooleanField(default=False)
     post_date_time = models.DateTimeField(default=timezone.now)
     post_type = models.CharField(max_length=20)
-    post_schedule_date = models.DateField()
-    post_schedule_time = models.TimeField()
+    # post_schedule_date = models.DateField()
+    # post_schedule_time = models.TimeField()
+    post_schedule_datetime = models.DateTimeField()
 
     def __str__(self):
         return f"Post {self.id} by {self.user.username} on {self.post_date_time}"

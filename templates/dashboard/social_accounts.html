@@ -7,7 +7,7 @@
 <div class="col container">
     <h1 class=" text-center text-light mt-5"> Link your accounts </h1>
     <div class="text-center mt-5">
-
+        
         <a
             class=" btn btn-outline-dark"
             href="{% url 'Twitter_auth' %}">Link your
@@ -16,7 +16,7 @@
         </a>
 
         <a href="{% url 'facebook_auth' %}"
-            class="btn btn-outline-dark ms-3"> Link your
+            class="btn btn-outline-dark ms-3" onclick="return false"> Link your
             <img src="{% static 'Facebook_Logo.png' %}" style="width:25px"
                 class="ms-2" alt="Button Image" />
         </a>
@@ -24,12 +24,6 @@
         <a href="{% url 'linkedin' %}"
             class="btn btn-outline-dark ms-3"> Link your
             <img src="{% static 'inwhite.png' %}" style="width:25px"
-                class="ms-2" alt="Button Image" />
-        </a>
-
-        <a href="{% url 'github' %}"
-            class="btn btn-outline-dark ms-3"> Link your
-            <img src="{% static 'github-white.png' %}" style="width:25px"
                 class="ms-2" alt="Button Image" />
         </a>
         <a href="{% url 'insta_auth' %}"
