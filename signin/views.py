@@ -319,8 +319,19 @@ def facebook_access(request):
         page_access_token=page_access_token,
     )
     print("RESPONSE URL:", response_url)
-    context = {"access_token": page_access_token}
-    return render(request, "dashboard/social_accounts.html", context)
+    link_instance = Link.objects.filter(user=social_account).first()
+    facebook_instance = Facebookuser.objects.filter(user=social_account).first()
+    twitter_exists = link_instance.user if link_instance else None
+    facebook_exists = facebook_instance.user if facebook_instance else None
+    return render(
+        request,
+        "dashboard/social_accounts.html",
+        {
+            "twitter_exists": twitter_exists,
+            "facebook_exists": facebook_exists,
+        },
+    )
+    
 
 
 def facebok_page_access(request):
