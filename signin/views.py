@@ -1,15 +1,18 @@
 from allauth.socialaccount.models import SocialAccount
+from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from .forms import PostForm, SchedulePostForm, RepositoryForm
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
-from .tasks import schedule_post_task
+
+# from .tasks import schedule_post_task
 from .models import Link, Facebookuser
 from pyfacebook import GraphAPI
 import tweepy
 from .models import Link, Facebookuser
 from linkedin_api import Linkedin
-import pytz
+import os
+from .s3_management import s3_image_upload
 from base.constant import (
     CONSUMER_KEY,
     CONSUMER_SECRET,
@@ -17,16 +20,15 @@ from base.constant import (
     APP_ID,
     APP_SECRET,
     PAGE_ID,
-    FREDIRECT_URL,
     AUTH_USER,
+    INSTA_ID,
 )
-from base import constant
-from django.utils import timezone
-from datetime import datetime
+
+SERVER_DOMAIN = os.environ.get("SERVER_DOMAIN")
 
 LINKEDIN_ID = "86mlue1q95me5q"
 LINKEDIN_SECRET = "RIGzXPJbqnIZdS3f"
-REDIRECT_URL = "http://127.0.0.1:8000/social_account"
+REDIRECT_URL = f"{SERVER_DOMAIN}/social_account"
 LINKEDIN_USERNAME = "kathan-patel-78973b1a3"
 LINKEDIN_PASSWORD = "Kathan@0901"
 
@@ -80,12 +82,18 @@ def social_accounts(request):
     user_social_account = request.user.socialaccount_set.first()
     link_instance = Link.objects.filter(user=user_social_account).first()
     facebook_instance = Facebookuser.objects.filter(user=user_social_account).first()
-    twitter_exists = link_instance.user
-    facebook_exists = facebook_instance.user
+    twitter_exists = link_instance.user if link_instance else None
+    facebook_exists = facebook_instance.user is not None if facebook_instance else None
+    print(twitter_exists)
+    print(facebook_exists)
     return render(
         request,
         "dashboard/social_accounts.html",
-        {"twitter_exists": twitter_exists, "facebook_exists": facebook_exists},
+        {
+            "twitter_exists": twitter_exists,
+            "facebook_exists": facebook_exists,
+            "user_social_account": user_social_account,
+        },
     )
 
 
@@ -129,11 +137,14 @@ def tauth(request):
     auth_url = AUTH_USER.get_authorization_url()
 
     print("authURl::", auth_url)
-    return redirect(auth_url)
+    return redirect(
+        auth_url,
+    )
 
 
 @login_required
 def taccess(request):
+
     verifier = request.GET.get("oauth_verifier")
     oauth_token = request.GET.get("oauth_token")
     request_token = AUTH_USER.request_token["oauth_token"]
@@ -143,7 +154,7 @@ def taccess(request):
     oauth_user = tweepy.OAuth1UserHandler(
         consumer_key=CONSUMER_KEY,
         consumer_secret=CONSUMER_SECRET,
-        callback="http://127.0.0.1:8000/Taccess",
+        callback=f"{SERVER_DOMAIN}/Taccess",
     )
     oauth_user.request_token = {
         "oauth_token": request_token,
@@ -179,8 +190,18 @@ def taccess(request):
             access_token=access_tokenn,
             access_token_secret=access_token_secrett,
         )
-
-    return render(request, "dashboard/social_accounts.html")
+    link_instance = Link.objects.filter(user=social_account).first()
+    facebook_instance = Facebookuser.objects.filter(user=social_account).first()
+    twitter_exists = link_instance.user if link_instance else None
+    facebook_exists = facebook_instance.user if facebook_instance else None
+    return render(
+        request,
+        "dashboard/social_accounts.html",
+        {
+            "twitter_exists": twitter_exists,
+            "facebook_exists": facebook_exists,
+        },
+    )
 
 
 # CLIENT_ID = "bkY4YzlOWmRQVlhmbHczQVBxaUE6MTpjaQ"
@@ -327,19 +348,25 @@ def facebok_page_access(request):
     return render(request, "dashboard/social_accounts.html", context)
 
 
-INSTA_ID = "17841465939257583"
+# INSTA_ID = "17841465939257583"
 
 
 def insta_auth(request):
-    dbfb = Facebookuser.objects.get(user="Kathan Patel")
-    obj = dbfb.access_token
-    access_token = obj.get("access_token")
-    api_i = GraphAPI(app_id=APP_ID, app_secret=APP_SECRET, access_token=access_token)
+    user_instance = SocialAccount.objects.filter(user=request.user).first()
+    facebook_instance = Facebookuser.objects.filter(user=user_instance).first()
+    facebok_page_access_token = facebook_instance.page_access_token
+    api_i = GraphAPI(
+        app_id=APP_ID, app_secret=APP_SECRET, access_token=facebok_page_access_token
+    )
+    # image_data = request.FILES.get("media_field")
+    # image_url = s3_image_upload(
+    #     request=request, image_data=image_data, folder_name="instagram"
+    # )
     data = api_i.post_object(
         object_id=INSTA_ID,
         connection="media",
         params={
-            "image_url": "https://picsum.photos/200/300",
+            "image_url": "https://postinsta.s3.amazonaws.com/hero-4-1.jpg",
             "caption": "Image by socialmedia_manager",
         },
     )
@@ -376,21 +403,38 @@ def post(request):
                 content = form.cleaned_data["post_text"]
                 twitter = form.cleaned_data.get("twitter")
                 facebook = form.cleaned_data.get("facebook")
+                instagram = form.cleaned_data.get("instagram")
                 twitter_access_token = link_instance.access_token
                 twitter_access_token_secret = link_instance.access_token_secret
                 facebok_page_access_token = facebook_instance.page_access_token
+                api = GraphAPI(
+                    app_id=APP_ID,
+                    app_secret=APP_SECRET,
+                    access_token=facebok_page_access_token,
+                )
+                image_data = request.FILES.get("post_media")
+                print("image_data", image_data)
+
+                image_url = s3_image_upload(
+                    request=request,
+                    image_data=image_data,
+                    folder_name="instagram",
+                )
                 if "post_now" in request.POST:
                     print("Post Now button clicked")
 
                     if twitter:
                         print("Twitter switch is ON")
                         try:
+
                             client = tweepy.Client(
                                 consumer_key=CONSUMER_KEY,
                                 consumer_secret=CONSUMER_SECRET,
                                 access_token=twitter_access_token,
                                 access_token_secret=twitter_access_token_secret,
                             )
+                            # mapi = tweepy.API(client)
+                            # media = mapi.media_upload(image_url)
                             client.create_tweet(text=content)
                             print("Posted to Twitter successfully!")
                             message += "Successfully Post on twitter \n"
@@ -400,27 +444,44 @@ def post(request):
                     if facebook:
                         print("Facebook switch is ON")
                         try:
-                            api = GraphAPI(
-                                app_id=APP_ID,
-                                app_secret=APP_SECRET,
-                                access_token=facebok_page_access_token,
-                            )
                             data = api.post_object(
                                 object_id=PAGE_ID,
-                                connection="feed",
-                                params={
-                                    "fields": "id,message,created_time,from",
-                                },
-                                data={"message": content},
+                                connection="photos",
+                                params={"url": image_url, "caption": content},
                             )
                             print("Posted to Facebook successfully!")
+                            message += "Successfully Post on Facebook \n"
                         except Exception as e:
                             message += "Failed to post on Facebook: {}\n".format(str(e))
                             print("Failed to post on Facebook:", str(e))
-                    if not (twitter or facebook):
-                        message = "Please Select any one socaial media platform"
+                    if instagram:
+                        print("Instagram Switch is on")
+                        try:
+                            media = api.post_object(
+                                object_id=INSTA_ID,
+                                connection="media",
+                                params={
+                                    "image_url": image_url,
+                                    "caption": content,
+                                },
+                            )
+                            container_id = media["id"]
+                            publish_media = api.post_object(
+                                object_id=INSTA_ID,
+                                connection="media_publish",
+                                params={
+                                    "creation_id": container_id,
+                                },
+                            )
+                            message += "Successfully Post on Instagram \n"
+                        except Exception as e:
+                            message = "Failed to post on instagram{}\n".format(str(e))
+                            print(e)
+
+                    if not (twitter or facebook or instagram):
+                        message = "Please Select any one socaial media platform\n"
                 else:
-                    message = "Posting on selected media is not supported yet."
+                    message = "Posting on selected media is not supported yet.\n"
     except Exception as e:
         message = str(e)
     return render(
@@ -428,114 +489,147 @@ def post(request):
     )
 
 
-def schedule_post(request):
-    message = ""
-    form = SchedulePostForm()
-    print("View function executed")
-
-    if request.method == "POST":
-        form = SchedulePostForm(request.POST, request.FILES)
-        print("Form submitted")
-        print("Form data:", request.POST)
-        if form.is_valid():
-            print("Form is Valid")
-            content = form.cleaned_data["post_text"]
-            twitter = form.cleaned_data.get("twitter")
-            facebook = form.cleaned_data.get("facebook")
-            # post_schedule_date = form.cleaned_data.get("post_schedule_date")
-            # post_schedule_time = form.cleaned_data.get("post_schedule_time")
-            # post_schedule_datetime = datetime.combine(
-            #     post_schedule_date, post_schedule_time
-            # )
-
-            # post_schedule_datetime = pytz.timezone("UTC").localize(
-            #     post_schedule_datetime
-            # )
-            post_schedule_datetime = form.cleaned_data.get("post_schedule_datetime")
-            user_instance = SocialAccount.objects.filter(user=request.user).first()
-            link_instance = Link.objects.filter(user=user_instance).first()
-            # facebook_instance = Facebookuser.objects.filter(user=user_instance).first()
-            twitter_access_token = link_instance.access_token
-            twitter_access_token_secret = link_instance.access_token_secret
-            # facebok_page_access_token = facebook_instance.page_access_token
-
-            if "post_schedule" in request.POST:
-                schedule_post_task.apply_async(
-                    args=[
-                        content,
-                        twitter,
-                        facebook,
-                        twitter_access_token,
-                        twitter_access_token_secret,
-                    ],
-                    eta=post_schedule_datetime,
-                )
-                message = "Post Scheduled successfully"
-                print("Post Schedule button clicked")
-            else:
-                message = "Failed to Schedule  Post"
-    return render(
-        request, "dashboard/SchedulePost.html", {"form": form, "error_message": message}
-    )
-
-    #     if twitter:
-    #         print("Twitter switch is ON")
-    #         try:
-    #             client = tweepy.Client(
-    #                 consumer_key=CONSUMER_KEY,
-    #                 consumer_secret=CONSUMER_SECRET,
-    #                 access_token=twitter_access_token,
-    #                 access_token_secret=twitter_access_token_secret,
-    #             )
-    #             client.create_tweet(text=content)
-    #             print("Posted to Twitter successfully!")
-    #             message += "Successfully Post on twitter \n"
-    #         except Exception as e:
-    #             message += "Failed to post on Twitter: {}\n".format(str(e))
-
-    #     if facebook:
-    #         print("Facebook switch is ON")
-    #         try:
-    #             api = GraphAPI(
-    #                 app_id=APP_ID,
-    #                 app_secret=APP_SECRET,
-    #                 access_token=facebok_page_access_token,
-    #             )
-    #             data = api.post_object(
-    #                 object_id=PAGE_ID,
-    #                 connection="feed",
-    #                 params={
-    #                     "fields": "id,message,created_time,from",
-    #                 },
-    #                 data={"message": content},
-    #             )
-    #             print("Posted to Facebook successfully!")
-    #         except Exception as e:
-    #             message += "Failed to post on Facebook: {}\n".format(str(e))
-    #     if not (twitter or facebook):
-    #         message = "Please Select any one socaial media platform"
-    # else:
-    #     message = "Posting on selected media is not supported yet."
-
-
 # def schedule_post(request):
-#     error_message = ""
+#     message = ""
 #     form = SchedulePostForm()
+#     print("View function executed")
+
 #     if request.method == "POST":
 #         form = SchedulePostForm(request.POST, request.FILES)
+#         print("Form submitted")
+#         print("Form data:", request.POST)
 #         if form.is_valid():
-#             post_schedule_time = form.cleaned_data["post_schedule_time"]
+#             print("Form is Valid")
 #             content = form.cleaned_data["post_text"]
-#             social_media = form.cleaned_data["social_media"]
+#             twitter = form.cleaned_data.get("twitter")
+#             facebook = form.cleaned_data.get("facebook")
+#             # post_schedule_date = form.cleaned_data.get("post_schedule_date")
+#             # post_schedule_time = form.cleaned_data.get("post_schedule_time")
+#             # post_schedule_datetime = datetime.combine(
+#             #     post_schedule_date, post_schedule_time
+#             # )
 
-#             # Queue Celery task for scheduled post
-#             schedule_post_task.apply_async(
-#                 args=[content, social_media], eta=post_schedule_time
-#             )
-#             return render(request, "dashboard/SchedulePostSuccess.html")
+#             # post_schedule_datetime = pytz.timezone("UTC").localize(
+#             #     post_schedule_datetime
+#             # )
+#             post_schedule_datetime = form.cleaned_data.get("post_schedule_datetime")
+#             user_instance = SocialAccount.objects.filter(user=request.user).first()
+#             link_instance = Link.objects.filter(user=user_instance).first()
+#             # facebook_instance = Facebookuser.objects.filter(user=user_instance).first()
+#             twitter_access_token = link_instance.access_token
+#             twitter_access_token_secret = link_instance.access_token_secret
+#             # facebok_page_access_token = facebook_instance.page_access_token
 
+#             if "post_schedule" in request.POST:
+#                 schedule_post_task.apply_async(
+#                     args=[
+#                         content,
+#                         twitter,
+#                         facebook,
+#                         twitter_access_token,
+#                         twitter_access_token_secret,
+#                     ],
+#                     eta=post_schedule_datetime,
+#                 )
+#                 message = "Post Scheduled successfully"
+#                 print("Post Schedule button clicked")
+#             else:
+#                 message = "Failed to Schedule  Post"
 #     return render(
-#         request,
-#         "dashboard/SchedulePost.html",
-#         {"form": form, "error_message": error_message},
+#         request, "dashboard/SchedulePost.html", {"form": form, "error_message": message}
 #     )
+
+#     if twitter:
+#         print("Twitter switch is ON")
+#         try:
+#             client = tweepy.Client(
+#                 consumer_key=CONSUMER_KEY,
+#                 consumer_secret=CONSUMER_SECRET,
+#                 access_token=twitter_access_token,
+#                 access_token_secret=twitter_access_token_secret,
+#             )
+#             client.create_tweet(text=content)
+#             print("Posted to Twitter successfully!")
+#             message += "Successfully Post on twitter \n"
+#         except Exception as e:
+#             message += "Failed to post on Twitter: {}\n".format(str(e))
+
+#     if facebook:
+#         print("Facebook switch is ON")
+#         try:
+#             api = GraphAPI(
+#                 app_id=APP_ID,
+#                 app_secret=APP_SECRET,
+#                 access_token=facebok_page_access_token,
+#             )
+#             data = api.post_object(
+#                 object_id=PAGE_ID,
+#                 connection="feed",
+#                 params={
+#                     "fields": "id,message,created_time,from",
+#                 },
+#                 data={"message": content},
+#             )
+#             print("Posted to Facebook successfully!")
+#         except Exception as e:
+#             message += "Failed to post on Facebook: {}\n".format(str(e))
+#     if not (twitter or facebook):
+#         message = "Please Select any one socaial media platform"
+# else:
+#     message = "Posting on selected media is not supported yet."
+
+
+def schedule_post(request):
+    error_message = ""
+    form = SchedulePostForm()
+    if request.method == "POST":
+        form = SchedulePostForm(request.POST, request.FILES)
+        if form.is_valid():
+            social_account_instance = SocialAccount.objects.filter(
+                user=request.user
+            ).first()
+            link_instance = Link.objects.filter(user=social_account_instance).first()
+            facebook_instance = Facebookuser.objects.filter(
+                user=social_account_instance
+            ).first()
+            print(facebook_instance)
+
+            twitter = form.cleaned_data.get("twitter")
+            facebook = form.cleaned_data.get("facebook")
+            instagram = form.cleaned_data.get("instagram")
+            schedule_post = form.save()
+            image_data = request.FILES.get("post_media")
+            # if image_data:
+            #     image_url = s3_image_upload(
+            #         request=request,
+            #         image_data=image_data,
+            #         folder_name="scheduled-post",
+            #     )
+            #     print(image_url)
+            # schedule_post.image = image_url
+
+            if twitter:
+                schedule_post.link = link_instance
+
+            if facebook or instagram:
+                schedule_post.meta_connection = facebook_instance
+
+            schedule_post.save()
+
+            return render(request, "dashboard/SchedulePostSuccess.html")
+
+    return render(
+        request,
+        "dashboard/SchedulePost.html",
+        {"form": form, "error_message": error_message},
+    )
+
+
+# from signin.models import Post
+
+# for post_data in Post.objects.all():
+#     print(
+#         "post_schedule_datetime",
+#         post_data.post_schedule_datetime.strftime("%d-%m-%y %H:%M"),
+#     )
+# print("current time", datetime.now().strftime("%d-%m-%y %H:%M"))

@@ -7,10 +7,10 @@
   </span>
 </h1>
 <div class="signup-form mt-5">
-  <p class="text-danger text-center">{{error_message}}</p>
-  <h2>Create a Schedule Post</h2>
+  <p class="text-danger text-center">{{error_message | linebreaksbr }}</p>
+  <h2>Create a New Post</h2>
   {% csrf_token %}{% crispy form %}
-
+  <!-- <a href="schedule-post" class="btn btn-secondary mt-1"> Schedule Post</a> -->
 </div>
 <style>
 .btn-primary, .btn-secondary{
