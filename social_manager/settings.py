@@ -31,7 +31,7 @@ ALLOWED_HOSTS = [
     "socialmediamanager.in.net",
     "106.215.20.147",
     "127.0.0.0",
-    "34.196.212.31"
+    "34.196.212.31",
 ]
 
 
@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     # css
     "bootstrap5",
     "django_bootstrap5",
+    "django_celery_beat",
     # forms_app
     "crispy_forms",
     "crispy_bootstrap5",
@@ -153,7 +154,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = "en-us"
 
-TIME_ZONE = "UTC"
+TIME_ZONE = "Asia/Kolkata"
 
 USE_I18N = True
 
@@ -271,9 +272,7 @@ TWITTER_API_SECRET_KEY = "7avCQF3YcfyazKiLMXA7LRKo4nV6P67Syxj0J5BYflzeNcY6iv"
 TWITTER_ACCESS_TOKEN = "1758379615968514048-g8GOVnszAiBdUZo3XqZbRrVM66Gk5z"
 TWITTER_ACCESS_TOKEN_SECRET = "SMfpOOTSu7vzTgzV0008bfdndv7TQJSnXzWgwznGqRJuN"
 
-#celery Settings
-CELERY_BROKER_URL = "redis://localhost:6379"
-CELERY_RESULT_BACKEND = "redis://localhost:6379"
+# celery Settings
 
 
 # SECURE_SSL_REDIRECT = True
@@ -298,3 +297,16 @@ CELERY_RESULT_BACKEND = "redis://localhost:6379"
 # stdout_logfile=/var/log/gunicorn/gunicorn.out.log
 # [group:guni]
 # programs:gunicorn
+
+# settings.py
+from datetime import timedelta
+
+
+CELERY_BROKER_URL = "redis://localhost:6379/0"
+
+CELERY_BEAT_SCHEDULE = {
+    "my-periodic-task": {
+        "task": "signin.tasks.my_periodic_task",
+        "schedule": timedelta(minutes=1),  # Adjust interval as needed
+    },
+}

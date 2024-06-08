@@ -15,7 +15,8 @@ http://unix:/run/gunicorn.sock
 https://socialmediamanager.in.net
 
 
-git token:	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
+git_username :kathanpatel0901
+git_token : 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
 
 linkedin access token:
 
@@ -130,3 +131,19 @@ sudo certbot --nginx -d socialmediamanager.in.net -d www.socialmediamanager.in.n
 sudo chown cord4:www-data /home/cord4/server.crt /home/cord4/server.key
 
 ipv4:106.215.20.147
+ipv6: 2401:4900:1c80:43eb:b73:dfcc:faae:1532
+
+
+106.215.20.147  
+
+117.99.111.255
+
+
+FACEBOOK:::
+1179387696834598
+
+Social Media Manager
+
+227651403774182
+
+EAAakH1sjMEkBOzZCnmHjYUNSBV0Tf4bVFZAZCTSMBCwZBZCP33FISSecZApSZC5I3EXoFN1VJqvzyQBRbEMK4rNNwBHt57MohUABZAAR4ixvFfpPS0jctufbrw5ZAEnIt3nInbdLAEhzs9a9nfhWdpMjI6ZCMxJDPGhYZBTZA9IZCvrymyQo1m2emwy0VAZCnvT1GbCbZChyJyIQmgZD
