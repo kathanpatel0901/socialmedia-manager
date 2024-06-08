@@ -6,7 +6,7 @@
 <h1 class=" text-center"> <span>Set Posts from here
   </span>
 </h1>
-<div class="signup-form mt-5">
+<div class="signup-form mt-5 mb-4">
   <p class="text-danger text-center">{{error_message | linebreaksbr }}</p>
   <h2>Create a New Post</h2>
   {% csrf_token %}{% crispy form %}

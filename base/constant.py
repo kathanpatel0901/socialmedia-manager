@@ -1,5 +1,6 @@
 from pyfacebook import GraphAPI
 import tweepy, os
+from dotenv import load_dotenv
 
 SERVER_DOMAIN = os.environ.get("SERVER_DOMAIN")
 # Twitter
@@ -9,7 +10,7 @@ CONSUMER_SECRET = "9I4HGBIQI4ylJag7BNuIRcxsfmOW8SI8r7bM98RLGJ5tqTwhpC"
 AUTH_USER = tweepy.OAuth1UserHandler(
     consumer_key=CONSUMER_KEY,
     consumer_secret=CONSUMER_SECRET,
-    callback=f"{SERVER_DOMAIN}/Taccess",
+    callback=f"http://127.0.0.1:8000/Taccess",
 )
 
 

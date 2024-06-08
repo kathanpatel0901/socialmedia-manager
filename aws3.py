@@ -1,0 +1,5 @@
+S3_ACCESS_KEY = "AKIAW3MEDKN44QRDF2XW"
+S3_SECRET_KEY = "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"
+S3_REGION = "us-east-1"
+S3_BUCKET = "postinsta"
+S3_CLOUDFRONT_URL = "https://postinsta.s3.amazonaws.com"

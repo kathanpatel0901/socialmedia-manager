@@ -19,6 +19,9 @@ media
 # AWS User-specific
 .idea/**/aws.xml
 
+#AWS S3
+aws3.py
+
 # Generated files
 .idea/**/contentModel.xml
 

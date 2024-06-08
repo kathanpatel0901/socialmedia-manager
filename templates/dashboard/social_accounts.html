@@ -28,17 +28,16 @@
             <img src="{% static 'Facebook_Logo.png' %}" style="width:25px"
                 class="ms-2" alt="Button Image" />
         </a>
-        {% else %}
-        <a href="{% url 'facebook_auth' %}"
-            class="btn btn-outline-dark ms-3" > Link your
-            <img src="{% static 'Facebook_Logo.png' %}" style="width:25px"
+        <a href="{% url 'insta_auth' %}"
+            class="btn btn-outline-dark ms-3 active"> Link your
+            <img src="{% static 'Instagram.png' %}" onclick="return false"
+                style="width:25px"
                 class="ms-2" alt="Button Image" />
         </a>
-        {% endif %}
-
-        <a href="{% url 'linkedin' %}"
+        {% else %}
+        <a href="{% url 'facebook_auth' %}"
             class="btn btn-outline-dark ms-3"> Link your
-            <img src="{% static 'inwhite.png' %}" style="width:25px"
+            <img src="{% static 'Facebook_Logo.png' %}" style="width:25px"
                 class="ms-2" alt="Button Image" />
         </a>
         <a href="{% url 'insta_auth' %}"
@@ -46,8 +45,13 @@
             <img src="{% static 'Instagram.png' %}" style="width:25px"
                 class="ms-2" alt="Button Image" />
         </a>
+        {% endif %}
 
-        
+        <!-- <a href="{% url 'linkedin' %}"
+            class="btn btn-outline-dark ms-3"> Link your
+            <img src="{% static 'inwhite.png' %}" style="width:25px"
+                class="ms-2" alt="Button Image" />
+        </a> -->
 
     </div>
 </div>

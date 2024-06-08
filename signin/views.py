@@ -4,6 +4,8 @@ from django.contrib.auth.decorators import login_required
 from .forms import PostForm, SchedulePostForm, RepositoryForm
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
+from dotenv import load_dotenv
+
 
 # from .tasks import schedule_post_task
 from .models import Link, Facebookuser
@@ -12,6 +14,7 @@ import tweepy
 from .models import Link, Facebookuser
 from linkedin_api import Linkedin
 import os
+
 from .s3_management import s3_image_upload
 from base.constant import (
     CONSUMER_KEY,
@@ -24,6 +27,7 @@ from base.constant import (
     INSTA_ID,
 )
 
+load_dotenv()
 SERVER_DOMAIN = os.environ.get("SERVER_DOMAIN")
 
 LINKEDIN_ID = "86mlue1q95me5q"
@@ -52,22 +56,6 @@ def index(request):
 def home(request):
     #    return render(request, "dashboard/home.html")
     return index(request)
-
-
-def test(request):
-    # user_instance = SocialAccount.objects.filter(user=request.user).first()
-    # link_instance = Link.objects.filter(user=user_instance).first()
-    # twitter_access_token = link_instance.access_token
-    # twitter_access_token_secret = link_instance.access_token_secret
-    # client = tweepy.Client(
-    #     consumer_key=CONSUMER_KEY,
-    #     consumer_secret=CONSUMER_SECRET,
-    #     access_token=twitter_access_token,
-    #     access_token_secret=twitter_access_token_secret,
-    # )
-    # client.create_tweet(text="HEllo twitter this is test ")
-    # print("Posted to Twitter successfully!")
-    return render(request, "base/test.html")
 
 
 def login(request):
@@ -135,7 +123,6 @@ def post_success(request):
 @login_required
 def tauth(request):
     auth_url = AUTH_USER.get_authorization_url()
-
     print("authURl::", auth_url)
     return redirect(
         auth_url,
@@ -154,7 +141,7 @@ def taccess(request):
     oauth_user = tweepy.OAuth1UserHandler(
         consumer_key=CONSUMER_KEY,
         consumer_secret=CONSUMER_SECRET,
-        callback=f"{SERVER_DOMAIN}/Taccess",
+        callback=f"http://127.0.0.1:8000/Taccess",
     )
     oauth_user.request_token = {
         "oauth_token": request_token,
@@ -331,7 +318,6 @@ def facebook_access(request):
             "facebook_exists": facebook_exists,
         },
     )
-    
 
 
 def facebok_page_access(request):
@@ -500,6 +486,62 @@ def post(request):
     )
 
 
+def schedule_post(request):
+    error_message = ""
+    form = SchedulePostForm()
+    if request.method == "POST":
+        form = SchedulePostForm(request.POST, request.FILES)
+        if form.is_valid():
+            social_account_instance = SocialAccount.objects.filter(
+                user=request.user
+            ).first()
+            link_instance = Link.objects.filter(user=social_account_instance).first()
+            facebook_instance = Facebookuser.objects.filter(
+                user=social_account_instance
+            ).first()
+            print(facebook_instance)
+
+            twitter = form.cleaned_data.get("twitter")
+            facebook = form.cleaned_data.get("facebook")
+            instagram = form.cleaned_data.get("instagram")
+            schedule_post = form.save()
+            image_data = request.FILES.get("post_media")
+            # if image_data:
+            #     image_url = s3_image_upload(
+            #         request=request,
+            #         image_data=image_data,
+            #         folder_name="scheduled-post",
+            #     )
+            #     print(image_url)
+            # schedule_post.image = image_url
+
+            if twitter:
+                schedule_post.link = link_instance
+
+            if facebook or instagram:
+                schedule_post.meta_connection = facebook_instance
+
+            schedule_post.save()
+
+            return render(request, "dashboard/SchedulePostSuccess.html")
+
+    return render(
+        request,
+        "dashboard/SchedulePost.html",
+        {"form": form, "error_message": error_message},
+    )
+
+
+# from signin.models import Post
+
+# for post_data in Post.objects.all():
+#     print(
+#         "post_schedule_datetime",
+#         post_data.post_schedule_datetime.strftime("%d-%m-%y %H:%M"),
+#     )
+# print("current time", datetime.now().strftime("%d-%m-%y %H:%M"))
+
+
 # def schedule_post(request):
 #     message = ""
 #     form = SchedulePostForm()
@@ -590,57 +632,17 @@ def post(request):
 #     message = "Posting on selected media is not supported yet."
 
 
-def schedule_post(request):
-    error_message = ""
-    form = SchedulePostForm()
-    if request.method == "POST":
-        form = SchedulePostForm(request.POST, request.FILES)
-        if form.is_valid():
-            social_account_instance = SocialAccount.objects.filter(
-                user=request.user
-            ).first()
-            link_instance = Link.objects.filter(user=social_account_instance).first()
-            facebook_instance = Facebookuser.objects.filter(
-                user=social_account_instance
-            ).first()
-            print(facebook_instance)
-
-            twitter = form.cleaned_data.get("twitter")
-            facebook = form.cleaned_data.get("facebook")
-            instagram = form.cleaned_data.get("instagram")
-            schedule_post = form.save()
-            image_data = request.FILES.get("post_media")
-            # if image_data:
-            #     image_url = s3_image_upload(
-            #         request=request,
-            #         image_data=image_data,
-            #         folder_name="scheduled-post",
-            #     )
-            #     print(image_url)
-            # schedule_post.image = image_url
-
-            if twitter:
-                schedule_post.link = link_instance
-
-            if facebook or instagram:
-                schedule_post.meta_connection = facebook_instance
-
-            schedule_post.save()
-
-            return render(request, "dashboard/SchedulePostSuccess.html")
-
-    return render(
-        request,
-        "dashboard/SchedulePost.html",
-        {"form": form, "error_message": error_message},
-    )
-
-
-# from signin.models import Post
-
-# for post_data in Post.objects.all():
-#     print(
-#         "post_schedule_datetime",
-#         post_data.post_schedule_datetime.strftime("%d-%m-%y %H:%M"),
-#     )
-# print("current time", datetime.now().strftime("%d-%m-%y %H:%M"))
+def test(request):
+    # user_instance = SocialAccount.objects.filter(user=request.user).first()
+    # link_instance = Link.objects.filter(user=user_instance).first()
+    # twitter_access_token = link_instance.access_token
+    # twitter_access_token_secret = link_instance.access_token_secret
+    # client = tweepy.Client(
+    #     consumer_key=CONSUMER_KEY,
+    #     consumer_secret=CONSUMER_SECRET,
+    #     access_token=twitter_access_token,
+    #     access_token_secret=twitter_access_token_secret,
+    # )
+    # client.create_tweet(text="HEllo twitter this is test ")
+    # print("Posted to Twitter successfully!")
+    return render(request, "base/test.html")

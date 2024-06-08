@@ -5,13 +5,13 @@ import boto3
 import io
 from datetime import datetime
 from PIL import Image
+from aws3 import S3_ACCESS_KEY, S3_BUCKET, S3_CLOUDFRONT_URL, S3_REGION, S3_SECRET_KEY
 
-
-s3_access_key = "AKIAW3MEDKN44QRDF2XW"
-s3_secret_key = "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"
-s3_region = "us-east-1"
-s3_bucket_name = "postinsta"
-s3_cloudfront_url = "https://postinsta.s3.amazonaws.com"
+s3_access_key = S3_ACCESS_KEY
+s3_secret_key = S3_SECRET_KEY
+s3_region = S3_REGION
+s3_bucket_name = S3_BUCKET
+s3_cloudfront_url = S3_CLOUDFRONT_URL
 
 
 S3_SESSION = boto3.Session(
