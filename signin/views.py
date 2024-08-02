@@ -1,6 +1,7 @@
 from allauth.socialaccount.models import SocialAccount
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
+from dotenv import load_dotenv
 from .forms import PostForm, SchedulePostForm, RepositoryForm
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
@@ -25,7 +26,7 @@ from base.constant import (
     INSTA_ID,
 )
 
-load_dotenv()
+# from load_dotenv()
 SERVER_DOMAIN = os.environ.get("SERVER_DOMAIN")
 
 LINKEDIN_ID = "86mlue1q95me5q"
@@ -187,22 +188,20 @@ def taccess(request):
         },
     )
 
+    # CLIENT_ID = "bkY4YzlOWmRQVlhmbHczQVBxaUE6MTpjaQ"
+    # CLIENT_SECRET = "mIYHgBwR84rZCXvYQvkJKEu6d1QTJYJEOQQRJjJ-PvX9e1CGqt"
+    # SCOPE = [
+    #     "tweet.read",
+    #     "tweet.write",
+    # ]
+    # AUTH = tweepy.OAuth2UserHandler(
+    #     client_id=CLIENT_ID,
+    #     redirect_uri="https://socialmediamanager.in.net/taccess2",
+    #     scope=SCOPE,
+    #     client_secret=CLIENT_SECRET,
+    # )
 
-# CLIENT_ID = "bkY4YzlOWmRQVlhmbHczQVBxaUE6MTpjaQ"
-# CLIENT_SECRET = "mIYHgBwR84rZCXvYQvkJKEu6d1QTJYJEOQQRJjJ-PvX9e1CGqt"
-# SCOPE = [
-#     "tweet.read",
-#     "tweet.write",
-# ]
-# AUTH = tweepy.OAuth2UserHandler(
-#     client_id=CLIENT_ID,
-#     redirect_uri="https://socialmediamanager.in.net/taccess2",
-#     scope=SCOPE,
-#     client_secret=CLIENT_SECRET,
-# )
-
-
-# def taccess2(request):
+    # def taccess2(request):
 
     AUTH.request_token = {}
     response_url = request.build_absolute_uri()
@@ -212,14 +211,13 @@ def taccess(request):
     )
     print("access_token::", access_token)
 
+
 #     response_url = request.build_absolute_uri()
 #     print("RESPONSE URL:", response_url)
 #     context = {"response_url": response_url}
 #     # access_token = AUTH.fetch_token(authorization_response=response_url)
 #     # print("access_token::", access_token)
 #     return render(request, "dashboard/social_accounts.html", context)
-
-
 
 
 #     return render(request, "dashboard/showpost.html")
@@ -296,7 +294,6 @@ def facebook_access(request):
             "facebook_exists": facebook_exists,
         },
     )
-    
 
 
 def facebok_page_access(request):
@@ -359,8 +356,6 @@ def insta_auth(request):
 
 def instabasic(request):
     return render(request, "dashboard/social_accounts.html")
-
-
 
 
 def post(request):
@@ -533,7 +528,7 @@ def schedule_post(request):
 
 def schedule_post(request):
     error_message = ""
-    form = SchedulePostForm()
+    form = SchedulePostForm()       
     if request.method == "POST":
         form = SchedulePostForm(request.POST, request.FILES)
         if form.is_valid():
@@ -575,127 +570,6 @@ def schedule_post(request):
         "dashboard/SchedulePost.html",
         {"form": form, "error_message": error_message},
     )
-
-
-# from signin.models import Post
-
-# for post_data in Post.objects.all():
-#     print(
-#         "post_schedule_datetime",
-#         post_data.post_schedule_datetime.strftime("%d-%m-%y %H:%M"),
-#     )
-# print("current time", datetime.now().strftime("%d-%m-%y %H:%M"))
-
-
-#   if request.method == "POST":
-#         form = RepositoryForm(request.POST)
-#         if "create" in request.POST and form.is_valid():
-#             repository_name = form.cleaned_data["repository_name"]
-#             repository_code = form.cleaned_data["repository_code"]
-#
-#             action = request.POST.get("action")
-#             if action == "create":
-#                 try:
-#                     repo = user.create_repo(repository_name)
-#                     return HttpResponse("Repository created successfully.")
-#                 except Exception as e:
-#                     return HttpResponse("Error Creating repository: " + str(e))
-#             # if action == "clone":
-#             #     try:
-#             #         repoClone = pygit2.clone_repository(repo.git_url, repository_code)
-#             #         return HttpResponse("Repository cloned successfully.")
-#             #     except Exception as e:
-#             #         return HttpResponse("Error Cloning Repository: " + str(e))
-#     else:
-#         form = RepositoryForm()
-# def schedule_post(request):
-#     message = ""
-#     form = SchedulePostForm()
-#     print("View function executed")
-
-#     if request.method == "POST":
-#         form = SchedulePostForm(request.POST, request.FILES)
-#         print("Form submitted")
-#         print("Form data:", request.POST)
-#         if form.is_valid():
-#             print("Form is Valid")
-#             content = form.cleaned_data["post_text"]
-#             twitter = form.cleaned_data.get("twitter")
-#             facebook = form.cleaned_data.get("facebook")
-#             # post_schedule_date = form.cleaned_data.get("post_schedule_date")
-#             # post_schedule_time = form.cleaned_data.get("post_schedule_time")
-#             # post_schedule_datetime = datetime.combine(
-#             #     post_schedule_date, post_schedule_time
-#             # )
-
-#             # post_schedule_datetime = pytz.timezone("UTC").localize(
-#             #     post_schedule_datetime
-#             # )
-#             post_schedule_datetime = form.cleaned_data.get("post_schedule_datetime")
-#             user_instance = SocialAccount.objects.filter(user=request.user).first()
-#             link_instance = Link.objects.filter(user=user_instance).first()
-#             # facebook_instance = Facebookuser.objects.filter(user=user_instance).first()
-#             twitter_access_token = link_instance.access_token
-#             twitter_access_token_secret = link_instance.access_token_secret
-#             # facebok_page_access_token = facebook_instance.page_access_token
-
-#             if "post_schedule" in request.POST:
-#                 schedule_post_task.apply_async(
-#                     args=[
-#                         content,
-#                         twitter,
-#                         facebook,
-#                         twitter_access_token,
-#                         twitter_access_token_secret,
-#                     ],
-#                     eta=post_schedule_datetime,
-#                 )
-#                 message = "Post Scheduled successfully"
-#                 print("Post Schedule button clicked")
-#             else:
-#                 message = "Failed to Schedule  Post"
-#     return render(
-#         request, "dashboard/SchedulePost.html", {"form": form, "error_message": message}
-#     )
-
-#     if twitter:
-#         print("Twitter switch is ON")
-#         try:
-#             client = tweepy.Client(
-#                 consumer_key=CONSUMER_KEY,
-#                 consumer_secret=CONSUMER_SECRET,
-#                 access_token=twitter_access_token,
-#                 access_token_secret=twitter_access_token_secret,
-#             )
-#             client.create_tweet(text=content)
-#             print("Posted to Twitter successfully!")
-#             message += "Successfully Post on twitter \n"
-#         except Exception as e:
-#             message += "Failed to post on Twitter: {}\n".format(str(e))
-
-#     if facebook:
-#         print("Facebook switch is ON")
-#         try:
-#             api = GraphAPI(
-#                 app_id=APP_ID,
-#                 app_secret=APP_SECRET,
-#                 access_token=facebok_page_access_token,
-#             )
-#             data = api.post_object(
-#                 object_id=PAGE_ID,
-#                 connection="feed",
-#                 params={
-#                     "fields": "id,message,created_time,from",
-#                 },
-#                 data={"message": content},
-#             )
-#             print("Posted to Facebook successfully!")
-#         except Exception as e:
-#             message += "Failed to post on Facebook: {}\n".format(str(e))
-#     if not (twitter or facebook):
-#         message = "Please Select any one socaial media platform"
-# else:
-#     message = "Posting on selected media is not supported yet."
 
 
 def schedule_post(request):
@@ -742,13 +616,3 @@ def schedule_post(request):
         "dashboard/SchedulePost.html",
         {"form": form, "error_message": error_message},
     )
-
-
-# from signin.models import Post
-
-# for post_data in Post.objects.all():
-#     print(
-#         "post_schedule_datetime",
-#         post_data.post_schedule_datetime.strftime("%d-%m-%y %H:%M"),
-#     )
-# print("current time", datetime.now().strftime("%d-%m-%y %H:%M"))
